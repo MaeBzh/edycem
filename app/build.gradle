@@ -3,7 +3,6 @@ apply from: "../gradle/script/quality_rules.gradle"
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
 
     defaultConfig {
         applicationId "com.imie.edycem"

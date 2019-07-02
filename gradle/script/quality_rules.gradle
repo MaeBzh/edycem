@@ -1,0 +1,97 @@
+apply plugin: 'checkstyle'
+apply plugin: 'findbugs'
+apply plugin: 'jacoco'
+apply plugin: 'pmd'
+
+def gradleExtra="${project.rootDir}/gradle/script"
+def reportDir="${project.buildDir}/reports"
+def outputDir="${project.buildDir}/intermediates/classes"
+
+task checkstyle(type: Checkstyle) {
+    description 'Run Checkstyle'
+    group 'verification'
+
+    ignoreFailures = true
+    showViolations = true
+
+    configFile file("${gradleExtra}/checkstyle_rules_lvl1.xml")
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    classpath = files()
+}
+
+task findbugs(type: FindBugs, dependsOn: "assembleDebug") {
+    description 'Run Findbugs'
+    group 'verification'
+
+    ignoreFailures = true
+    effort = "max"
+    reportLevel = "high"
+    excludeFilter = new File("${gradleExtra}/findbugs_excludes.xml")
+    classes = files("${outputDir}")
+
+    source 'src'
+    include '**/*.java'
+    exclude '**/gen/**'
+
+    reports {
+        xml {
+            destination "${reportDir}/findbugs/findbugs.xml"
+            xml.withMessages true
+        }
+    }
+
+    classpath = files()
+}
+
+task jacocoTestReport(type:JacocoReport, dependsOn: "connectedDebugAndroidTest") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports"
+
+    // exclude auto-generated classes and tests
+    def fileFilter = ['**/R.class',
+                      '**/R$*.class',
+                      '**/BuildConfig.*',
+                      '**/Manifest*.*',
+                      'com/imie/edycem/view/*',
+                      'com/imie/edycem/menu/*',
+                      'com/imie/edycem/harmony/*'
+                      ]
+
+    def debugTree = fileTree(dir:
+            "${outputDir}/debug",
+            excludes: fileFilter)
+
+    def mainSrc = "${project.projectDir}"
+
+    sourceDirectories = files([mainSrc])
+    classDirectories = files([debugTree])
+
+    executionData = fileTree(dir: project.projectDir, includes:
+            ['**/*.exec', '**/*.ec'])
+
+    reports {
+        xml.enabled = true
+        xml.destination = "${buildDir}/jacocoTestReport.xml"
+        csv.enabled = false
+        html.enabled = true
+        html.destination = "${buildDir}/reports/jacoco"
+    }
+}
+
+task pmd (type: Pmd) {
+    description 'Run pmd'
+    group 'verification'
+
+    ignoreFailures = true
+
+    ruleSetFiles = files("${gradleExtra}/pmd_rules_lvl1.xml")
+    source = fileTree('src/com/imie/edycem')
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+}

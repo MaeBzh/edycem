@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="harmony-rules">
+    <property name="findbug.analyze.package" value="" />
+    <property name="checkstyle.includes" value="" />
+    <property name="checkstyle.excludes" value="" />
+    <property name="tmp.rel-dir" value="tmp" />
+    <property name="sdk.extra.dir" value="${sdk.dir}/extras/android/support/v4" />
+    <property name="supportv4.jar" value="android-support-v4.jar" />
+
+    <path id="findbugs.dir.jars">
+    <fileset dir="${env.FINDBUGS_HOME}/lib">
+        <include name="*.jar" />
+    </fileset>
+    </path>
+
+    <target name="-setup" depends="android_rules.-setup">
+        <condition property="android_executable" value="android.bat" else="android">
+            <os family="windows"/>
+        </condition>
+    </target>
+
+    <!-- basic -->
+    <target name="init">
+        <mkdir dir="${out.dir}"/>
+        <mkdir dir="${tmp.rel-dir}"/>
+    </target>
+
+    <target name="test-all" depends="test-all-debug,test-all-release"/>
+    <target name="test-all-debug" depends="uninstall,emma,clean,test-all-sub,reports"/>
+    <target name="test-all-release" depends="uninstall,clean,release,install,monkey"/>
+
+    <target name="test-all-sub">
+        <subant target="test-all">
+            <fileset dir="./test" includes="build.xml"/>
+        </subant>
+    </target>
+
+    <target name="monkey">
+        <subant target="monkey">
+            <fileset dir="./test" includes="build.xml"/>
+        </subant>
+    </target>
+
+    <target name="monkey-disable">
+        <subant target="monkey-disable">
+            <fileset dir="./test" includes="build.xml"/>
+        </subant>
+    </target>
+
+    <target name="run-findbugs" depends="init">
+        <taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" description="classes+findbugs=magic" classpathref="findbugs.dir.jars"/>
+        <findbugs home="${env.FINDBUGS_HOME}"
+                output="xml"
+                outputFile="${tmp.rel-dir}/findbugs.xml"
+                onlyAnalyze="${findbug.analyze.package}"
+                excludefilter="./findbugs_excludes.xml">
+            <sourcePath path="${source.dir}" />
+            <class location="${out.dir}" />
+            <auxClasspath refid="classpath" /> <!-- so we dont get hundrets of "The following classes needed for analysis were missing" warnings. -->
+        </findbugs>
+        <xslt
+            in="${tmp.rel-dir}/findbugs.xml"
+                   out="${tmp.rel-dir}/findbugs.html"
+            style="${env.FINDBUGS_HOME}/src/xsl/fancy.xsl"
+           />
+    </target>
+
+    <target name="run-checkstyle" depends="init"
+        description="Report of code convention violations.">
+
+        <!-- Fail this target if CheckStyle is not installed. -->
+           <available file="${env.CHECKSTYLE_HOME}/checkstyle-5.6-all.jar"
+            property="checkstyle.available"/>
+           <fail unless="checkstyle.available"
+               message="Error: CHECKSTYLE_HOME not set or checkstyle-5.6-all.jar not found." />
+
+        <!-- Run this target if CheckStyle is installed. -->
+        <taskdef resource="checkstyletask.properties"
+               classpath="${env.CHECKSTYLE_HOME}/checkstyle-5.6-all.jar" />
+
+           <!-- run analysis-->
+           <checkstyle config="checkstyle_rules_lvl1.xml"
+                       failureProperty="checkstyle.failure"
+                       failOnViolation="false" >
+               <formatter type="xml" tofile="${tmp.rel-dir}/checkstyle-result.xml" />
+               <fileset dir="${source.dir}"
+                    includes="${checkstyle.includes}"
+                    excludes="${checkstyle.excludes}" />
+           </checkstyle>
+
+        <!-- Report -->
+           <xslt
+               in="${tmp.rel-dir}/checkstyle-result.xml"
+               out="${tmp.rel-dir}/checkstyle-result.html"
+               style="${env.CHECKSTYLE_HOME}/contrib/checkstyle-noframes.xsl"
+           />
+    </target>
+
+    <target name="run-pmd" depends="init"
+        description="Run pmd">
+
+        <!-- Fail this target if Pmd is not installed. -->
+        <available file="${env.PMD_HOME}/lib/pmd-5.0.2.jar"
+            property="pmd.available" />
+        <fail unless="pmd.available"
+            message="Error: PMD_HOME not set or pmd-5.0.2.jar not found." />
+
+        <path id="pmd.classpath">
+            <fileset dir="${env.PMD_HOME}/lib/">
+                <include name="**/*.jar" />
+            </fileset>
+        </path>
+
+        <!-- Run this target if Pmd is installed. -->
+        <taskdef name="pmd"
+            classpathref="pmd.classpath"
+            classpath="${env.PMD_HOME}/lib/pmd-5.0.2.jar"
+            classname="net.sourceforge.pmd.ant.PMDTask" />
+        <pmd shortFilenames="true">
+            <ruleset>./pmd_rules_lvl1.xml</ruleset>
+            <formatter type="xml" toFile="${tmp.rel-dir}/pmd.xml"/>
+            <fileset dir="${source.dir}">
+                <include name="**/*.java"/>
+                <exclude name="**/*Test*"/>
+            </fileset>
+        </pmd>
+
+        <taskdef name="cpd"
+            classpathref="pmd.classpath"
+            classpath="${env.PMD_HOME}/lib/pmd-5.0.2.jar"
+            classname="net.sourceforge.pmd.cpd.CPDTask" />
+        <cpd
+            minimumTokenCount="100"
+            language="java"
+            format="xml"
+            outputFile="${tmp.rel-dir}/cpd.xml">
+            <fileset dir="${source.dir}">
+                <include name="**/*.java"/>
+                <exclude name="**/*Test*"/>
+            </fileset>
+        </cpd>
+
+        <!-- Report -->
+        <xslt
+            in="${tmp.rel-dir}/pmd.xml"
+            out="${tmp.rel-dir}/pmd.html"
+            style="${env.PMD_HOME}/etc/xslt/pmd-report.xslt" />
+        <xslt
+            in="${tmp.rel-dir}/cpd.xml"
+            out="${tmp.rel-dir}/cpd.html"
+            style="${env.PMD_HOME}/etc/xslt/cpdhtml.xslt" />
+    </target>
+
+    <target name="reports" depends="run-checkstyle,run-findbugs,run-pmd" />
+
+    <!-- Code obfuscation check  -->
+    <target name="proguard" >
+        <property name="debug.proguard.enable" value="true" />
+    </target>
+
+	<target name="-debug-obfuscation-check">
+		<!-- proguard is never enabled in debug mode -->
+        <condition property="proguard.enabled" value="true" else="false">
+            <isset property="debug.proguard.enable"/>
+        </condition>
+	</target>
+
+    <target name="-update-library">
+        <condition property="library.target" value="${target}">
+           <not>
+              <isset property="library.target"/>
+           </not>
+        </condition>
+
+		<!-- Manage library naming -->
+		<condition property="library.target" value="${nameSetter}">
+           <not>
+              <isset property="${nameSetter}"/>
+           </not>
+        </condition>
+
+        <echo level="info">Update ${library.update} Android library</echo>
+        <exec executable="${sdk.dir}/tools/${android_executable}" failonerror="true">
+            <arg value="update"/>
+            <arg value="lib-project"/>
+            <arg value="-p"/>
+            <arg value="${library.update}"/>
+            <arg value="--target"/>
+            <arg value="${library.target}"/>
+            <arg value="--name" />
+            <arg value="${nameSetter}"/>
+        </exec>
+    </target>
+
+    <target name="-update-library-add">
+        <echo level="info">Update ${library.update} Android library with library</echo>
+        <exec executable="${sdk.dir}/tools/${android_executable}" failonerror="true">
+            <arg value="update"/>
+            <arg value="project"/>
+            <arg value="-p"/>
+            <arg value="${library.update}"/>
+            <arg value="--library"/>
+            <arg value="${library.param.library}"/>
+        </exec>
+    </target>
+</project>

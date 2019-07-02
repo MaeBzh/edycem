@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <Match>
+    <Class name="~.*\.R\$.*"/>
+  </Match>
+  <Match>
+    <Or>
+    <Package name="~com[.]imie[.]edycem[.]criterias[.]base([.].*)?" />
+    <Package name="~com[.]imie[.]edycem[.]data[.]base([.].*)?" />
+    <Package name="~com[.]imie[.]edycem[.]harmony([.].*)?" />
+    <Package name="~com[.]imie[.]edycem[.]provider[.]base([.].*)?" />
+    <Package name="~com[.]imie[.]edycem[.]provider[.]utils[.]base([.].*)?" />
+    <Class name="~com[.]imie[.]edycem[.]EdycemApplicationBase.java"/>
+    </Or>
+  </Match>
+</FindBugsFilter>

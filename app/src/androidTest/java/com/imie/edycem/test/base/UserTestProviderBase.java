@@ -19,6 +19,7 @@ import com.imie.edycem.provider.contract.UserContract;
 import com.imie.edycem.data.UserSQLiteAdapter;
 
 import com.imie.edycem.entity.User;
+import com.imie.edycem.entity.WorkingTime;
 
 
 import java.util.ArrayList;
@@ -147,6 +148,9 @@ public abstract class UserTestProviderBase extends TestDBBase {
 
             try {
                 user.setId(this.entity.getId());
+                if (this.entity.getUserWorkingTimes() != null) {
+                    user.getUserWorkingTimes().addAll(this.entity.getUserWorkingTimes());
+                }
 
                 ContentValues values = UserContract.itemToContentValues(user);
                 result = this.provider.update(
@@ -261,6 +265,20 @@ public abstract class UserTestProviderBase extends TestDBBase {
             User user = UserUtils.generateRandom(this.ctx);
 
             user.setId(this.entity.getId());
+            if (this.entity.getUserWorkingTimes() != null) {
+                for (WorkingTime userWorkingTimes : this.entity.getUserWorkingTimes()) {
+                    boolean found = false;
+                    for (WorkingTime userWorkingTimes2 : user.getUserWorkingTimes()) {
+                        if (userWorkingTimes.getId() == userWorkingTimes2.getId() ) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found) {
+                        user.getUserWorkingTimes().add(userWorkingTimes);
+                    }
+                }
+            }
             result = this.providerUtils.update(user);
 
             Assert.assertTrue(result > 0);

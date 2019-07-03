@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import com.imie.edycem.entity.User;
+import com.imie.edycem.entity.Job;
+import com.imie.edycem.entity.WorkingTime;
 
 
 
@@ -59,6 +61,13 @@ public abstract class UserContractBase {
     public static final String ALIASED_COL_DATERGPD =
             UserContract.TABLE_NAME + "." + COL_DATERGPD;
 
+    /** job_id. */
+    public static final String COL_JOB_ID =
+            "job_id";
+    /** Alias. */
+    public static final String ALIASED_COL_JOB_ID =
+            UserContract.TABLE_NAME + "." + COL_JOB_ID;
+
 
 
 
@@ -76,7 +85,9 @@ public abstract class UserContractBase {
         
         UserContract.COL_PASSWORD,
         
-        UserContract.COL_DATERGPD
+        UserContract.COL_DATERGPD,
+        
+        UserContract.COL_JOB_ID,
     };
 
     /** Global Fields. */
@@ -88,7 +99,10 @@ public abstract class UserContractBase {
         
         UserContract.ALIASED_COL_PASSWORD,
         
-        UserContract.ALIASED_COL_DATERGPD
+        UserContract.ALIASED_COL_DATERGPD,
+        
+        UserContract.ALIASED_COL_JOB_ID,
+        
     };
 
 
@@ -120,7 +134,12 @@ public abstract class UserContractBase {
                     item.getDateRgpd().toString(ISODateTimeFormat.dateTime()));
             }
 
+             if (item.getJob() != null) {
+                result.put(UserContract.COL_JOB_ID,
+                    item.getJob().getId());
+            }
 
+ 
         return result;
     }
 
@@ -171,6 +190,16 @@ public abstract class UserContractBase {
                 } else {
                     result.setDateRgpd(new DateTime());
                 }
+            }
+            if (result.getJob() == null) {
+                final Job job = new Job();
+                index = cursor.getColumnIndex(UserContract.COL_JOB_ID);
+
+                if (index > -1) {
+                    job.setId(cursor.getInt(index));
+                    result.setJob(job);
+                }
+
             }
 
         }

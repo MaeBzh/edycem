@@ -28,10 +28,19 @@ import com.imie.edycem.criterias.base.CriteriaExpression;
 import com.imie.edycem.criterias.base.CriteriaExpression.GroupType;
 
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.entity.User;
+import com.imie.edycem.entity.Project;
+import com.imie.edycem.entity.Task;
 
 import com.imie.edycem.provider.WorkingTimeProviderAdapter;
+import com.imie.edycem.provider.UserProviderAdapter;
+import com.imie.edycem.provider.ProjectProviderAdapter;
+import com.imie.edycem.provider.TaskProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
+import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.contract.ProjectContract;
+import com.imie.edycem.provider.contract.TaskContract;
 
 /**
  * WorkingTime Provider Utils Base.
@@ -145,6 +154,18 @@ public abstract class WorkingTimeProviderUtilsBase
             cursor.moveToFirst();
             result = WorkingTimeContract.cursorToItem(cursor);
 
+            if (result.getUser() != null) {
+                result.setUser(
+                    this.getAssociateUser(result));
+            }
+            if (result.getProject() != null) {
+                result.setProject(
+                    this.getAssociateProject(result));
+            }
+            if (result.getTask() != null) {
+                result.setTask(
+                    this.getAssociateTask(result));
+            }
         }
         cursor.close();
 
@@ -235,5 +256,86 @@ public abstract class WorkingTimeProviderUtilsBase
         return result;
     }
 
-    
+    /** Relations operations. */
+    /**
+     * Get associate User.
+     * @param item WorkingTime
+     * @return User
+     */
+    public User getAssociateUser(
+            final WorkingTime item) {
+        User result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor userCursor = prov.query(
+                UserProviderAdapter.USER_URI,
+                UserContract.ALIASED_COLS,
+                UserContract.ALIASED_COL_ID + "= ?",
+                new String[]{String.valueOf(item.getUser().getId())},
+                null);
+
+        if (userCursor.getCount() > 0) {
+            userCursor.moveToFirst();
+            result = UserContract.cursorToItem(userCursor);
+        } else {
+            result = null;
+        }
+        userCursor.close();
+
+        return result;
+    }
+
+    /**
+     * Get associate Project.
+     * @param item WorkingTime
+     * @return Project
+     */
+    public Project getAssociateProject(
+            final WorkingTime item) {
+        Project result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor projectCursor = prov.query(
+                ProjectProviderAdapter.PROJECT_URI,
+                ProjectContract.ALIASED_COLS,
+                ProjectContract.ALIASED_COL_ID + "= ?",
+                new String[]{String.valueOf(item.getProject().getId())},
+                null);
+
+        if (projectCursor.getCount() > 0) {
+            projectCursor.moveToFirst();
+            result = ProjectContract.cursorToItem(projectCursor);
+        } else {
+            result = null;
+        }
+        projectCursor.close();
+
+        return result;
+    }
+
+    /**
+     * Get associate Task.
+     * @param item WorkingTime
+     * @return Task
+     */
+    public Task getAssociateTask(
+            final WorkingTime item) {
+        Task result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor taskCursor = prov.query(
+                TaskProviderAdapter.TASK_URI,
+                TaskContract.ALIASED_COLS,
+                TaskContract.ALIASED_COL_ID + "= ?",
+                new String[]{String.valueOf(item.getTask().getId())},
+                null);
+
+        if (taskCursor.getCount() > 0) {
+            taskCursor.moveToFirst();
+            result = TaskContract.cursorToItem(taskCursor);
+        } else {
+            result = null;
+        }
+        taskCursor.close();
+
+        return result;
+    }
+
 }

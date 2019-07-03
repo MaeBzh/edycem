@@ -25,7 +25,9 @@ import com.imie.edycem.entity.Project;
 import com.imie.edycem.provider.ProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.ProjectContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.data.ProjectSQLiteAdapter;
+import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
 
 /**
  * ProjectProviderAdapterBase.
@@ -50,6 +52,9 @@ public abstract class ProjectProviderAdapterBase
     protected static final int PROJECT_ONE =
             1355342586;
 
+    /** PROJECT_PROJECTWORKINGTIMES. */
+    protected static final int PROJECT_PROJECTWORKINGTIMES =
+            1355342587;
 
     /**
      * Static constructor.
@@ -66,6 +71,10 @@ public abstract class ProjectProviderAdapterBase
                 EdycemProvider.authority,
                 projectType + "/#",
                 PROJECT_ONE);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                projectType + "/#" + "/projectworkingtimes",
+                PROJECT_PROJECTWORKINGTIMES);
     }
 
     /**
@@ -79,6 +88,7 @@ public abstract class ProjectProviderAdapterBase
 
         this.uriIds.add(PROJECT_ALL);
         this.uriIds.add(PROJECT_ONE);
+        this.uriIds.add(PROJECT_PROJECTWORKINGTIMES);
     }
 
     @Override
@@ -100,6 +110,9 @@ public abstract class ProjectProviderAdapterBase
                 break;
             case PROJECT_ONE:
                 result = single + "project";
+                break;
+            case PROJECT_PROJECTWORKINGTIMES:
+                result = collection + "project";
                 break;
             default:
                 result = null;
@@ -185,6 +198,7 @@ public abstract class ProjectProviderAdapterBase
 
         int matchedUri = EdycemProviderBase.getUriMatcher().match(uri);
         android.database.Cursor result = null;
+        int projectId;
 
         switch (matchedUri) {
 
@@ -199,6 +213,13 @@ public abstract class ProjectProviderAdapterBase
                 break;
             case PROJECT_ONE:
                 result = this.queryById(uri.getPathSegments().get(1));
+                break;
+
+            case PROJECT_PROJECTWORKINGTIMES:
+                projectId = Integer.parseInt(uri.getPathSegments().get(1));
+                WorkingTimeSQLiteAdapter projectWorkingTimesAdapter = new WorkingTimeSQLiteAdapter(this.ctx);
+                projectWorkingTimesAdapter.open(this.getDb());
+                result = projectWorkingTimesAdapter.getByProject(projectId, WorkingTimeContract.ALIASED_COLS, selection, selectionArgs, null);
                 break;
 
             default:

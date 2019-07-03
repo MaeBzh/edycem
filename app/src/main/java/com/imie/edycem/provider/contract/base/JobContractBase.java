@@ -16,6 +16,7 @@ import android.content.ContentValues;
 import java.util.ArrayList;
 
 import com.imie.edycem.entity.Job;
+import com.imie.edycem.entity.User;
 
 
 
@@ -55,7 +56,7 @@ public abstract class JobContractBase {
         
         JobContract.COL_ID,
         
-        JobContract.COL_NAME
+        JobContract.COL_NAME,
     };
 
     /** Global Fields. */
@@ -63,7 +64,8 @@ public abstract class JobContractBase {
         
         JobContract.ALIASED_COL_ID,
         
-        JobContract.ALIASED_COL_NAME
+        JobContract.ALIASED_COL_NAME,
+        
     };
 
 
@@ -85,7 +87,7 @@ public abstract class JobContractBase {
                     item.getName());
             }
 
-
+ 
         return result;
     }
 

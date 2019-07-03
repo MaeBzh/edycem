@@ -20,10 +20,18 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ObjectArrays;
 import com.imie.edycem.data.SQLiteAdapter;
 import com.imie.edycem.data.UserSQLiteAdapter;
+import com.imie.edycem.data.JobSQLiteAdapter;
+import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
 import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.contract.JobContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.entity.User;
+import com.imie.edycem.entity.Job;
+import com.imie.edycem.entity.WorkingTime;
 
 import com.imie.edycem.harmony.util.DateUtils;
 import com.imie.edycem.EdycemApplication;
@@ -80,9 +88,13 @@ public abstract class UserSQLiteAdapterBase
          + UserContract.COL_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT,"
          + UserContract.COL_IDSMARTPHONE    + " VARCHAR NOT NULL,"
          + UserContract.COL_PASSWORD    + " VARCHAR NOT NULL,"
-         + UserContract.COL_DATERGPD    + " DATETIME NOT NULL"
+         + UserContract.COL_DATERGPD    + " DATETIME NOT NULL,"
+         + UserContract.COL_JOB_ID    + " INTEGER NOT NULL,"
 
         
+         + "FOREIGN KEY(" + UserContract.COL_JOB_ID + ") REFERENCES " 
+             + JobContract.TABLE_NAME 
+                + " (" + JobContract.COL_ID + ")"
         + ");"
 ;
     }
@@ -140,9 +152,56 @@ public abstract class UserSQLiteAdapterBase
         final User result = this.cursorToItem(cursor);
         cursor.close();
 
+        if (result.getJob() != null) {
+            final JobSQLiteAdapter jobAdapter =
+                    new JobSQLiteAdapter(this.ctx);
+            jobAdapter.open(this.mDatabase);
+
+            result.setJob(jobAdapter.getByID(
+                            result.getJob().getId()));
+        }
+        final WorkingTimeSQLiteAdapter userWorkingTimesAdapter =
+                new WorkingTimeSQLiteAdapter(this.ctx);
+        userWorkingTimesAdapter.open(this.mDatabase);
+        android.database.Cursor userworkingtimesCursor = userWorkingTimesAdapter
+                    .getByUser(
+                            result.getId(),
+                            WorkingTimeContract.ALIASED_COLS,
+                            null,
+                            null,
+                            null);
+        result.setUserWorkingTimes(userWorkingTimesAdapter.cursorToItems(userworkingtimesCursor));
+
+        userworkingtimesCursor.close();
         return result;
     }
 
+    /**
+     * Find & read User by job.
+     * @param jobId jobId
+     * @param orderBy Order by string (can be null)
+     * @return List of User entities
+     */
+     public android.database.Cursor getByJob(final int jobId, String[] projection, String selection, String[] selectionArgs, String orderBy) {
+        String idSelection = UserContract.COL_JOB_ID + "= ?";
+        String idSelectionArgs = String.valueOf(jobId);
+        if (!Strings.isNullOrEmpty(selection)) {
+            selection += " AND " + idSelection;
+            selectionArgs = ObjectArrays.concat(selectionArgs, idSelectionArgs);
+        } else {
+            selection = idSelection;
+            selectionArgs = new String[]{idSelectionArgs};
+        }
+        final android.database.Cursor cursor = this.query(
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                orderBy);
+
+        return cursor;
+     }
 
     /**
      * Read All Users entities.
@@ -184,6 +243,16 @@ public abstract class UserSQLiteAdapterBase
                     values);
         }
         item.setId(insertResult);
+        if (item.getUserWorkingTimes() != null) {
+            WorkingTimeSQLiteAdapterBase userWorkingTimesAdapter =
+                    new WorkingTimeSQLiteAdapter(this.ctx);
+            userWorkingTimesAdapter.open(this.mDatabase);
+            for (WorkingTime workingtime
+                        : item.getUserWorkingTimes()) {
+                workingtime.setUser(item);
+                userWorkingTimesAdapter.insertOrUpdate(workingtime);
+            }
+        }
         return insertResult;
     }
 

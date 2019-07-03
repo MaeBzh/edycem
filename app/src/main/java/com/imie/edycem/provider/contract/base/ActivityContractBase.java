@@ -16,6 +16,7 @@ import android.content.ContentValues;
 import java.util.ArrayList;
 
 import com.imie.edycem.entity.Activity;
+import com.imie.edycem.entity.Task;
 
 
 
@@ -55,7 +56,7 @@ public abstract class ActivityContractBase {
         
         ActivityContract.COL_ID,
         
-        ActivityContract.COL_NAME
+        ActivityContract.COL_NAME,
     };
 
     /** Global Fields. */
@@ -63,7 +64,8 @@ public abstract class ActivityContractBase {
         
         ActivityContract.ALIASED_COL_ID,
         
-        ActivityContract.ALIASED_COL_NAME
+        ActivityContract.ALIASED_COL_NAME,
+        
     };
 
 
@@ -85,7 +87,7 @@ public abstract class ActivityContractBase {
                     item.getName());
             }
 
-
+ 
         return result;
     }
 

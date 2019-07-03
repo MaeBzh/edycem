@@ -10,6 +10,7 @@ import com.tactfactory.harmony.annotation.Column;
 import com.tactfactory.harmony.annotation.Entity;
 import com.tactfactory.harmony.annotation.GeneratedValue;
 import com.tactfactory.harmony.annotation.Id;
+import com.tactfactory.harmony.annotation.OneToMany;
 import com.tactfactory.harmony.annotation.Table;
 
 import org.joda.time.DateTime;
@@ -33,18 +34,21 @@ public class Project implements Serializable, Parcelable {
     private String company;
     @Column(type = Column.Type.TEXT)
     private String claimantName;
-    @Column(type = Column.Type.TEXT)
+    @Column(type = Column.Type.TEXT, nullable = true)
     private String relevantSite;
-    @Column(type = Column.Type.BOOLEAN)
+    @Column(type = Column.Type.BOOLEAN, nullable = true)
     private boolean isEligibleCir;
-    @Column(type = Column.Type.BOOLEAN)
+    @Column(type = Column.Type.BOOLEAN, nullable = true)
     private boolean asPartOfPulpit;
-    @Column(type = Column.Type.DATETIME)
+    @Column(type = Column.Type.DATETIME, nullable = true)
     private DateTime deadline;
-    @Column(type = Column.Type.TEXT)
+    @Column(type = Column.Type.TEXT, nullable = true)
     private String documents;
-    @Column(type = Column.Type.TEXT)
+    @Column(type = Column.Type.TEXT, nullable = true)
     private String activityType;
+
+    @OneToMany(targetEntity = "WorkingTime", mappedBy = "project")
+    private ArrayList<WorkingTime> projectWorkingTimes;
 
 
     /**
@@ -281,8 +285,20 @@ public class Project implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
-    }
 
+        if (this.getProjectWorkingTimes() != null) {
+            dest.writeInt(this.getProjectWorkingTimes().size());
+            for (WorkingTime item : this.getProjectWorkingTimes()) {
+                if (!this.parcelableParents.contains(item)) {
+                    item.writeToParcel(this.parcelableParents, dest, flags);
+                } else {
+                    dest.writeParcelable(null, flags);
+                }
+            }
+        } else {
+            dest.writeInt(-1);
+        }
+    }
     /**
      * Regenerated Parcel Constructor. 
      *
@@ -328,7 +344,26 @@ public class Project implements Serializable, Parcelable {
         if (activityTypeBool == 1) {
             this.setActivityType(parc.readString());
         }
+
+        int nbProjectWorkingTimes = parc.readInt();
+        if (nbProjectWorkingTimes > -1) {
+            ArrayList<WorkingTime> items =
+                new ArrayList<WorkingTime>();
+            for (int i = 0; i < nbProjectWorkingTimes; i++) {
+                items.add((WorkingTime) parc.readParcelable(
+                        WorkingTime.class.getClassLoader()));
+            }
+            this.setProjectWorkingTimes(items);
+        }
     }
+
+
+
+
+
+
+
+
 
     /**
      * Parcel Constructor.
@@ -387,4 +422,18 @@ public class Project implements Serializable, Parcelable {
         }
     };
 
+     /**
+     * Get the ProjectWorkingTimes.
+     * @return the projectWorkingTimes
+     */
+    public ArrayList<WorkingTime> getProjectWorkingTimes() {
+         return this.projectWorkingTimes;
+    }
+     /**
+     * Set the ProjectWorkingTimes.
+     * @param value the projectWorkingTimes to set
+     */
+    public void setProjectWorkingTimes(final ArrayList<WorkingTime> value) {
+         this.projectWorkingTimes = value;
+    }
 }

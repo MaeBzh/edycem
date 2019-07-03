@@ -19,6 +19,7 @@ import com.imie.edycem.provider.contract.ProjectContract;
 import com.imie.edycem.data.ProjectSQLiteAdapter;
 
 import com.imie.edycem.entity.Project;
+import com.imie.edycem.entity.WorkingTime;
 
 
 import java.util.ArrayList;
@@ -147,6 +148,9 @@ public abstract class ProjectTestProviderBase extends TestDBBase {
 
             try {
                 project.setId(this.entity.getId());
+                if (this.entity.getProjectWorkingTimes() != null) {
+                    project.getProjectWorkingTimes().addAll(this.entity.getProjectWorkingTimes());
+                }
 
                 ContentValues values = ProjectContract.itemToContentValues(project);
                 result = this.provider.update(
@@ -261,6 +265,20 @@ public abstract class ProjectTestProviderBase extends TestDBBase {
             Project project = ProjectUtils.generateRandom(this.ctx);
 
             project.setId(this.entity.getId());
+            if (this.entity.getProjectWorkingTimes() != null) {
+                for (WorkingTime projectWorkingTimes : this.entity.getProjectWorkingTimes()) {
+                    boolean found = false;
+                    for (WorkingTime projectWorkingTimes2 : project.getProjectWorkingTimes()) {
+                        if (projectWorkingTimes.getId() == projectWorkingTimes2.getId() ) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found) {
+                        project.getProjectWorkingTimes().add(projectWorkingTimes);
+                    }
+                }
+            }
             result = this.providerUtils.update(project);
 
             Assert.assertTrue(result > 0);

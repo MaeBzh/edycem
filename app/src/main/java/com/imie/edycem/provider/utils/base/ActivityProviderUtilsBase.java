@@ -24,14 +24,20 @@ import android.os.RemoteException;
 
 
 import com.imie.edycem.provider.utils.ProviderUtils;
+import com.imie.edycem.criterias.base.Criterion;
+import com.imie.edycem.criterias.base.Criterion.Type;
+import com.imie.edycem.criterias.base.value.ArrayValue;
 import com.imie.edycem.criterias.base.CriteriaExpression;
 import com.imie.edycem.criterias.base.CriteriaExpression.GroupType;
 
 import com.imie.edycem.entity.Activity;
+import com.imie.edycem.entity.Task;
 
 import com.imie.edycem.provider.ActivityProviderAdapter;
+import com.imie.edycem.provider.TaskProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.ActivityContract;
+import com.imie.edycem.provider.contract.TaskContract;
 
 /**
  * Activity Provider Utils Base.
@@ -72,6 +78,30 @@ public abstract class ActivityProviderUtilsBase
                         .withValues(itemValues)
                         .build());
 
+        if (item.getTasks() != null && item.getTasks().size() > 0) {
+            CriteriaExpression crit = new CriteriaExpression(GroupType.AND);
+            Criterion inCrit = new Criterion();
+            crit.add(inCrit);
+
+            inCrit.setKey(TaskContract.COL_ID);
+            inCrit.setType(Type.IN);
+            ArrayValue inValue = new ArrayValue();
+            inCrit.addValue(inValue);
+
+            for (int i = 0; i < item.getTasks().size(); i++) {
+                inValue.addValue(String.valueOf(item.getTasks().get(i).getId()));
+            }
+
+            operations.add(ContentProviderOperation.newUpdate(TaskProviderAdapter.TASK_URI)
+                    .withValueBackReference(
+                            TaskContract
+                                    .COL_ACTIVITY_ID,
+                            0)
+                    .withSelection(
+                            crit.toSQLiteSelection(),
+                            crit.toSQLiteSelectionArgs())
+                    .build());
+        }
 
         try {
             ContentProviderResult[] results =
@@ -145,6 +175,8 @@ public abstract class ActivityProviderUtilsBase
             cursor.moveToFirst();
             result = ActivityContract.cursorToItem(cursor);
 
+            result.setTasks(
+                this.getAssociateTasks(result));
         }
         cursor.close();
 
@@ -222,6 +254,55 @@ public abstract class ActivityProviderUtilsBase
                 .build());
 
 
+        if (item.getTasks() != null && item.getTasks().size() > 0) {
+            String selection;
+            String[] selectionArgs;
+            // Set new tasks for Activity
+            CriteriaExpression tasksCrit =
+                        new CriteriaExpression(GroupType.AND);
+            Criterion crit = new Criterion();
+            ArrayValue values = new ArrayValue();
+            crit.setType(Type.IN);
+            crit.setKey(TaskContract.COL_ID);
+            crit.addValue(values);
+            tasksCrit.add(crit);
+
+
+            for (Task tasks : item.getTasks()) {
+                values.addValue(
+                    String.valueOf(tasks.getId()));
+            }
+            selection = tasksCrit.toSQLiteSelection();
+            selectionArgs = tasksCrit.toSQLiteSelectionArgs();
+
+            operations.add(ContentProviderOperation.newUpdate(
+                    TaskProviderAdapter.TASK_URI)
+                    .withValue(
+                            TaskContract.COL_ACTIVITY_ID,
+                            item.getId())
+                    .withSelection(
+                            selection,
+                            selectionArgs)
+                    .build());
+
+            // Remove old associated tasks
+            crit.setType(Type.NOT_IN);
+            tasksCrit.add(TaskContract.COL_ACTIVITY_ID,
+                    String.valueOf(item.getId()),
+                    Type.EQUALS);
+
+
+            operations.add(ContentProviderOperation.newUpdate(
+                    TaskProviderAdapter.TASK_URI)
+                    .withValue(
+                            TaskContract.COL_ACTIVITY_ID,
+                            null)
+                    .withSelection(
+                            tasksCrit.toSQLiteSelection(),
+                            tasksCrit.toSQLiteSelectionArgs())
+                    .build());
+        }
+
 
         try {
             ContentProviderResult[] results = prov.applyBatch(EdycemProvider.authority, operations);
@@ -235,5 +316,29 @@ public abstract class ActivityProviderUtilsBase
         return result;
     }
 
-    
+    /** Relations operations. */
+    /**
+     * Get associate Tasks.
+     * @param item Activity
+     * @return Task
+     */
+    public ArrayList<Task> getAssociateTasks(
+            final Activity item) {
+        ArrayList<Task> result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor taskCursor = prov.query(
+                TaskProviderAdapter.TASK_URI,
+                TaskContract.ALIASED_COLS,
+                TaskContract.ALIASED_COL_ACTIVITY_ID
+                        + "= ?",
+                new String[]{String.valueOf(item.getId())},
+                null);
+
+        result = TaskContract.cursorToItems(
+                        taskCursor);
+        taskCursor.close();
+
+        return result;
+    }
+
 }

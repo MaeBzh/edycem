@@ -18,10 +18,18 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ObjectArrays;
 import com.imie.edycem.data.SQLiteAdapter;
 import com.imie.edycem.data.TaskSQLiteAdapter;
+import com.imie.edycem.data.ActivitySQLiteAdapter;
+import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
 import com.imie.edycem.provider.contract.TaskContract;
+import com.imie.edycem.provider.contract.ActivityContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.entity.Task;
+import com.imie.edycem.entity.Activity;
+import com.imie.edycem.entity.WorkingTime;
 
 
 import com.imie.edycem.EdycemApplication;
@@ -76,9 +84,13 @@ public abstract class TaskSQLiteAdapterBase
         + TaskContract.TABLE_NAME    + " ("
         
          + TaskContract.COL_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-         + TaskContract.COL_NAME    + " VARCHAR NOT NULL"
+         + TaskContract.COL_NAME    + " VARCHAR NOT NULL,"
+         + TaskContract.COL_ACTIVITY_ID    + " INTEGER NOT NULL,"
 
         
+         + "FOREIGN KEY(" + TaskContract.COL_ACTIVITY_ID + ") REFERENCES " 
+             + ActivityContract.TABLE_NAME 
+                + " (" + ActivityContract.COL_ID + ")"
         + ");"
 ;
     }
@@ -136,9 +148,56 @@ public abstract class TaskSQLiteAdapterBase
         final Task result = this.cursorToItem(cursor);
         cursor.close();
 
+        if (result.getActivity() != null) {
+            final ActivitySQLiteAdapter activityAdapter =
+                    new ActivitySQLiteAdapter(this.ctx);
+            activityAdapter.open(this.mDatabase);
+
+            result.setActivity(activityAdapter.getByID(
+                            result.getActivity().getId()));
+        }
+        final WorkingTimeSQLiteAdapter taskWorkingTimesAdapter =
+                new WorkingTimeSQLiteAdapter(this.ctx);
+        taskWorkingTimesAdapter.open(this.mDatabase);
+        android.database.Cursor taskworkingtimesCursor = taskWorkingTimesAdapter
+                    .getByTask(
+                            result.getId(),
+                            WorkingTimeContract.ALIASED_COLS,
+                            null,
+                            null,
+                            null);
+        result.setTaskWorkingTimes(taskWorkingTimesAdapter.cursorToItems(taskworkingtimesCursor));
+
+        taskworkingtimesCursor.close();
         return result;
     }
 
+    /**
+     * Find & read Task by activity.
+     * @param activityId activityId
+     * @param orderBy Order by string (can be null)
+     * @return List of Task entities
+     */
+     public android.database.Cursor getByActivity(final int activityId, String[] projection, String selection, String[] selectionArgs, String orderBy) {
+        String idSelection = TaskContract.COL_ACTIVITY_ID + "= ?";
+        String idSelectionArgs = String.valueOf(activityId);
+        if (!Strings.isNullOrEmpty(selection)) {
+            selection += " AND " + idSelection;
+            selectionArgs = ObjectArrays.concat(selectionArgs, idSelectionArgs);
+        } else {
+            selection = idSelection;
+            selectionArgs = new String[]{idSelectionArgs};
+        }
+        final android.database.Cursor cursor = this.query(
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                orderBy);
+
+        return cursor;
+     }
 
     /**
      * Read All Tasks entities.
@@ -180,6 +239,16 @@ public abstract class TaskSQLiteAdapterBase
                     values);
         }
         item.setId(insertResult);
+        if (item.getTaskWorkingTimes() != null) {
+            WorkingTimeSQLiteAdapterBase taskWorkingTimesAdapter =
+                    new WorkingTimeSQLiteAdapter(this.ctx);
+            taskWorkingTimesAdapter.open(this.mDatabase);
+            for (WorkingTime workingtime
+                        : item.getTaskWorkingTimes()) {
+                workingtime.setTask(item);
+                taskWorkingTimesAdapter.insertOrUpdate(workingtime);
+            }
+        }
         return insertResult;
     }
 

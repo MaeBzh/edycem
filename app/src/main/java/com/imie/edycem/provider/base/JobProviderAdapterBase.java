@@ -25,7 +25,9 @@ import com.imie.edycem.entity.Job;
 import com.imie.edycem.provider.ProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.JobContract;
+import com.imie.edycem.provider.contract.UserContract;
 import com.imie.edycem.data.JobSQLiteAdapter;
+import com.imie.edycem.data.UserSQLiteAdapter;
 
 /**
  * JobProviderAdapterBase.
@@ -50,6 +52,9 @@ public abstract class JobProviderAdapterBase
     protected static final int JOB_ONE =
             74654;
 
+    /** JOB_USERS. */
+    protected static final int JOB_USERS =
+            74655;
 
     /**
      * Static constructor.
@@ -66,6 +71,10 @@ public abstract class JobProviderAdapterBase
                 EdycemProvider.authority,
                 jobType + "/#",
                 JOB_ONE);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                jobType + "/#" + "/users",
+                JOB_USERS);
     }
 
     /**
@@ -79,6 +88,7 @@ public abstract class JobProviderAdapterBase
 
         this.uriIds.add(JOB_ALL);
         this.uriIds.add(JOB_ONE);
+        this.uriIds.add(JOB_USERS);
     }
 
     @Override
@@ -100,6 +110,9 @@ public abstract class JobProviderAdapterBase
                 break;
             case JOB_ONE:
                 result = single + "job";
+                break;
+            case JOB_USERS:
+                result = collection + "job";
                 break;
             default:
                 result = null;
@@ -185,6 +198,7 @@ public abstract class JobProviderAdapterBase
 
         int matchedUri = EdycemProviderBase.getUriMatcher().match(uri);
         android.database.Cursor result = null;
+        int jobId;
 
         switch (matchedUri) {
 
@@ -199,6 +213,13 @@ public abstract class JobProviderAdapterBase
                 break;
             case JOB_ONE:
                 result = this.queryById(uri.getPathSegments().get(1));
+                break;
+
+            case JOB_USERS:
+                jobId = Integer.parseInt(uri.getPathSegments().get(1));
+                UserSQLiteAdapter usersAdapter = new UserSQLiteAdapter(this.ctx);
+                usersAdapter.open(this.getDb());
+                result = usersAdapter.getByJob(jobId, UserContract.ALIASED_COLS, selection, selectionArgs, null);
                 break;
 
             default:

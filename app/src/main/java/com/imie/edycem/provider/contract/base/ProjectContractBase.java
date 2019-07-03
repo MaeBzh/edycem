@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import com.imie.edycem.entity.Project;
+import com.imie.edycem.entity.WorkingTime;
 
 
 
@@ -139,7 +140,7 @@ public abstract class ProjectContractBase {
         
         ProjectContract.COL_DOCUMENTS,
         
-        ProjectContract.COL_ACTIVITYTYPE
+        ProjectContract.COL_ACTIVITYTYPE,
     };
 
     /** Global Fields. */
@@ -165,7 +166,8 @@ public abstract class ProjectContractBase {
         
         ProjectContract.ALIASED_COL_DOCUMENTS,
         
-        ProjectContract.ALIASED_COL_ACTIVITYTYPE
+        ProjectContract.ALIASED_COL_ACTIVITYTYPE,
+        
     };
 
 
@@ -205,6 +207,8 @@ public abstract class ProjectContractBase {
              if (item.getRelevantSite() != null) {
                 result.put(ProjectContract.COL_RELEVANTSITE,
                     item.getRelevantSite());
+            } else {
+                result.put(ProjectContract.COL_RELEVANTSITE, (String) null);
             }
 
              result.put(ProjectContract.COL_ISELIGIBLECIR,
@@ -216,19 +220,25 @@ public abstract class ProjectContractBase {
              if (item.getDeadline() != null) {
                 result.put(ProjectContract.COL_DEADLINE,
                     item.getDeadline().toString(ISODateTimeFormat.dateTime()));
+            } else {
+                result.put(ProjectContract.COL_DEADLINE, (String) null);
             }
 
              if (item.getDocuments() != null) {
                 result.put(ProjectContract.COL_DOCUMENTS,
                     item.getDocuments());
+            } else {
+                result.put(ProjectContract.COL_DOCUMENTS, (String) null);
             }
 
              if (item.getActivityType() != null) {
                 result.put(ProjectContract.COL_ACTIVITYTYPE,
                     item.getActivityType());
+            } else {
+                result.put(ProjectContract.COL_ACTIVITYTYPE, (String) null);
             }
 
-
+ 
         return result;
     }
 
@@ -282,38 +292,50 @@ public abstract class ProjectContractBase {
             index = cursor.getColumnIndex(ProjectContract.COL_RELEVANTSITE);
 
             if (index > -1) {
-                result.setRelevantSite(cursor.getString(index));
+            if (!cursor.isNull(index)) {
+                    result.setRelevantSite(cursor.getString(index));
+            }
             }
             index = cursor.getColumnIndex(ProjectContract.COL_ISELIGIBLECIR);
 
             if (index > -1) {
-                result.setIsEligibleCir(cursor.getInt(index) == 1);
+            if (!cursor.isNull(index)) {
+                    result.setIsEligibleCir(cursor.getInt(index) == 1);
+            }
             }
             index = cursor.getColumnIndex(ProjectContract.COL_ASPARTOFPULPIT);
 
             if (index > -1) {
-                result.setAsPartOfPulpit(cursor.getInt(index) == 1);
+            if (!cursor.isNull(index)) {
+                    result.setAsPartOfPulpit(cursor.getInt(index) == 1);
+            }
             }
             index = cursor.getColumnIndex(ProjectContract.COL_DEADLINE);
 
             if (index > -1) {
-                final DateTime dtDeadline =
+            if (!cursor.isNull(index)) {
+                    final DateTime dtDeadline =
                         DateUtils.formatISOStringToDateTime(cursor.getString(index));
-                if (dtDeadline != null) {
-                        result.setDeadline(dtDeadline);
-                } else {
-                    result.setDeadline(new DateTime());
-                }
+                    if (dtDeadline != null) {
+                            result.setDeadline(dtDeadline);
+                    } else {
+                        result.setDeadline(new DateTime());
+                    }
+            }
             }
             index = cursor.getColumnIndex(ProjectContract.COL_DOCUMENTS);
 
             if (index > -1) {
-                result.setDocuments(cursor.getString(index));
+            if (!cursor.isNull(index)) {
+                    result.setDocuments(cursor.getString(index));
+            }
             }
             index = cursor.getColumnIndex(ProjectContract.COL_ACTIVITYTYPE);
 
             if (index > -1) {
-                result.setActivityType(cursor.getString(index));
+            if (!cursor.isNull(index)) {
+                    result.setActivityType(cursor.getString(index));
+            }
             }
 
         }

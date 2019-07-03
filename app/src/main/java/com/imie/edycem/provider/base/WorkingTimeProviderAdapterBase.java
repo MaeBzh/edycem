@@ -26,6 +26,9 @@ import com.imie.edycem.provider.ProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
+import com.imie.edycem.data.UserSQLiteAdapter;
+import com.imie.edycem.data.ProjectSQLiteAdapter;
+import com.imie.edycem.data.TaskSQLiteAdapter;
 
 /**
  * WorkingTimeProviderAdapterBase.
@@ -50,6 +53,15 @@ public abstract class WorkingTimeProviderAdapterBase
     protected static final int WORKINGTIME_ONE =
             1797167487;
 
+    /** WORKINGTIME_USER. */
+    protected static final int WORKINGTIME_USER =
+            1797167488;
+    /** WORKINGTIME_PROJECT. */
+    protected static final int WORKINGTIME_PROJECT =
+            1797167489;
+    /** WORKINGTIME_TASK. */
+    protected static final int WORKINGTIME_TASK =
+            1797167490;
 
     /**
      * Static constructor.
@@ -66,6 +78,18 @@ public abstract class WorkingTimeProviderAdapterBase
                 EdycemProvider.authority,
                 workingTimeType + "/#",
                 WORKINGTIME_ONE);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                workingTimeType + "/#" + "/user",
+                WORKINGTIME_USER);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                workingTimeType + "/#" + "/project",
+                WORKINGTIME_PROJECT);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                workingTimeType + "/#" + "/task",
+                WORKINGTIME_TASK);
     }
 
     /**
@@ -79,6 +103,9 @@ public abstract class WorkingTimeProviderAdapterBase
 
         this.uriIds.add(WORKINGTIME_ALL);
         this.uriIds.add(WORKINGTIME_ONE);
+        this.uriIds.add(WORKINGTIME_USER);
+        this.uriIds.add(WORKINGTIME_PROJECT);
+        this.uriIds.add(WORKINGTIME_TASK);
     }
 
     @Override
@@ -99,6 +126,15 @@ public abstract class WorkingTimeProviderAdapterBase
                 result = collection + "workingtime";
                 break;
             case WORKINGTIME_ONE:
+                result = single + "workingtime";
+                break;
+            case WORKINGTIME_USER:
+                result = single + "workingtime";
+                break;
+            case WORKINGTIME_PROJECT:
+                result = single + "workingtime";
+                break;
+            case WORKINGTIME_TASK:
                 result = single + "workingtime";
                 break;
             default:
@@ -185,6 +221,7 @@ public abstract class WorkingTimeProviderAdapterBase
 
         int matchedUri = EdycemProviderBase.getUriMatcher().match(uri);
         android.database.Cursor result = null;
+        android.database.Cursor workingTimeCursor;
 
         switch (matchedUri) {
 
@@ -199,6 +236,54 @@ public abstract class WorkingTimeProviderAdapterBase
                 break;
             case WORKINGTIME_ONE:
                 result = this.queryById(uri.getPathSegments().get(1));
+                break;
+
+            case WORKINGTIME_USER:
+                workingTimeCursor = this.queryById(
+                        uri.getPathSegments().get(1));
+
+                if (workingTimeCursor.getCount() > 0) {
+                    workingTimeCursor.moveToFirst();
+                    int userId = workingTimeCursor.getInt(
+                            workingTimeCursor.getColumnIndex(
+                                    WorkingTimeContract.COL_USER_ID));
+
+                    UserSQLiteAdapter userAdapter = new UserSQLiteAdapter(this.ctx);
+                    userAdapter.open(this.getDb());
+                    result = userAdapter.query(userId);
+                }
+                break;
+
+            case WORKINGTIME_PROJECT:
+                workingTimeCursor = this.queryById(
+                        uri.getPathSegments().get(1));
+
+                if (workingTimeCursor.getCount() > 0) {
+                    workingTimeCursor.moveToFirst();
+                    int projectId = workingTimeCursor.getInt(
+                            workingTimeCursor.getColumnIndex(
+                                    WorkingTimeContract.COL_PROJECT_ID));
+
+                    ProjectSQLiteAdapter projectAdapter = new ProjectSQLiteAdapter(this.ctx);
+                    projectAdapter.open(this.getDb());
+                    result = projectAdapter.query(projectId);
+                }
+                break;
+
+            case WORKINGTIME_TASK:
+                workingTimeCursor = this.queryById(
+                        uri.getPathSegments().get(1));
+
+                if (workingTimeCursor.getCount() > 0) {
+                    workingTimeCursor.moveToFirst();
+                    int taskId = workingTimeCursor.getInt(
+                            workingTimeCursor.getColumnIndex(
+                                    WorkingTimeContract.COL_TASK_ID));
+
+                    TaskSQLiteAdapter taskAdapter = new TaskSQLiteAdapter(this.ctx);
+                    taskAdapter.open(this.getDb());
+                    result = taskAdapter.query(taskId);
+                }
                 break;
 
             default:

@@ -20,8 +20,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.imie.edycem.data.SQLiteAdapter;
 import com.imie.edycem.data.ActivitySQLiteAdapter;
+import com.imie.edycem.data.TaskSQLiteAdapter;
 import com.imie.edycem.provider.contract.ActivityContract;
+import com.imie.edycem.provider.contract.TaskContract;
 import com.imie.edycem.entity.Activity;
+import com.imie.edycem.entity.Task;
 
 
 import com.imie.edycem.EdycemApplication;
@@ -136,6 +139,19 @@ public abstract class ActivitySQLiteAdapterBase
         final Activity result = this.cursorToItem(cursor);
         cursor.close();
 
+        final TaskSQLiteAdapter tasksAdapter =
+                new TaskSQLiteAdapter(this.ctx);
+        tasksAdapter.open(this.mDatabase);
+        android.database.Cursor tasksCursor = tasksAdapter
+                    .getByActivity(
+                            result.getId(),
+                            TaskContract.ALIASED_COLS,
+                            null,
+                            null,
+                            null);
+        result.setTasks(tasksAdapter.cursorToItems(tasksCursor));
+
+        tasksCursor.close();
         return result;
     }
 
@@ -180,6 +196,16 @@ public abstract class ActivitySQLiteAdapterBase
                     values);
         }
         item.setId(insertResult);
+        if (item.getTasks() != null) {
+            TaskSQLiteAdapterBase tasksAdapter =
+                    new TaskSQLiteAdapter(this.ctx);
+            tasksAdapter.open(this.mDatabase);
+            for (Task task
+                        : item.getTasks()) {
+                task.setActivity(item);
+                tasksAdapter.insertOrUpdate(task);
+            }
+        }
         return insertResult;
     }
 

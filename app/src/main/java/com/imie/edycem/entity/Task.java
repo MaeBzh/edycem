@@ -9,9 +9,9 @@ import com.tactfactory.harmony.annotation.Column;
 import com.tactfactory.harmony.annotation.Entity;
 import com.tactfactory.harmony.annotation.GeneratedValue;
 import com.tactfactory.harmony.annotation.Id;
+import com.tactfactory.harmony.annotation.ManyToOne;
+import com.tactfactory.harmony.annotation.OneToMany;
 import com.tactfactory.harmony.annotation.Table;
-
-import org.joda.time.DateTime;
 
 @Entity
 @Table
@@ -26,6 +26,11 @@ public class Task implements Serializable, Parcelable {
     private int id;
     @Column(type = Column.Type.TEXT)
     private String name;
+    
+    @ManyToOne(targetEntity = "Activity", inversedBy = "tasks")
+    private Activity activity;
+    @OneToMany(targetEntity = "WorkingTime", mappedBy = "task")
+    private ArrayList<WorkingTime> taskWorkingTimes;
 
     /**
      * Default constructor.
@@ -82,8 +87,26 @@ public class Task implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
-    }
+        if (this.getActivity() != null
+                    && !this.parcelableParents.contains(this.getActivity())) {
+            this.getActivity().writeToParcel(this.parcelableParents, dest, flags);
+        } else {
+            dest.writeParcelable(null, flags);
+        }
 
+        if (this.getTaskWorkingTimes() != null) {
+            dest.writeInt(this.getTaskWorkingTimes().size());
+            for (WorkingTime item : this.getTaskWorkingTimes()) {
+                if (!this.parcelableParents.contains(item)) {
+                    item.writeToParcel(this.parcelableParents, dest, flags);
+                } else {
+                    dest.writeParcelable(null, flags);
+                }
+            }
+        } else {
+            dest.writeInt(-1);
+        }
+    }
     /**
      * Regenerated Parcel Constructor. 
      *
@@ -97,7 +120,27 @@ public class Task implements Serializable, Parcelable {
         if (nameBool == 1) {
             this.setName(parc.readString());
         }
+        this.setActivity((Activity) parc.readParcelable(Activity.class.getClassLoader()));
+
+        int nbTaskWorkingTimes = parc.readInt();
+        if (nbTaskWorkingTimes > -1) {
+            ArrayList<WorkingTime> items =
+                new ArrayList<WorkingTime>();
+            for (int i = 0; i < nbTaskWorkingTimes; i++) {
+                items.add((WorkingTime) parc.readParcelable(
+                        WorkingTime.class.getClassLoader()));
+            }
+            this.setTaskWorkingTimes(items);
+        }
     }
+
+
+
+
+
+
+
+
 
     /**
      * Parcel Constructor.
@@ -156,4 +199,32 @@ public class Task implements Serializable, Parcelable {
         }
     };
 
+     /**
+     * Get the Activity.
+     * @return the activity
+     */
+    public Activity getActivity() {
+         return this.activity;
+    }
+     /**
+     * Set the Activity.
+     * @param value the activity to set
+     */
+    public void setActivity(final Activity value) {
+         this.activity = value;
+    }
+     /**
+     * Get the TaskWorkingTimes.
+     * @return the taskWorkingTimes
+     */
+    public ArrayList<WorkingTime> getTaskWorkingTimes() {
+         return this.taskWorkingTimes;
+    }
+     /**
+     * Set the TaskWorkingTimes.
+     * @param value the taskWorkingTimes to set
+     */
+    public void setTaskWorkingTimes(final ArrayList<WorkingTime> value) {
+         this.taskWorkingTimes = value;
+    }
 }

@@ -18,6 +18,12 @@ import com.imie.edycem.entity.WorkingTime;
 
 import com.imie.edycem.test.utils.TestUtils;
 
+import com.imie.edycem.test.utils.UserUtils;
+
+import com.imie.edycem.test.utils.ProjectUtils;
+
+import com.imie.edycem.test.utils.TaskUtils;
+
 
 /** WorkingTime utils test class base. */
 public abstract class WorkingTimeUtilsBase {
@@ -35,6 +41,9 @@ public abstract class WorkingTimeUtilsBase {
         workingTime.setDate(TestUtils.generateRandomDate());
         workingTime.setSpentTime("spentTime_"+TestUtils.generateRandomString(10));
         workingTime.setDescription("description_"+TestUtils.generateRandomString(10));
+        workingTime.setUser(UserUtils.generateRandom(ctx));
+        workingTime.setProject(ProjectUtils.generateRandom(ctx));
+        workingTime.setTask(TaskUtils.generateRandom(ctx));
 
         return workingTime;
     }
@@ -55,6 +64,27 @@ public abstract class WorkingTimeUtilsBase {
             Assert.assertTrue(workingTime1.getDate().isEqual(workingTime2.getDate()));
             Assert.assertEquals(workingTime1.getSpentTime(), workingTime2.getSpentTime());
             Assert.assertEquals(workingTime1.getDescription(), workingTime2.getDescription());
+            if (workingTime1.getUser() != null
+                    && workingTime2.getUser() != null) {
+                if (checkRecursiveId) {
+                    Assert.assertEquals(workingTime1.getUser().getId(),
+                            workingTime2.getUser().getId());
+                }
+            }
+            if (workingTime1.getProject() != null
+                    && workingTime2.getProject() != null) {
+                if (checkRecursiveId) {
+                    Assert.assertEquals(workingTime1.getProject().getId(),
+                            workingTime2.getProject().getId());
+                }
+            }
+            if (workingTime1.getTask() != null
+                    && workingTime2.getTask() != null) {
+                if (checkRecursiveId) {
+                    Assert.assertEquals(workingTime1.getTask().getId(),
+                            workingTime2.getTask().getId());
+                }
+            }
         }
 
         return ret;

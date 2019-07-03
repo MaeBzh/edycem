@@ -9,6 +9,7 @@ import com.tactfactory.harmony.annotation.Column;
 import com.tactfactory.harmony.annotation.Entity;
 import com.tactfactory.harmony.annotation.GeneratedValue;
 import com.tactfactory.harmony.annotation.Id;
+import com.tactfactory.harmony.annotation.OneToMany;
 import com.tactfactory.harmony.annotation.Table;
 
 @Entity
@@ -24,6 +25,9 @@ public class Job implements Serializable, Parcelable {
     private int id;
     @Column(type = Column.Type.TEXT)
     private String name;
+
+    @OneToMany(targetEntity = "user", mappedBy = "job")
+    private ArrayList<User> users;
 
     /**
      * Default constructor.
@@ -80,8 +84,20 @@ public class Job implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
-    }
 
+        if (this.getUsers() != null) {
+            dest.writeInt(this.getUsers().size());
+            for (User item : this.getUsers()) {
+                if (!this.parcelableParents.contains(item)) {
+                    item.writeToParcel(this.parcelableParents, dest, flags);
+                } else {
+                    dest.writeParcelable(null, flags);
+                }
+            }
+        } else {
+            dest.writeInt(-1);
+        }
+    }
     /**
      * Regenerated Parcel Constructor. 
      *
@@ -95,7 +111,26 @@ public class Job implements Serializable, Parcelable {
         if (nameBool == 1) {
             this.setName(parc.readString());
         }
+
+        int nbUsers = parc.readInt();
+        if (nbUsers > -1) {
+            ArrayList<User> items =
+                new ArrayList<User>();
+            for (int i = 0; i < nbUsers; i++) {
+                items.add((User) parc.readParcelable(
+                        User.class.getClassLoader()));
+            }
+            this.setUsers(items);
+        }
     }
+
+
+
+
+
+
+
+
 
     /**
      * Parcel Constructor.
@@ -154,4 +189,18 @@ public class Job implements Serializable, Parcelable {
         }
     };
 
+     /**
+     * Get the Users.
+     * @return the users
+     */
+    public ArrayList<User> getUsers() {
+         return this.users;
+    }
+     /**
+     * Set the Users.
+     * @param value the users to set
+     */
+    public void setUsers(final ArrayList<User> value) {
+         this.users = value;
+    }
 }

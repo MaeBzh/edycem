@@ -24,14 +24,23 @@ import android.os.RemoteException;
 
 
 import com.imie.edycem.provider.utils.ProviderUtils;
+import com.imie.edycem.criterias.base.Criterion;
+import com.imie.edycem.criterias.base.Criterion.Type;
+import com.imie.edycem.criterias.base.value.ArrayValue;
 import com.imie.edycem.criterias.base.CriteriaExpression;
 import com.imie.edycem.criterias.base.CriteriaExpression.GroupType;
 
 import com.imie.edycem.entity.Task;
+import com.imie.edycem.entity.Activity;
+import com.imie.edycem.entity.WorkingTime;
 
 import com.imie.edycem.provider.TaskProviderAdapter;
+import com.imie.edycem.provider.ActivityProviderAdapter;
+import com.imie.edycem.provider.WorkingTimeProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.TaskContract;
+import com.imie.edycem.provider.contract.ActivityContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 
 /**
  * Task Provider Utils Base.
@@ -72,6 +81,30 @@ public abstract class TaskProviderUtilsBase
                         .withValues(itemValues)
                         .build());
 
+        if (item.getTaskWorkingTimes() != null && item.getTaskWorkingTimes().size() > 0) {
+            CriteriaExpression crit = new CriteriaExpression(GroupType.AND);
+            Criterion inCrit = new Criterion();
+            crit.add(inCrit);
+
+            inCrit.setKey(WorkingTimeContract.COL_ID);
+            inCrit.setType(Type.IN);
+            ArrayValue inValue = new ArrayValue();
+            inCrit.addValue(inValue);
+
+            for (int i = 0; i < item.getTaskWorkingTimes().size(); i++) {
+                inValue.addValue(String.valueOf(item.getTaskWorkingTimes().get(i).getId()));
+            }
+
+            operations.add(ContentProviderOperation.newUpdate(WorkingTimeProviderAdapter.WORKINGTIME_URI)
+                    .withValueBackReference(
+                            WorkingTimeContract
+                                    .COL_TASK_ID,
+                            0)
+                    .withSelection(
+                            crit.toSQLiteSelection(),
+                            crit.toSQLiteSelectionArgs())
+                    .build());
+        }
 
         try {
             ContentProviderResult[] results =
@@ -145,6 +178,12 @@ public abstract class TaskProviderUtilsBase
             cursor.moveToFirst();
             result = TaskContract.cursorToItem(cursor);
 
+            if (result.getActivity() != null) {
+                result.setActivity(
+                    this.getAssociateActivity(result));
+            }
+            result.setTaskWorkingTimes(
+                this.getAssociateTaskWorkingTimes(result));
         }
         cursor.close();
 
@@ -222,6 +261,55 @@ public abstract class TaskProviderUtilsBase
                 .build());
 
 
+        if (item.getTaskWorkingTimes() != null && item.getTaskWorkingTimes().size() > 0) {
+            String selection;
+            String[] selectionArgs;
+            // Set new taskWorkingTimes for Task
+            CriteriaExpression taskWorkingTimesCrit =
+                        new CriteriaExpression(GroupType.AND);
+            Criterion crit = new Criterion();
+            ArrayValue values = new ArrayValue();
+            crit.setType(Type.IN);
+            crit.setKey(WorkingTimeContract.COL_ID);
+            crit.addValue(values);
+            taskWorkingTimesCrit.add(crit);
+
+
+            for (WorkingTime taskWorkingTimes : item.getTaskWorkingTimes()) {
+                values.addValue(
+                    String.valueOf(taskWorkingTimes.getId()));
+            }
+            selection = taskWorkingTimesCrit.toSQLiteSelection();
+            selectionArgs = taskWorkingTimesCrit.toSQLiteSelectionArgs();
+
+            operations.add(ContentProviderOperation.newUpdate(
+                    WorkingTimeProviderAdapter.WORKINGTIME_URI)
+                    .withValue(
+                            WorkingTimeContract.COL_TASK_ID,
+                            item.getId())
+                    .withSelection(
+                            selection,
+                            selectionArgs)
+                    .build());
+
+            // Remove old associated taskWorkingTimes
+            crit.setType(Type.NOT_IN);
+            taskWorkingTimesCrit.add(WorkingTimeContract.COL_TASK_ID,
+                    String.valueOf(item.getId()),
+                    Type.EQUALS);
+
+
+            operations.add(ContentProviderOperation.newUpdate(
+                    WorkingTimeProviderAdapter.WORKINGTIME_URI)
+                    .withValue(
+                            WorkingTimeContract.COL_TASK_ID,
+                            null)
+                    .withSelection(
+                            taskWorkingTimesCrit.toSQLiteSelection(),
+                            taskWorkingTimesCrit.toSQLiteSelectionArgs())
+                    .build());
+        }
+
 
         try {
             ContentProviderResult[] results = prov.applyBatch(EdycemProvider.authority, operations);
@@ -235,5 +323,56 @@ public abstract class TaskProviderUtilsBase
         return result;
     }
 
-    
+    /** Relations operations. */
+    /**
+     * Get associate Activity.
+     * @param item Task
+     * @return Activity
+     */
+    public Activity getAssociateActivity(
+            final Task item) {
+        Activity result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor activityCursor = prov.query(
+                ActivityProviderAdapter.ACTIVITY_URI,
+                ActivityContract.ALIASED_COLS,
+                ActivityContract.ALIASED_COL_ID + "= ?",
+                new String[]{String.valueOf(item.getActivity().getId())},
+                null);
+
+        if (activityCursor.getCount() > 0) {
+            activityCursor.moveToFirst();
+            result = ActivityContract.cursorToItem(activityCursor);
+        } else {
+            result = null;
+        }
+        activityCursor.close();
+
+        return result;
+    }
+
+    /**
+     * Get associate TaskWorkingTimes.
+     * @param item Task
+     * @return WorkingTime
+     */
+    public ArrayList<WorkingTime> getAssociateTaskWorkingTimes(
+            final Task item) {
+        ArrayList<WorkingTime> result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor workingTimeCursor = prov.query(
+                WorkingTimeProviderAdapter.WORKINGTIME_URI,
+                WorkingTimeContract.ALIASED_COLS,
+                WorkingTimeContract.ALIASED_COL_TASK_ID
+                        + "= ?",
+                new String[]{String.valueOf(item.getId())},
+                null);
+
+        result = WorkingTimeContract.cursorToItems(
+                        workingTimeCursor);
+        workingTimeCursor.close();
+
+        return result;
+    }
+
 }

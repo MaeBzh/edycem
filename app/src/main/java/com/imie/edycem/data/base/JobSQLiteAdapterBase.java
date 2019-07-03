@@ -20,8 +20,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.imie.edycem.data.SQLiteAdapter;
 import com.imie.edycem.data.JobSQLiteAdapter;
+import com.imie.edycem.data.UserSQLiteAdapter;
 import com.imie.edycem.provider.contract.JobContract;
+import com.imie.edycem.provider.contract.UserContract;
 import com.imie.edycem.entity.Job;
+import com.imie.edycem.entity.User;
 
 
 import com.imie.edycem.EdycemApplication;
@@ -136,6 +139,19 @@ public abstract class JobSQLiteAdapterBase
         final Job result = this.cursorToItem(cursor);
         cursor.close();
 
+        final UserSQLiteAdapter usersAdapter =
+                new UserSQLiteAdapter(this.ctx);
+        usersAdapter.open(this.mDatabase);
+        android.database.Cursor usersCursor = usersAdapter
+                    .getByJob(
+                            result.getId(),
+                            UserContract.ALIASED_COLS,
+                            null,
+                            null,
+                            null);
+        result.setUsers(usersAdapter.cursorToItems(usersCursor));
+
+        usersCursor.close();
         return result;
     }
 
@@ -180,6 +196,16 @@ public abstract class JobSQLiteAdapterBase
                     values);
         }
         item.setId(insertResult);
+        if (item.getUsers() != null) {
+            UserSQLiteAdapterBase usersAdapter =
+                    new UserSQLiteAdapter(this.ctx);
+            usersAdapter.open(this.mDatabase);
+            for (User user
+                        : item.getUsers()) {
+                user.setJob(item);
+                usersAdapter.insertOrUpdate(user);
+            }
+        }
         return insertResult;
     }
 

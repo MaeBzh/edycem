@@ -24,14 +24,20 @@ import android.os.RemoteException;
 
 
 import com.imie.edycem.provider.utils.ProviderUtils;
+import com.imie.edycem.criterias.base.Criterion;
+import com.imie.edycem.criterias.base.Criterion.Type;
+import com.imie.edycem.criterias.base.value.ArrayValue;
 import com.imie.edycem.criterias.base.CriteriaExpression;
 import com.imie.edycem.criterias.base.CriteriaExpression.GroupType;
 
 import com.imie.edycem.entity.Project;
+import com.imie.edycem.entity.WorkingTime;
 
 import com.imie.edycem.provider.ProjectProviderAdapter;
+import com.imie.edycem.provider.WorkingTimeProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.ProjectContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 
 /**
  * Project Provider Utils Base.
@@ -72,6 +78,30 @@ public abstract class ProjectProviderUtilsBase
                         .withValues(itemValues)
                         .build());
 
+        if (item.getProjectWorkingTimes() != null && item.getProjectWorkingTimes().size() > 0) {
+            CriteriaExpression crit = new CriteriaExpression(GroupType.AND);
+            Criterion inCrit = new Criterion();
+            crit.add(inCrit);
+
+            inCrit.setKey(WorkingTimeContract.COL_ID);
+            inCrit.setType(Type.IN);
+            ArrayValue inValue = new ArrayValue();
+            inCrit.addValue(inValue);
+
+            for (int i = 0; i < item.getProjectWorkingTimes().size(); i++) {
+                inValue.addValue(String.valueOf(item.getProjectWorkingTimes().get(i).getId()));
+            }
+
+            operations.add(ContentProviderOperation.newUpdate(WorkingTimeProviderAdapter.WORKINGTIME_URI)
+                    .withValueBackReference(
+                            WorkingTimeContract
+                                    .COL_PROJECT_ID,
+                            0)
+                    .withSelection(
+                            crit.toSQLiteSelection(),
+                            crit.toSQLiteSelectionArgs())
+                    .build());
+        }
 
         try {
             ContentProviderResult[] results =
@@ -145,6 +175,8 @@ public abstract class ProjectProviderUtilsBase
             cursor.moveToFirst();
             result = ProjectContract.cursorToItem(cursor);
 
+            result.setProjectWorkingTimes(
+                this.getAssociateProjectWorkingTimes(result));
         }
         cursor.close();
 
@@ -222,6 +254,55 @@ public abstract class ProjectProviderUtilsBase
                 .build());
 
 
+        if (item.getProjectWorkingTimes() != null && item.getProjectWorkingTimes().size() > 0) {
+            String selection;
+            String[] selectionArgs;
+            // Set new projectWorkingTimes for Project
+            CriteriaExpression projectWorkingTimesCrit =
+                        new CriteriaExpression(GroupType.AND);
+            Criterion crit = new Criterion();
+            ArrayValue values = new ArrayValue();
+            crit.setType(Type.IN);
+            crit.setKey(WorkingTimeContract.COL_ID);
+            crit.addValue(values);
+            projectWorkingTimesCrit.add(crit);
+
+
+            for (WorkingTime projectWorkingTimes : item.getProjectWorkingTimes()) {
+                values.addValue(
+                    String.valueOf(projectWorkingTimes.getId()));
+            }
+            selection = projectWorkingTimesCrit.toSQLiteSelection();
+            selectionArgs = projectWorkingTimesCrit.toSQLiteSelectionArgs();
+
+            operations.add(ContentProviderOperation.newUpdate(
+                    WorkingTimeProviderAdapter.WORKINGTIME_URI)
+                    .withValue(
+                            WorkingTimeContract.COL_PROJECT_ID,
+                            item.getId())
+                    .withSelection(
+                            selection,
+                            selectionArgs)
+                    .build());
+
+            // Remove old associated projectWorkingTimes
+            crit.setType(Type.NOT_IN);
+            projectWorkingTimesCrit.add(WorkingTimeContract.COL_PROJECT_ID,
+                    String.valueOf(item.getId()),
+                    Type.EQUALS);
+
+
+            operations.add(ContentProviderOperation.newUpdate(
+                    WorkingTimeProviderAdapter.WORKINGTIME_URI)
+                    .withValue(
+                            WorkingTimeContract.COL_PROJECT_ID,
+                            null)
+                    .withSelection(
+                            projectWorkingTimesCrit.toSQLiteSelection(),
+                            projectWorkingTimesCrit.toSQLiteSelectionArgs())
+                    .build());
+        }
+
 
         try {
             ContentProviderResult[] results = prov.applyBatch(EdycemProvider.authority, operations);
@@ -235,5 +316,29 @@ public abstract class ProjectProviderUtilsBase
         return result;
     }
 
-    
+    /** Relations operations. */
+    /**
+     * Get associate ProjectWorkingTimes.
+     * @param item Project
+     * @return WorkingTime
+     */
+    public ArrayList<WorkingTime> getAssociateProjectWorkingTimes(
+            final Project item) {
+        ArrayList<WorkingTime> result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor workingTimeCursor = prov.query(
+                WorkingTimeProviderAdapter.WORKINGTIME_URI,
+                WorkingTimeContract.ALIASED_COLS,
+                WorkingTimeContract.ALIASED_COL_PROJECT_ID
+                        + "= ?",
+                new String[]{String.valueOf(item.getId())},
+                null);
+
+        result = WorkingTimeContract.cursorToItems(
+                        workingTimeCursor);
+        workingTimeCursor.close();
+
+        return result;
+    }
+
 }

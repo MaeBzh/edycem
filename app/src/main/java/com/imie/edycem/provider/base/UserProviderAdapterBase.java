@@ -25,7 +25,10 @@ import com.imie.edycem.entity.User;
 import com.imie.edycem.provider.ProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.data.UserSQLiteAdapter;
+import com.imie.edycem.data.JobSQLiteAdapter;
+import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
 
 /**
  * UserProviderAdapterBase.
@@ -50,6 +53,12 @@ public abstract class UserProviderAdapterBase
     protected static final int USER_ONE =
             2645996;
 
+    /** USER_JOB. */
+    protected static final int USER_JOB =
+            2645997;
+    /** USER_USERWORKINGTIMES. */
+    protected static final int USER_USERWORKINGTIMES =
+            2645998;
 
     /**
      * Static constructor.
@@ -66,6 +75,14 @@ public abstract class UserProviderAdapterBase
                 EdycemProvider.authority,
                 userType + "/#",
                 USER_ONE);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                userType + "/#" + "/job",
+                USER_JOB);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                userType + "/#" + "/userworkingtimes",
+                USER_USERWORKINGTIMES);
     }
 
     /**
@@ -79,6 +96,8 @@ public abstract class UserProviderAdapterBase
 
         this.uriIds.add(USER_ALL);
         this.uriIds.add(USER_ONE);
+        this.uriIds.add(USER_JOB);
+        this.uriIds.add(USER_USERWORKINGTIMES);
     }
 
     @Override
@@ -100,6 +119,12 @@ public abstract class UserProviderAdapterBase
                 break;
             case USER_ONE:
                 result = single + "user";
+                break;
+            case USER_JOB:
+                result = single + "user";
+                break;
+            case USER_USERWORKINGTIMES:
+                result = collection + "user";
                 break;
             default:
                 result = null;
@@ -185,6 +210,8 @@ public abstract class UserProviderAdapterBase
 
         int matchedUri = EdycemProviderBase.getUriMatcher().match(uri);
         android.database.Cursor result = null;
+        android.database.Cursor userCursor;
+        int userId;
 
         switch (matchedUri) {
 
@@ -199,6 +226,29 @@ public abstract class UserProviderAdapterBase
                 break;
             case USER_ONE:
                 result = this.queryById(uri.getPathSegments().get(1));
+                break;
+
+            case USER_JOB:
+                userCursor = this.queryById(
+                        uri.getPathSegments().get(1));
+
+                if (userCursor.getCount() > 0) {
+                    userCursor.moveToFirst();
+                    int jobId = userCursor.getInt(
+                            userCursor.getColumnIndex(
+                                    UserContract.COL_JOB_ID));
+
+                    JobSQLiteAdapter jobAdapter = new JobSQLiteAdapter(this.ctx);
+                    jobAdapter.open(this.getDb());
+                    result = jobAdapter.query(jobId);
+                }
+                break;
+
+            case USER_USERWORKINGTIMES:
+                userId = Integer.parseInt(uri.getPathSegments().get(1));
+                WorkingTimeSQLiteAdapter userWorkingTimesAdapter = new WorkingTimeSQLiteAdapter(this.ctx);
+                userWorkingTimesAdapter.open(this.getDb());
+                result = userWorkingTimesAdapter.getByUser(userId, WorkingTimeContract.ALIASED_COLS, selection, selectionArgs, null);
                 break;
 
             default:

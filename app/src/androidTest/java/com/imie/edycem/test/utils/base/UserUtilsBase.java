@@ -18,6 +18,11 @@ import com.imie.edycem.entity.User;
 
 import com.imie.edycem.test.utils.TestUtils;
 
+import com.imie.edycem.test.utils.JobUtils;
+import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.test.utils.WorkingTimeUtils;
+
+import java.util.ArrayList;
 
 /** User utils test class base. */
 public abstract class UserUtilsBase {
@@ -35,6 +40,10 @@ public abstract class UserUtilsBase {
         user.setIdSmartphone("idSmartphone_"+TestUtils.generateRandomString(10));
         user.setPassword("password_"+TestUtils.generateRandomString(10));
         user.setDateRgpd(TestUtils.generateRandomDateTime());
+        user.setJob(JobUtils.generateRandom(ctx));
+        ArrayList<WorkingTime> relatedUserWorkingTimess = new ArrayList<WorkingTime>();
+        relatedUserWorkingTimess.add(WorkingTimeUtils.generateRandom(ctx));
+        user.setUserWorkingTimes(relatedUserWorkingTimess);
 
         return user;
     }
@@ -55,6 +64,34 @@ public abstract class UserUtilsBase {
             Assert.assertEquals(user1.getIdSmartphone(), user2.getIdSmartphone());
             Assert.assertEquals(user1.getPassword(), user2.getPassword());
             Assert.assertTrue(user1.getDateRgpd().isEqual(user2.getDateRgpd()));
+            if (user1.getJob() != null
+                    && user2.getJob() != null) {
+                if (checkRecursiveId) {
+                    Assert.assertEquals(user1.getJob().getId(),
+                            user2.getJob().getId());
+                }
+            }
+            if (user1.getUserWorkingTimes() != null
+                    && user2.getUserWorkingTimes() != null) {
+                Assert.assertEquals(user1.getUserWorkingTimes().size(),
+                    user2.getUserWorkingTimes().size());
+                if (checkRecursiveId) {
+                    for (WorkingTime userWorkingTimes1 : user1.getUserWorkingTimes()) {
+                        boolean found = false;
+                        for (WorkingTime userWorkingTimes2 : user2.getUserWorkingTimes()) {
+                            if (userWorkingTimes1.getId() == userWorkingTimes2.getId()) {
+                                found = true;
+                            }
+                        }
+                        Assert.assertTrue(
+                                String.format(
+                                        "Couldn't find associated userWorkingTimes (id = %s) in User (id = %s)",
+                                        userWorkingTimes1.getId(),
+                                        user1.getId()),
+                                found);
+                    }
+                }
+            }
         }
 
         return ret;

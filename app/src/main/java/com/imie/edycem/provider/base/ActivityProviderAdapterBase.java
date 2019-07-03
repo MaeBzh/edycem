@@ -25,7 +25,9 @@ import com.imie.edycem.entity.Activity;
 import com.imie.edycem.provider.ProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.ActivityContract;
+import com.imie.edycem.provider.contract.TaskContract;
 import com.imie.edycem.data.ActivitySQLiteAdapter;
+import com.imie.edycem.data.TaskSQLiteAdapter;
 
 /**
  * ActivityProviderAdapterBase.
@@ -50,6 +52,9 @@ public abstract class ActivityProviderAdapterBase
     protected static final int ACTIVITY_ONE =
             1591322834;
 
+    /** ACTIVITY_TASKS. */
+    protected static final int ACTIVITY_TASKS =
+            1591322835;
 
     /**
      * Static constructor.
@@ -66,6 +71,10 @@ public abstract class ActivityProviderAdapterBase
                 EdycemProvider.authority,
                 activityType + "/#",
                 ACTIVITY_ONE);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                activityType + "/#" + "/tasks",
+                ACTIVITY_TASKS);
     }
 
     /**
@@ -79,6 +88,7 @@ public abstract class ActivityProviderAdapterBase
 
         this.uriIds.add(ACTIVITY_ALL);
         this.uriIds.add(ACTIVITY_ONE);
+        this.uriIds.add(ACTIVITY_TASKS);
     }
 
     @Override
@@ -100,6 +110,9 @@ public abstract class ActivityProviderAdapterBase
                 break;
             case ACTIVITY_ONE:
                 result = single + "activity";
+                break;
+            case ACTIVITY_TASKS:
+                result = collection + "activity";
                 break;
             default:
                 result = null;
@@ -185,6 +198,7 @@ public abstract class ActivityProviderAdapterBase
 
         int matchedUri = EdycemProviderBase.getUriMatcher().match(uri);
         android.database.Cursor result = null;
+        int activityId;
 
         switch (matchedUri) {
 
@@ -199,6 +213,13 @@ public abstract class ActivityProviderAdapterBase
                 break;
             case ACTIVITY_ONE:
                 result = this.queryById(uri.getPathSegments().get(1));
+                break;
+
+            case ACTIVITY_TASKS:
+                activityId = Integer.parseInt(uri.getPathSegments().get(1));
+                TaskSQLiteAdapter tasksAdapter = new TaskSQLiteAdapter(this.ctx);
+                tasksAdapter.open(this.getDb());
+                result = tasksAdapter.getByActivity(activityId, TaskContract.ALIASED_COLS, selection, selectionArgs, null);
                 break;
 
             default:

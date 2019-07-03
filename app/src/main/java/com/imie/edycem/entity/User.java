@@ -10,6 +10,8 @@ import com.tactfactory.harmony.annotation.Column;
 import com.tactfactory.harmony.annotation.Entity;
 import com.tactfactory.harmony.annotation.GeneratedValue;
 import com.tactfactory.harmony.annotation.Id;
+import com.tactfactory.harmony.annotation.ManyToOne;
+import com.tactfactory.harmony.annotation.OneToMany;
 import com.tactfactory.harmony.annotation.Table;
 
 import org.joda.time.DateTime;
@@ -31,6 +33,11 @@ public class User implements Serializable, Parcelable {
     private String password;
     @Column(type = Column.Type.DATETIME)
     private DateTime dateRgpd;
+
+    @ManyToOne(targetEntity = "Job", inversedBy = "users")
+    private Job job;
+    @OneToMany(targetEntity = "WorkingTime", mappedBy = "user")
+    private ArrayList<WorkingTime> userWorkingTimes;
 
 
     /**
@@ -129,8 +136,26 @@ public class User implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
-    }
+        if (this.getJob() != null
+                    && !this.parcelableParents.contains(this.getJob())) {
+            this.getJob().writeToParcel(this.parcelableParents, dest, flags);
+        } else {
+            dest.writeParcelable(null, flags);
+        }
 
+        if (this.getUserWorkingTimes() != null) {
+            dest.writeInt(this.getUserWorkingTimes().size());
+            for (WorkingTime item : this.getUserWorkingTimes()) {
+                if (!this.parcelableParents.contains(item)) {
+                    item.writeToParcel(this.parcelableParents, dest, flags);
+                } else {
+                    dest.writeParcelable(null, flags);
+                }
+            }
+        } else {
+            dest.writeInt(-1);
+        }
+    }
     /**
      * Regenerated Parcel Constructor. 
      *
@@ -154,7 +179,27 @@ public class User implements Serializable, Parcelable {
                             .withOffsetParsed().parseDateTime(
                                     parc.readString()));
         }
+        this.setJob((Job) parc.readParcelable(Job.class.getClassLoader()));
+
+        int nbUserWorkingTimes = parc.readInt();
+        if (nbUserWorkingTimes > -1) {
+            ArrayList<WorkingTime> items =
+                new ArrayList<WorkingTime>();
+            for (int i = 0; i < nbUserWorkingTimes; i++) {
+                items.add((WorkingTime) parc.readParcelable(
+                        WorkingTime.class.getClassLoader()));
+            }
+            this.setUserWorkingTimes(items);
+        }
     }
+
+
+
+
+
+
+
+
 
     /**
      * Parcel Constructor.
@@ -213,4 +258,33 @@ public class User implements Serializable, Parcelable {
         }
     };
 
+     /**
+     * Get the Job.
+     * @return the job
+     */
+    public Job getJob() {
+         return this.job;
+    }
+     /**
+     * Set the Job.
+     * @param value the job to set
+     */
+    public void setJob(final Job value) {
+         this.job = value;
+    }
+
+     /**
+     * Get the UserWorkingTimes.
+     * @return the userWorkingTimes
+     */
+    public ArrayList<WorkingTime> getUserWorkingTimes() {
+         return this.userWorkingTimes;
+    }
+     /**
+     * Set the UserWorkingTimes.
+     * @param value the userWorkingTimes to set
+     */
+    public void setUserWorkingTimes(final ArrayList<WorkingTime> value) {
+         this.userWorkingTimes = value;
+    }
 }

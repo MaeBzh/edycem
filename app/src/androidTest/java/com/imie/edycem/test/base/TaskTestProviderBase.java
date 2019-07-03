@@ -19,6 +19,7 @@ import com.imie.edycem.provider.contract.TaskContract;
 import com.imie.edycem.data.TaskSQLiteAdapter;
 
 import com.imie.edycem.entity.Task;
+import com.imie.edycem.entity.WorkingTime;
 
 
 import java.util.ArrayList;
@@ -147,6 +148,9 @@ public abstract class TaskTestProviderBase extends TestDBBase {
 
             try {
                 task.setId(this.entity.getId());
+                if (this.entity.getTaskWorkingTimes() != null) {
+                    task.getTaskWorkingTimes().addAll(this.entity.getTaskWorkingTimes());
+                }
 
                 ContentValues values = TaskContract.itemToContentValues(task);
                 result = this.provider.update(
@@ -261,6 +265,20 @@ public abstract class TaskTestProviderBase extends TestDBBase {
             Task task = TaskUtils.generateRandom(this.ctx);
 
             task.setId(this.entity.getId());
+            if (this.entity.getTaskWorkingTimes() != null) {
+                for (WorkingTime taskWorkingTimes : this.entity.getTaskWorkingTimes()) {
+                    boolean found = false;
+                    for (WorkingTime taskWorkingTimes2 : task.getTaskWorkingTimes()) {
+                        if (taskWorkingTimes.getId() == taskWorkingTimes2.getId() ) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found) {
+                        task.getTaskWorkingTimes().add(taskWorkingTimes);
+                    }
+                }
+            }
             result = this.providerUtils.update(task);
 
             Assert.assertTrue(result > 0);

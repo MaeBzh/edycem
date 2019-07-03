@@ -17,7 +17,10 @@ import com.imie.edycem.entity.Activity;
 
 
 import com.imie.edycem.test.utils.TestUtils;
+import com.imie.edycem.entity.Task;
+import com.imie.edycem.test.utils.TaskUtils;
 
+import java.util.ArrayList;
 
 /** Activity utils test class base. */
 public abstract class ActivityUtilsBase {
@@ -33,6 +36,9 @@ public abstract class ActivityUtilsBase {
 
         activity.setId(TestUtils.generateRandomInt(0,100) + 1);
         activity.setName("name_"+TestUtils.generateRandomString(10));
+        ArrayList<Task> relatedTaskss = new ArrayList<Task>();
+        relatedTaskss.add(TaskUtils.generateRandom(ctx));
+        activity.setTasks(relatedTaskss);
 
         return activity;
     }
@@ -51,6 +57,27 @@ public abstract class ActivityUtilsBase {
         if (activity1!=null && activity2 !=null){
             Assert.assertEquals(activity1.getId(), activity2.getId());
             Assert.assertEquals(activity1.getName(), activity2.getName());
+            if (activity1.getTasks() != null
+                    && activity2.getTasks() != null) {
+                Assert.assertEquals(activity1.getTasks().size(),
+                    activity2.getTasks().size());
+                if (checkRecursiveId) {
+                    for (Task tasks1 : activity1.getTasks()) {
+                        boolean found = false;
+                        for (Task tasks2 : activity2.getTasks()) {
+                            if (tasks1.getId() == tasks2.getId()) {
+                                found = true;
+                            }
+                        }
+                        Assert.assertTrue(
+                                String.format(
+                                        "Couldn't find associated tasks (id = %s) in Activity (id = %s)",
+                                        tasks1.getId(),
+                                        activity1.getId()),
+                                found);
+                    }
+                }
+            }
         }
 
         return ret;

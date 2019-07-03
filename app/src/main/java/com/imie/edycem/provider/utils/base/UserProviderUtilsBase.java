@@ -24,14 +24,23 @@ import android.os.RemoteException;
 
 
 import com.imie.edycem.provider.utils.ProviderUtils;
+import com.imie.edycem.criterias.base.Criterion;
+import com.imie.edycem.criterias.base.Criterion.Type;
+import com.imie.edycem.criterias.base.value.ArrayValue;
 import com.imie.edycem.criterias.base.CriteriaExpression;
 import com.imie.edycem.criterias.base.CriteriaExpression.GroupType;
 
 import com.imie.edycem.entity.User;
+import com.imie.edycem.entity.Job;
+import com.imie.edycem.entity.WorkingTime;
 
 import com.imie.edycem.provider.UserProviderAdapter;
+import com.imie.edycem.provider.JobProviderAdapter;
+import com.imie.edycem.provider.WorkingTimeProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.contract.JobContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 
 /**
  * User Provider Utils Base.
@@ -72,6 +81,30 @@ public abstract class UserProviderUtilsBase
                         .withValues(itemValues)
                         .build());
 
+        if (item.getUserWorkingTimes() != null && item.getUserWorkingTimes().size() > 0) {
+            CriteriaExpression crit = new CriteriaExpression(GroupType.AND);
+            Criterion inCrit = new Criterion();
+            crit.add(inCrit);
+
+            inCrit.setKey(WorkingTimeContract.COL_ID);
+            inCrit.setType(Type.IN);
+            ArrayValue inValue = new ArrayValue();
+            inCrit.addValue(inValue);
+
+            for (int i = 0; i < item.getUserWorkingTimes().size(); i++) {
+                inValue.addValue(String.valueOf(item.getUserWorkingTimes().get(i).getId()));
+            }
+
+            operations.add(ContentProviderOperation.newUpdate(WorkingTimeProviderAdapter.WORKINGTIME_URI)
+                    .withValueBackReference(
+                            WorkingTimeContract
+                                    .COL_USER_ID,
+                            0)
+                    .withSelection(
+                            crit.toSQLiteSelection(),
+                            crit.toSQLiteSelectionArgs())
+                    .build());
+        }
 
         try {
             ContentProviderResult[] results =
@@ -145,6 +178,12 @@ public abstract class UserProviderUtilsBase
             cursor.moveToFirst();
             result = UserContract.cursorToItem(cursor);
 
+            if (result.getJob() != null) {
+                result.setJob(
+                    this.getAssociateJob(result));
+            }
+            result.setUserWorkingTimes(
+                this.getAssociateUserWorkingTimes(result));
         }
         cursor.close();
 
@@ -222,6 +261,55 @@ public abstract class UserProviderUtilsBase
                 .build());
 
 
+        if (item.getUserWorkingTimes() != null && item.getUserWorkingTimes().size() > 0) {
+            String selection;
+            String[] selectionArgs;
+            // Set new userWorkingTimes for User
+            CriteriaExpression userWorkingTimesCrit =
+                        new CriteriaExpression(GroupType.AND);
+            Criterion crit = new Criterion();
+            ArrayValue values = new ArrayValue();
+            crit.setType(Type.IN);
+            crit.setKey(WorkingTimeContract.COL_ID);
+            crit.addValue(values);
+            userWorkingTimesCrit.add(crit);
+
+
+            for (WorkingTime userWorkingTimes : item.getUserWorkingTimes()) {
+                values.addValue(
+                    String.valueOf(userWorkingTimes.getId()));
+            }
+            selection = userWorkingTimesCrit.toSQLiteSelection();
+            selectionArgs = userWorkingTimesCrit.toSQLiteSelectionArgs();
+
+            operations.add(ContentProviderOperation.newUpdate(
+                    WorkingTimeProviderAdapter.WORKINGTIME_URI)
+                    .withValue(
+                            WorkingTimeContract.COL_USER_ID,
+                            item.getId())
+                    .withSelection(
+                            selection,
+                            selectionArgs)
+                    .build());
+
+            // Remove old associated userWorkingTimes
+            crit.setType(Type.NOT_IN);
+            userWorkingTimesCrit.add(WorkingTimeContract.COL_USER_ID,
+                    String.valueOf(item.getId()),
+                    Type.EQUALS);
+
+
+            operations.add(ContentProviderOperation.newUpdate(
+                    WorkingTimeProviderAdapter.WORKINGTIME_URI)
+                    .withValue(
+                            WorkingTimeContract.COL_USER_ID,
+                            null)
+                    .withSelection(
+                            userWorkingTimesCrit.toSQLiteSelection(),
+                            userWorkingTimesCrit.toSQLiteSelectionArgs())
+                    .build());
+        }
+
 
         try {
             ContentProviderResult[] results = prov.applyBatch(EdycemProvider.authority, operations);
@@ -235,5 +323,56 @@ public abstract class UserProviderUtilsBase
         return result;
     }
 
-    
+    /** Relations operations. */
+    /**
+     * Get associate Job.
+     * @param item User
+     * @return Job
+     */
+    public Job getAssociateJob(
+            final User item) {
+        Job result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor jobCursor = prov.query(
+                JobProviderAdapter.JOB_URI,
+                JobContract.ALIASED_COLS,
+                JobContract.ALIASED_COL_ID + "= ?",
+                new String[]{String.valueOf(item.getJob().getId())},
+                null);
+
+        if (jobCursor.getCount() > 0) {
+            jobCursor.moveToFirst();
+            result = JobContract.cursorToItem(jobCursor);
+        } else {
+            result = null;
+        }
+        jobCursor.close();
+
+        return result;
+    }
+
+    /**
+     * Get associate UserWorkingTimes.
+     * @param item User
+     * @return WorkingTime
+     */
+    public ArrayList<WorkingTime> getAssociateUserWorkingTimes(
+            final User item) {
+        ArrayList<WorkingTime> result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor workingTimeCursor = prov.query(
+                WorkingTimeProviderAdapter.WORKINGTIME_URI,
+                WorkingTimeContract.ALIASED_COLS,
+                WorkingTimeContract.ALIASED_COL_USER_ID
+                        + "= ?",
+                new String[]{String.valueOf(item.getId())},
+                null);
+
+        result = WorkingTimeContract.cursorToItems(
+                        workingTimeCursor);
+        workingTimeCursor.close();
+
+        return result;
+    }
+
 }

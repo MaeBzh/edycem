@@ -25,7 +25,10 @@ import com.imie.edycem.entity.Task;
 import com.imie.edycem.provider.ProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.TaskContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.data.TaskSQLiteAdapter;
+import com.imie.edycem.data.ActivitySQLiteAdapter;
+import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
 
 /**
  * TaskProviderAdapterBase.
@@ -50,6 +53,12 @@ public abstract class TaskProviderAdapterBase
     protected static final int TASK_ONE =
             2599334;
 
+    /** TASK_ACTIVITY. */
+    protected static final int TASK_ACTIVITY =
+            2599335;
+    /** TASK_TASKWORKINGTIMES. */
+    protected static final int TASK_TASKWORKINGTIMES =
+            2599336;
 
     /**
      * Static constructor.
@@ -66,6 +75,14 @@ public abstract class TaskProviderAdapterBase
                 EdycemProvider.authority,
                 taskType + "/#",
                 TASK_ONE);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                taskType + "/#" + "/activity",
+                TASK_ACTIVITY);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                taskType + "/#" + "/taskworkingtimes",
+                TASK_TASKWORKINGTIMES);
     }
 
     /**
@@ -79,6 +96,8 @@ public abstract class TaskProviderAdapterBase
 
         this.uriIds.add(TASK_ALL);
         this.uriIds.add(TASK_ONE);
+        this.uriIds.add(TASK_ACTIVITY);
+        this.uriIds.add(TASK_TASKWORKINGTIMES);
     }
 
     @Override
@@ -100,6 +119,12 @@ public abstract class TaskProviderAdapterBase
                 break;
             case TASK_ONE:
                 result = single + "task";
+                break;
+            case TASK_ACTIVITY:
+                result = single + "task";
+                break;
+            case TASK_TASKWORKINGTIMES:
+                result = collection + "task";
                 break;
             default:
                 result = null;
@@ -185,6 +210,8 @@ public abstract class TaskProviderAdapterBase
 
         int matchedUri = EdycemProviderBase.getUriMatcher().match(uri);
         android.database.Cursor result = null;
+        android.database.Cursor taskCursor;
+        int taskId;
 
         switch (matchedUri) {
 
@@ -199,6 +226,29 @@ public abstract class TaskProviderAdapterBase
                 break;
             case TASK_ONE:
                 result = this.queryById(uri.getPathSegments().get(1));
+                break;
+
+            case TASK_ACTIVITY:
+                taskCursor = this.queryById(
+                        uri.getPathSegments().get(1));
+
+                if (taskCursor.getCount() > 0) {
+                    taskCursor.moveToFirst();
+                    int activityId = taskCursor.getInt(
+                            taskCursor.getColumnIndex(
+                                    TaskContract.COL_ACTIVITY_ID));
+
+                    ActivitySQLiteAdapter activityAdapter = new ActivitySQLiteAdapter(this.ctx);
+                    activityAdapter.open(this.getDb());
+                    result = activityAdapter.query(activityId);
+                }
+                break;
+
+            case TASK_TASKWORKINGTIMES:
+                taskId = Integer.parseInt(uri.getPathSegments().get(1));
+                WorkingTimeSQLiteAdapter taskWorkingTimesAdapter = new WorkingTimeSQLiteAdapter(this.ctx);
+                taskWorkingTimesAdapter.open(this.getDb());
+                result = taskWorkingTimesAdapter.getByTask(taskId, WorkingTimeContract.ALIASED_COLS, selection, selectionArgs, null);
                 break;
 
             default:

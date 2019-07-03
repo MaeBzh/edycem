@@ -19,6 +19,7 @@ import com.imie.edycem.provider.contract.JobContract;
 import com.imie.edycem.data.JobSQLiteAdapter;
 
 import com.imie.edycem.entity.Job;
+import com.imie.edycem.entity.User;
 
 
 import java.util.ArrayList;
@@ -147,6 +148,9 @@ public abstract class JobTestProviderBase extends TestDBBase {
 
             try {
                 job.setId(this.entity.getId());
+                if (this.entity.getUsers() != null) {
+                    job.getUsers().addAll(this.entity.getUsers());
+                }
 
                 ContentValues values = JobContract.itemToContentValues(job);
                 result = this.provider.update(
@@ -261,6 +265,20 @@ public abstract class JobTestProviderBase extends TestDBBase {
             Job job = JobUtils.generateRandom(this.ctx);
 
             job.setId(this.entity.getId());
+            if (this.entity.getUsers() != null) {
+                for (User users : this.entity.getUsers()) {
+                    boolean found = false;
+                    for (User users2 : job.getUsers()) {
+                        if (users.getId() == users2.getId() ) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found) {
+                        job.getUsers().add(users);
+                    }
+                }
+            }
             result = this.providerUtils.update(job);
 
             Assert.assertTrue(result > 0);

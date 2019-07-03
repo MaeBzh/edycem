@@ -19,6 +19,7 @@ import com.imie.edycem.provider.contract.ActivityContract;
 import com.imie.edycem.data.ActivitySQLiteAdapter;
 
 import com.imie.edycem.entity.Activity;
+import com.imie.edycem.entity.Task;
 
 
 import java.util.ArrayList;
@@ -147,6 +148,9 @@ public abstract class ActivityTestProviderBase extends TestDBBase {
 
             try {
                 activity.setId(this.entity.getId());
+                if (this.entity.getTasks() != null) {
+                    activity.getTasks().addAll(this.entity.getTasks());
+                }
 
                 ContentValues values = ActivityContract.itemToContentValues(activity);
                 result = this.provider.update(
@@ -261,6 +265,20 @@ public abstract class ActivityTestProviderBase extends TestDBBase {
             Activity activity = ActivityUtils.generateRandom(this.ctx);
 
             activity.setId(this.entity.getId());
+            if (this.entity.getTasks() != null) {
+                for (Task tasks : this.entity.getTasks()) {
+                    boolean found = false;
+                    for (Task tasks2 : activity.getTasks()) {
+                        if (tasks.getId() == tasks2.getId() ) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found) {
+                        activity.getTasks().add(tasks);
+                    }
+                }
+            }
             result = this.providerUtils.update(activity);
 
             Assert.assertTrue(result > 0);

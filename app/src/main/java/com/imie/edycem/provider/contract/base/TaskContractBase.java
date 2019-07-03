@@ -16,6 +16,8 @@ import android.content.ContentValues;
 import java.util.ArrayList;
 
 import com.imie.edycem.entity.Task;
+import com.imie.edycem.entity.Activity;
+import com.imie.edycem.entity.WorkingTime;
 
 
 
@@ -42,6 +44,13 @@ public abstract class TaskContractBase {
     public static final String ALIASED_COL_NAME =
             TaskContract.TABLE_NAME + "." + COL_NAME;
 
+    /** activity_id. */
+    public static final String COL_ACTIVITY_ID =
+            "activity_id";
+    /** Alias. */
+    public static final String ALIASED_COL_ACTIVITY_ID =
+            TaskContract.TABLE_NAME + "." + COL_ACTIVITY_ID;
+
 
 
 
@@ -55,7 +64,9 @@ public abstract class TaskContractBase {
         
         TaskContract.COL_ID,
         
-        TaskContract.COL_NAME
+        TaskContract.COL_NAME,
+        
+        TaskContract.COL_ACTIVITY_ID,
     };
 
     /** Global Fields. */
@@ -63,7 +74,10 @@ public abstract class TaskContractBase {
         
         TaskContract.ALIASED_COL_ID,
         
-        TaskContract.ALIASED_COL_NAME
+        TaskContract.ALIASED_COL_NAME,
+        
+        TaskContract.ALIASED_COL_ACTIVITY_ID,
+        
     };
 
 
@@ -85,7 +99,12 @@ public abstract class TaskContractBase {
                     item.getName());
             }
 
+             if (item.getActivity() != null) {
+                result.put(TaskContract.COL_ACTIVITY_ID,
+                    item.getActivity().getId());
+            }
 
+ 
         return result;
     }
 
@@ -120,6 +139,16 @@ public abstract class TaskContractBase {
 
             if (index > -1) {
                 result.setName(cursor.getString(index));
+            }
+            if (result.getActivity() == null) {
+                final Activity activity = new Activity();
+                index = cursor.getColumnIndex(TaskContract.COL_ACTIVITY_ID);
+
+                if (index > -1) {
+                    activity.setId(cursor.getInt(index));
+                    result.setActivity(activity);
+                }
+
             }
 
         }

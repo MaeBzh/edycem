@@ -22,8 +22,11 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.imie.edycem.data.SQLiteAdapter;
 import com.imie.edycem.data.ProjectSQLiteAdapter;
+import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
 import com.imie.edycem.provider.contract.ProjectContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.entity.Project;
+import com.imie.edycem.entity.WorkingTime;
 
 import com.imie.edycem.harmony.util.DateUtils;
 import com.imie.edycem.EdycemApplication;
@@ -82,12 +85,12 @@ public abstract class ProjectSQLiteAdapterBase
          + ProjectContract.COL_DESCRIPTION    + " VARCHAR NOT NULL,"
          + ProjectContract.COL_COMPANY    + " VARCHAR NOT NULL,"
          + ProjectContract.COL_CLAIMANTNAME    + " VARCHAR NOT NULL,"
-         + ProjectContract.COL_RELEVANTSITE    + " VARCHAR NOT NULL,"
-         + ProjectContract.COL_ISELIGIBLECIR    + " BOOLEAN NOT NULL,"
-         + ProjectContract.COL_ASPARTOFPULPIT    + " BOOLEAN NOT NULL,"
-         + ProjectContract.COL_DEADLINE    + " DATETIME NOT NULL,"
-         + ProjectContract.COL_DOCUMENTS    + " VARCHAR NOT NULL,"
-         + ProjectContract.COL_ACTIVITYTYPE    + " VARCHAR NOT NULL"
+         + ProjectContract.COL_RELEVANTSITE    + " VARCHAR,"
+         + ProjectContract.COL_ISELIGIBLECIR    + " BOOLEAN,"
+         + ProjectContract.COL_ASPARTOFPULPIT    + " BOOLEAN,"
+         + ProjectContract.COL_DEADLINE    + " DATETIME,"
+         + ProjectContract.COL_DOCUMENTS    + " VARCHAR,"
+         + ProjectContract.COL_ACTIVITYTYPE    + " VARCHAR"
 
         
         + ");"
@@ -147,6 +150,19 @@ public abstract class ProjectSQLiteAdapterBase
         final Project result = this.cursorToItem(cursor);
         cursor.close();
 
+        final WorkingTimeSQLiteAdapter projectWorkingTimesAdapter =
+                new WorkingTimeSQLiteAdapter(this.ctx);
+        projectWorkingTimesAdapter.open(this.mDatabase);
+        android.database.Cursor projectworkingtimesCursor = projectWorkingTimesAdapter
+                    .getByProject(
+                            result.getId(),
+                            WorkingTimeContract.ALIASED_COLS,
+                            null,
+                            null,
+                            null);
+        result.setProjectWorkingTimes(projectWorkingTimesAdapter.cursorToItems(projectworkingtimesCursor));
+
+        projectworkingtimesCursor.close();
         return result;
     }
 
@@ -191,6 +207,16 @@ public abstract class ProjectSQLiteAdapterBase
                     values);
         }
         item.setId(insertResult);
+        if (item.getProjectWorkingTimes() != null) {
+            WorkingTimeSQLiteAdapterBase projectWorkingTimesAdapter =
+                    new WorkingTimeSQLiteAdapter(this.ctx);
+            projectWorkingTimesAdapter.open(this.mDatabase);
+            for (WorkingTime workingtime
+                        : item.getProjectWorkingTimes()) {
+                workingtime.setProject(item);
+                projectWorkingTimesAdapter.insertOrUpdate(workingtime);
+            }
+        }
         return insertResult;
     }
 

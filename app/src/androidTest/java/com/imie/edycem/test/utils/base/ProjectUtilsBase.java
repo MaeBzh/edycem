@@ -17,7 +17,10 @@ import com.imie.edycem.entity.Project;
 
 
 import com.imie.edycem.test.utils.TestUtils;
+import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.test.utils.WorkingTimeUtils;
 
+import java.util.ArrayList;
 
 /** Project utils test class base. */
 public abstract class ProjectUtilsBase {
@@ -42,6 +45,9 @@ public abstract class ProjectUtilsBase {
         project.setDeadline(TestUtils.generateRandomDateTime());
         project.setDocuments("documents_"+TestUtils.generateRandomString(10));
         project.setActivityType("activityType_"+TestUtils.generateRandomString(10));
+        ArrayList<WorkingTime> relatedProjectWorkingTimess = new ArrayList<WorkingTime>();
+        relatedProjectWorkingTimess.add(WorkingTimeUtils.generateRandom(ctx));
+        project.setProjectWorkingTimes(relatedProjectWorkingTimess);
 
         return project;
     }
@@ -69,6 +75,27 @@ public abstract class ProjectUtilsBase {
             Assert.assertTrue(project1.getDeadline().isEqual(project2.getDeadline()));
             Assert.assertEquals(project1.getDocuments(), project2.getDocuments());
             Assert.assertEquals(project1.getActivityType(), project2.getActivityType());
+            if (project1.getProjectWorkingTimes() != null
+                    && project2.getProjectWorkingTimes() != null) {
+                Assert.assertEquals(project1.getProjectWorkingTimes().size(),
+                    project2.getProjectWorkingTimes().size());
+                if (checkRecursiveId) {
+                    for (WorkingTime projectWorkingTimes1 : project1.getProjectWorkingTimes()) {
+                        boolean found = false;
+                        for (WorkingTime projectWorkingTimes2 : project2.getProjectWorkingTimes()) {
+                            if (projectWorkingTimes1.getId() == projectWorkingTimes2.getId()) {
+                                found = true;
+                            }
+                        }
+                        Assert.assertTrue(
+                                String.format(
+                                        "Couldn't find associated projectWorkingTimes (id = %s) in Project (id = %s)",
+                                        projectWorkingTimes1.getId(),
+                                        project1.getId()),
+                                found);
+                    }
+                }
+            }
         }
 
         return ret;

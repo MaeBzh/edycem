@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.entity.User;
+import com.imie.edycem.entity.Project;
+import com.imie.edycem.entity.Task;
 
 
 
@@ -59,6 +62,27 @@ public abstract class WorkingTimeContractBase {
     public static final String ALIASED_COL_DESCRIPTION =
             WorkingTimeContract.TABLE_NAME + "." + COL_DESCRIPTION;
 
+    /** user_id. */
+    public static final String COL_USER_ID =
+            "user_id";
+    /** Alias. */
+    public static final String ALIASED_COL_USER_ID =
+            WorkingTimeContract.TABLE_NAME + "." + COL_USER_ID;
+
+    /** project_id. */
+    public static final String COL_PROJECT_ID =
+            "project_id";
+    /** Alias. */
+    public static final String ALIASED_COL_PROJECT_ID =
+            WorkingTimeContract.TABLE_NAME + "." + COL_PROJECT_ID;
+
+    /** task_id. */
+    public static final String COL_TASK_ID =
+            "task_id";
+    /** Alias. */
+    public static final String ALIASED_COL_TASK_ID =
+            WorkingTimeContract.TABLE_NAME + "." + COL_TASK_ID;
+
 
 
 
@@ -76,7 +100,13 @@ public abstract class WorkingTimeContractBase {
         
         WorkingTimeContract.COL_SPENTTIME,
         
-        WorkingTimeContract.COL_DESCRIPTION
+        WorkingTimeContract.COL_DESCRIPTION,
+        
+        WorkingTimeContract.COL_USER_ID,
+        
+        WorkingTimeContract.COL_PROJECT_ID,
+        
+        WorkingTimeContract.COL_TASK_ID
     };
 
     /** Global Fields. */
@@ -88,7 +118,13 @@ public abstract class WorkingTimeContractBase {
         
         WorkingTimeContract.ALIASED_COL_SPENTTIME,
         
-        WorkingTimeContract.ALIASED_COL_DESCRIPTION
+        WorkingTimeContract.ALIASED_COL_DESCRIPTION,
+        
+        WorkingTimeContract.ALIASED_COL_USER_ID,
+        
+        WorkingTimeContract.ALIASED_COL_PROJECT_ID,
+        
+        WorkingTimeContract.ALIASED_COL_TASK_ID
     };
 
 
@@ -118,6 +154,21 @@ public abstract class WorkingTimeContractBase {
              if (item.getDescription() != null) {
                 result.put(WorkingTimeContract.COL_DESCRIPTION,
                     item.getDescription());
+            }
+
+             if (item.getUser() != null) {
+                result.put(WorkingTimeContract.COL_USER_ID,
+                    item.getUser().getId());
+            }
+
+             if (item.getProject() != null) {
+                result.put(WorkingTimeContract.COL_PROJECT_ID,
+                    item.getProject().getId());
+            }
+
+             if (item.getTask() != null) {
+                result.put(WorkingTimeContract.COL_TASK_ID,
+                    item.getTask().getId());
             }
 
 
@@ -171,6 +222,36 @@ public abstract class WorkingTimeContractBase {
 
             if (index > -1) {
                 result.setDescription(cursor.getString(index));
+            }
+            if (result.getUser() == null) {
+                final User user = new User();
+                index = cursor.getColumnIndex(WorkingTimeContract.COL_USER_ID);
+
+                if (index > -1) {
+                    user.setId(cursor.getInt(index));
+                    result.setUser(user);
+                }
+
+            }
+            if (result.getProject() == null) {
+                final Project project = new Project();
+                index = cursor.getColumnIndex(WorkingTimeContract.COL_PROJECT_ID);
+
+                if (index > -1) {
+                    project.setId(cursor.getInt(index));
+                    result.setProject(project);
+                }
+
+            }
+            if (result.getTask() == null) {
+                final Task task = new Task();
+                index = cursor.getColumnIndex(WorkingTimeContract.COL_TASK_ID);
+
+                if (index > -1) {
+                    task.setId(cursor.getInt(index));
+                    result.setTask(task);
+                }
+
             }
 
         }

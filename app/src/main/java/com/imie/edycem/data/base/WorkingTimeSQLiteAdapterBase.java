@@ -20,10 +20,21 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ObjectArrays;
 import com.imie.edycem.data.SQLiteAdapter;
 import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
+import com.imie.edycem.data.UserSQLiteAdapter;
+import com.imie.edycem.data.ProjectSQLiteAdapter;
+import com.imie.edycem.data.TaskSQLiteAdapter;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
+import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.contract.ProjectContract;
+import com.imie.edycem.provider.contract.TaskContract;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.entity.User;
+import com.imie.edycem.entity.Project;
+import com.imie.edycem.entity.Task;
 
 import com.imie.edycem.harmony.util.DateUtils;
 import com.imie.edycem.EdycemApplication;
@@ -80,9 +91,21 @@ public abstract class WorkingTimeSQLiteAdapterBase
          + WorkingTimeContract.COL_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT,"
          + WorkingTimeContract.COL_DATE    + " DATE NOT NULL,"
          + WorkingTimeContract.COL_SPENTTIME    + " VARCHAR NOT NULL,"
-         + WorkingTimeContract.COL_DESCRIPTION    + " VARCHAR NOT NULL"
+         + WorkingTimeContract.COL_DESCRIPTION    + " VARCHAR NOT NULL,"
+         + WorkingTimeContract.COL_USER_ID    + " INTEGER NOT NULL,"
+         + WorkingTimeContract.COL_PROJECT_ID    + " INTEGER NOT NULL,"
+         + WorkingTimeContract.COL_TASK_ID    + " INTEGER NOT NULL,"
 
         
+         + "FOREIGN KEY(" + WorkingTimeContract.COL_USER_ID + ") REFERENCES " 
+             + UserContract.TABLE_NAME 
+                + " (" + UserContract.COL_ID + "),"
+         + "FOREIGN KEY(" + WorkingTimeContract.COL_PROJECT_ID + ") REFERENCES " 
+             + ProjectContract.TABLE_NAME 
+                + " (" + ProjectContract.COL_ID + "),"
+         + "FOREIGN KEY(" + WorkingTimeContract.COL_TASK_ID + ") REFERENCES " 
+             + TaskContract.TABLE_NAME 
+                + " (" + TaskContract.COL_ID + ")"
         + ");"
 ;
     }
@@ -140,9 +163,111 @@ public abstract class WorkingTimeSQLiteAdapterBase
         final WorkingTime result = this.cursorToItem(cursor);
         cursor.close();
 
+        if (result.getUser() != null) {
+            final UserSQLiteAdapter userAdapter =
+                    new UserSQLiteAdapter(this.ctx);
+            userAdapter.open(this.mDatabase);
+
+            result.setUser(userAdapter.getByID(
+                            result.getUser().getId()));
+        }
+        if (result.getProject() != null) {
+            final ProjectSQLiteAdapter projectAdapter =
+                    new ProjectSQLiteAdapter(this.ctx);
+            projectAdapter.open(this.mDatabase);
+
+            result.setProject(projectAdapter.getByID(
+                            result.getProject().getId()));
+        }
+        if (result.getTask() != null) {
+            final TaskSQLiteAdapter taskAdapter =
+                    new TaskSQLiteAdapter(this.ctx);
+            taskAdapter.open(this.mDatabase);
+
+            result.setTask(taskAdapter.getByID(
+                            result.getTask().getId()));
+        }
         return result;
     }
 
+    /**
+     * Find & read WorkingTime by user.
+     * @param userId userId
+     * @param orderBy Order by string (can be null)
+     * @return List of WorkingTime entities
+     */
+     public android.database.Cursor getByUser(final int userId, String[] projection, String selection, String[] selectionArgs, String orderBy) {
+        String idSelection = WorkingTimeContract.COL_USER_ID + "= ?";
+        String idSelectionArgs = String.valueOf(userId);
+        if (!Strings.isNullOrEmpty(selection)) {
+            selection += " AND " + idSelection;
+            selectionArgs = ObjectArrays.concat(selectionArgs, idSelectionArgs);
+        } else {
+            selection = idSelection;
+            selectionArgs = new String[]{idSelectionArgs};
+        }
+        final android.database.Cursor cursor = this.query(
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                orderBy);
+
+        return cursor;
+     }
+    /**
+     * Find & read WorkingTime by project.
+     * @param projectId projectId
+     * @param orderBy Order by string (can be null)
+     * @return List of WorkingTime entities
+     */
+     public android.database.Cursor getByProject(final int projectId, String[] projection, String selection, String[] selectionArgs, String orderBy) {
+        String idSelection = WorkingTimeContract.COL_PROJECT_ID + "= ?";
+        String idSelectionArgs = String.valueOf(projectId);
+        if (!Strings.isNullOrEmpty(selection)) {
+            selection += " AND " + idSelection;
+            selectionArgs = ObjectArrays.concat(selectionArgs, idSelectionArgs);
+        } else {
+            selection = idSelection;
+            selectionArgs = new String[]{idSelectionArgs};
+        }
+        final android.database.Cursor cursor = this.query(
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                orderBy);
+
+        return cursor;
+     }
+    /**
+     * Find & read WorkingTime by task.
+     * @param taskId taskId
+     * @param orderBy Order by string (can be null)
+     * @return List of WorkingTime entities
+     */
+     public android.database.Cursor getByTask(final int taskId, String[] projection, String selection, String[] selectionArgs, String orderBy) {
+        String idSelection = WorkingTimeContract.COL_TASK_ID + "= ?";
+        String idSelectionArgs = String.valueOf(taskId);
+        if (!Strings.isNullOrEmpty(selection)) {
+            selection += " AND " + idSelection;
+            selectionArgs = ObjectArrays.concat(selectionArgs, idSelectionArgs);
+        } else {
+            selection = idSelection;
+            selectionArgs = new String[]{idSelectionArgs};
+        }
+        final android.database.Cursor cursor = this.query(
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                orderBy);
+
+        return cursor;
+     }
 
     /**
      * Read All WorkingTimes entities.

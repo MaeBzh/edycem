@@ -10,6 +10,7 @@ import com.tactfactory.harmony.annotation.Column;
 import com.tactfactory.harmony.annotation.Entity;
 import com.tactfactory.harmony.annotation.GeneratedValue;
 import com.tactfactory.harmony.annotation.Id;
+import com.tactfactory.harmony.annotation.ManyToOne;
 import com.tactfactory.harmony.annotation.Table;
 
 import org.joda.time.DateTime;
@@ -31,6 +32,13 @@ public class WorkingTime implements Serializable, Parcelable {
     private String spentTime;
     @Column(type = Column.Type.TEXT)
     private String description;
+
+    @ManyToOne(targetEntity = "User", inversedBy = "userWorkingTimes")
+    private User user;
+    @ManyToOne(targetEntity = "Project", inversedBy = "projectWorkingTimes")
+    private Project project;
+    @ManyToOne(targetEntity = "Task", inversedBy = "TaskWorkingTimes")
+    private Task task;
 
     /**
      * Default constructor.
@@ -128,8 +136,25 @@ public class WorkingTime implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
+        if (this.getUser() != null
+                    && !this.parcelableParents.contains(this.getUser())) {
+            this.getUser().writeToParcel(this.parcelableParents, dest, flags);
+        } else {
+            dest.writeParcelable(null, flags);
+        }
+        if (this.getProject() != null
+                    && !this.parcelableParents.contains(this.getProject())) {
+            this.getProject().writeToParcel(this.parcelableParents, dest, flags);
+        } else {
+            dest.writeParcelable(null, flags);
+        }
+        if (this.getTask() != null
+                    && !this.parcelableParents.contains(this.getTask())) {
+            this.getTask().writeToParcel(this.parcelableParents, dest, flags);
+        } else {
+            dest.writeParcelable(null, flags);
+        }
     }
-
     /**
      * Regenerated Parcel Constructor. 
      *
@@ -153,7 +178,18 @@ public class WorkingTime implements Serializable, Parcelable {
         if (descriptionBool == 1) {
             this.setDescription(parc.readString());
         }
+        this.setUser((User) parc.readParcelable(User.class.getClassLoader()));
+        this.setProject((Project) parc.readParcelable(Project.class.getClassLoader()));
+        this.setTask((Task) parc.readParcelable(Task.class.getClassLoader()));
     }
+
+
+
+
+
+
+
+
 
     /**
      * Parcel Constructor.
@@ -212,4 +248,46 @@ public class WorkingTime implements Serializable, Parcelable {
         }
     };
 
+     /**
+     * Get the User.
+     * @return the user
+     */
+    public User getUser() {
+         return this.user;
+    }
+     /**
+     * Set the User.
+     * @param value the user to set
+     */
+    public void setUser(final User value) {
+         this.user = value;
+    }
+     /**
+     * Get the Project.
+     * @return the project
+     */
+    public Project getProject() {
+         return this.project;
+    }
+     /**
+     * Set the Project.
+     * @param value the project to set
+     */
+    public void setProject(final Project value) {
+         this.project = value;
+    }
+     /**
+     * Get the Task.
+     * @return the task
+     */
+    public Task getTask() {
+         return this.task;
+    }
+     /**
+     * Set the Task.
+     * @param value the task to set
+     */
+    public void setTask(final Task value) {
+         this.task = value;
+    }
 }

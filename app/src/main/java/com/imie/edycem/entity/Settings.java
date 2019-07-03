@@ -81,7 +81,6 @@ public class Settings implements Serializable, Parcelable {
             dest.writeInt(0);
         }
     }
-
     /**
      * Regenerated Parcel Constructor. 
      *
@@ -96,6 +95,14 @@ public class Settings implements Serializable, Parcelable {
             this.setRgpd(parc.readString());
         }
     }
+
+
+
+
+
+
+
+
 
     /**
      * Parcel Constructor.

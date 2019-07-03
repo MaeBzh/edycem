@@ -9,6 +9,7 @@ import com.tactfactory.harmony.annotation.Column;
 import com.tactfactory.harmony.annotation.Entity;
 import com.tactfactory.harmony.annotation.GeneratedValue;
 import com.tactfactory.harmony.annotation.Id;
+import com.tactfactory.harmony.annotation.OneToMany;
 import com.tactfactory.harmony.annotation.Table;
 
 @Entity
@@ -24,6 +25,10 @@ public class Activity implements Serializable, Parcelable {
     private int id;
     @Column(type = Column.Type.TEXT)
     private String name;
+
+    @OneToMany(targetEntity = "Task", mappedBy = "activity")
+    private ArrayList<Task> tasks;
+
 
     /**
      * Default constructor.
@@ -80,8 +85,20 @@ public class Activity implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
-    }
 
+        if (this.getTasks() != null) {
+            dest.writeInt(this.getTasks().size());
+            for (Task item : this.getTasks()) {
+                if (!this.parcelableParents.contains(item)) {
+                    item.writeToParcel(this.parcelableParents, dest, flags);
+                } else {
+                    dest.writeParcelable(null, flags);
+                }
+            }
+        } else {
+            dest.writeInt(-1);
+        }
+    }
     /**
      * Regenerated Parcel Constructor. 
      *
@@ -95,7 +112,26 @@ public class Activity implements Serializable, Parcelable {
         if (nameBool == 1) {
             this.setName(parc.readString());
         }
+
+        int nbTasks = parc.readInt();
+        if (nbTasks > -1) {
+            ArrayList<Task> items =
+                new ArrayList<Task>();
+            for (int i = 0; i < nbTasks; i++) {
+                items.add((Task) parc.readParcelable(
+                        Task.class.getClassLoader()));
+            }
+            this.setTasks(items);
+        }
     }
+
+
+
+
+
+
+
+
 
     /**
      * Parcel Constructor.
@@ -154,4 +190,18 @@ public class Activity implements Serializable, Parcelable {
         }
     };
 
+     /**
+     * Get the Tasks.
+     * @return the tasks
+     */
+    public ArrayList<Task> getTasks() {
+         return this.tasks;
+    }
+     /**
+     * Set the Tasks.
+     * @param value the tasks to set
+     */
+    public void setTasks(final ArrayList<Task> value) {
+         this.tasks = value;
+    }
 }

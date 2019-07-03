@@ -28,6 +28,7 @@ import com.imie.edycem.provider.contract.ProjectContract;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.data.ProjectSQLiteAdapter;
 import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
+import com.imie.edycem.data.JobSQLiteAdapter;
 
 /**
  * ProjectProviderAdapterBase.
@@ -55,6 +56,9 @@ public abstract class ProjectProviderAdapterBase
     /** PROJECT_PROJECTWORKINGTIMES. */
     protected static final int PROJECT_PROJECTWORKINGTIMES =
             1355342587;
+    /** PROJECT_JOB. */
+    protected static final int PROJECT_JOB =
+            1355342588;
 
     /**
      * Static constructor.
@@ -75,6 +79,10 @@ public abstract class ProjectProviderAdapterBase
                 EdycemProvider.authority,
                 projectType + "/#" + "/projectworkingtimes",
                 PROJECT_PROJECTWORKINGTIMES);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                projectType + "/#" + "/job",
+                PROJECT_JOB);
     }
 
     /**
@@ -89,6 +97,7 @@ public abstract class ProjectProviderAdapterBase
         this.uriIds.add(PROJECT_ALL);
         this.uriIds.add(PROJECT_ONE);
         this.uriIds.add(PROJECT_PROJECTWORKINGTIMES);
+        this.uriIds.add(PROJECT_JOB);
     }
 
     @Override
@@ -113,6 +122,9 @@ public abstract class ProjectProviderAdapterBase
                 break;
             case PROJECT_PROJECTWORKINGTIMES:
                 result = collection + "project";
+                break;
+            case PROJECT_JOB:
+                result = single + "project";
                 break;
             default:
                 result = null;
@@ -198,6 +210,7 @@ public abstract class ProjectProviderAdapterBase
 
         int matchedUri = EdycemProviderBase.getUriMatcher().match(uri);
         android.database.Cursor result = null;
+        android.database.Cursor projectCursor;
         int projectId;
 
         switch (matchedUri) {
@@ -220,6 +233,22 @@ public abstract class ProjectProviderAdapterBase
                 WorkingTimeSQLiteAdapter projectWorkingTimesAdapter = new WorkingTimeSQLiteAdapter(this.ctx);
                 projectWorkingTimesAdapter.open(this.getDb());
                 result = projectWorkingTimesAdapter.getByProject(projectId, WorkingTimeContract.ALIASED_COLS, selection, selectionArgs, null);
+                break;
+
+            case PROJECT_JOB:
+                projectCursor = this.queryById(
+                        uri.getPathSegments().get(1));
+
+                if (projectCursor.getCount() > 0) {
+                    projectCursor.moveToFirst();
+                    int jobId = projectCursor.getInt(
+                            projectCursor.getColumnIndex(
+                                    ProjectContract.COL_JOB_ID));
+
+                    JobSQLiteAdapter jobAdapter = new JobSQLiteAdapter(this.ctx);
+                    jobAdapter.open(this.getDb());
+                    result = jobAdapter.query(jobId);
+                }
                 break;
 
             default:

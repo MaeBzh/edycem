@@ -40,19 +40,40 @@ public abstract class UserContractBase {
     public static final String ALIASED_COL_ID =
             UserContract.TABLE_NAME + "." + COL_ID;
 
+    /** firstname. */
+    public static final String COL_FIRSTNAME =
+            "firstname";
+    /** Alias. */
+    public static final String ALIASED_COL_FIRSTNAME =
+            UserContract.TABLE_NAME + "." + COL_FIRSTNAME;
+
+    /** lastname. */
+    public static final String COL_LASTNAME =
+            "lastname";
+    /** Alias. */
+    public static final String ALIASED_COL_LASTNAME =
+            UserContract.TABLE_NAME + "." + COL_LASTNAME;
+
+    /** email. */
+    public static final String COL_EMAIL =
+            "email";
+    /** Alias. */
+    public static final String ALIASED_COL_EMAIL =
+            UserContract.TABLE_NAME + "." + COL_EMAIL;
+
+    /** isEligible. */
+    public static final String COL_ISELIGIBLE =
+            "isEligible";
+    /** Alias. */
+    public static final String ALIASED_COL_ISELIGIBLE =
+            UserContract.TABLE_NAME + "." + COL_ISELIGIBLE;
+
     /** idSmartphone. */
     public static final String COL_IDSMARTPHONE =
             "idSmartphone";
     /** Alias. */
     public static final String ALIASED_COL_IDSMARTPHONE =
             UserContract.TABLE_NAME + "." + COL_IDSMARTPHONE;
-
-    /** password. */
-    public static final String COL_PASSWORD =
-            "password";
-    /** Alias. */
-    public static final String ALIASED_COL_PASSWORD =
-            UserContract.TABLE_NAME + "." + COL_PASSWORD;
 
     /** dateRgpd. */
     public static final String COL_DATERGPD =
@@ -81,9 +102,15 @@ public abstract class UserContractBase {
         
         UserContract.COL_ID,
         
-        UserContract.COL_IDSMARTPHONE,
+        UserContract.COL_FIRSTNAME,
         
-        UserContract.COL_PASSWORD,
+        UserContract.COL_LASTNAME,
+        
+        UserContract.COL_EMAIL,
+        
+        UserContract.COL_ISELIGIBLE,
+        
+        UserContract.COL_IDSMARTPHONE,
         
         UserContract.COL_DATERGPD,
         
@@ -95,9 +122,15 @@ public abstract class UserContractBase {
         
         UserContract.ALIASED_COL_ID,
         
-        UserContract.ALIASED_COL_IDSMARTPHONE,
+        UserContract.ALIASED_COL_FIRSTNAME,
         
-        UserContract.ALIASED_COL_PASSWORD,
+        UserContract.ALIASED_COL_LASTNAME,
+        
+        UserContract.ALIASED_COL_EMAIL,
+        
+        UserContract.ALIASED_COL_ISELIGIBLE,
+        
+        UserContract.ALIASED_COL_IDSMARTPHONE,
         
         UserContract.ALIASED_COL_DATERGPD,
         
@@ -119,14 +152,27 @@ public abstract class UserContractBase {
              result.put(UserContract.COL_ID,
                 String.valueOf(item.getId()));
 
+             if (item.getFirstname() != null) {
+                result.put(UserContract.COL_FIRSTNAME,
+                    item.getFirstname());
+            }
+
+             if (item.getLastname() != null) {
+                result.put(UserContract.COL_LASTNAME,
+                    item.getLastname());
+            }
+
+             if (item.getEmail() != null) {
+                result.put(UserContract.COL_EMAIL,
+                    item.getEmail());
+            }
+
+             result.put(UserContract.COL_ISELIGIBLE,
+                item.isIsEligible() ? 1 : 0);
+
              if (item.getIdSmartphone() != null) {
                 result.put(UserContract.COL_IDSMARTPHONE,
                     item.getIdSmartphone());
-            }
-
-             if (item.getPassword() != null) {
-                result.put(UserContract.COL_PASSWORD,
-                    item.getPassword());
             }
 
              if (item.getDateRgpd() != null) {
@@ -170,15 +216,30 @@ public abstract class UserContractBase {
             if (index > -1) {
                 result.setId(cursor.getInt(index));
             }
+            index = cursor.getColumnIndex(UserContract.COL_FIRSTNAME);
+
+            if (index > -1) {
+                result.setFirstname(cursor.getString(index));
+            }
+            index = cursor.getColumnIndex(UserContract.COL_LASTNAME);
+
+            if (index > -1) {
+                result.setLastname(cursor.getString(index));
+            }
+            index = cursor.getColumnIndex(UserContract.COL_EMAIL);
+
+            if (index > -1) {
+                result.setEmail(cursor.getString(index));
+            }
+            index = cursor.getColumnIndex(UserContract.COL_ISELIGIBLE);
+
+            if (index > -1) {
+                result.setIsEligible(cursor.getInt(index) == 1);
+            }
             index = cursor.getColumnIndex(UserContract.COL_IDSMARTPHONE);
 
             if (index > -1) {
                 result.setIdSmartphone(cursor.getString(index));
-            }
-            index = cursor.getColumnIndex(UserContract.COL_PASSWORD);
-
-            if (index > -1) {
-                result.setPassword(cursor.getString(index));
             }
             index = cursor.getColumnIndex(UserContract.COL_DATERGPD);
 

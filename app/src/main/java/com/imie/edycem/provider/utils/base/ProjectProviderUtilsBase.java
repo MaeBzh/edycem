@@ -32,12 +32,15 @@ import com.imie.edycem.criterias.base.CriteriaExpression.GroupType;
 
 import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.entity.Job;
 
 import com.imie.edycem.provider.ProjectProviderAdapter;
 import com.imie.edycem.provider.WorkingTimeProviderAdapter;
+import com.imie.edycem.provider.JobProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.ProjectContract;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
+import com.imie.edycem.provider.contract.JobContract;
 
 /**
  * Project Provider Utils Base.
@@ -177,6 +180,10 @@ public abstract class ProjectProviderUtilsBase
 
             result.setProjectWorkingTimes(
                 this.getAssociateProjectWorkingTimes(result));
+            if (result.getJob() != null) {
+                result.setJob(
+                    this.getAssociateJob(result));
+            }
         }
         cursor.close();
 
@@ -337,6 +344,33 @@ public abstract class ProjectProviderUtilsBase
         result = WorkingTimeContract.cursorToItems(
                         workingTimeCursor);
         workingTimeCursor.close();
+
+        return result;
+    }
+
+    /**
+     * Get associate Job.
+     * @param item Project
+     * @return Job
+     */
+    public Job getAssociateJob(
+            final Project item) {
+        Job result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor jobCursor = prov.query(
+                JobProviderAdapter.JOB_URI,
+                JobContract.ALIASED_COLS,
+                JobContract.ALIASED_COL_ID + "= ?",
+                new String[]{String.valueOf(item.getJob().getId())},
+                null);
+
+        if (jobCursor.getCount() > 0) {
+            jobCursor.moveToFirst();
+            result = JobContract.cursorToItem(jobCursor);
+        } else {
+            result = null;
+        }
+        jobCursor.close();
 
         return result;
     }

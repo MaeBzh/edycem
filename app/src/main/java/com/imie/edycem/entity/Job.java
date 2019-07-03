@@ -26,8 +26,10 @@ public class Job implements Serializable, Parcelable {
     @Column(type = Column.Type.TEXT)
     private String name;
 
-    @OneToMany(targetEntity = "user", mappedBy = "job")
+    @OneToMany(targetEntity = "User", mappedBy = "job")
     private ArrayList<User> users;
+    @OneToMany(targetEntity = "Project", mappedBy = "job")
+    private ArrayList<Project> projects;
 
     /**
      * Default constructor.
@@ -97,6 +99,19 @@ public class Job implements Serializable, Parcelable {
         } else {
             dest.writeInt(-1);
         }
+
+        if (this.getProjects() != null) {
+            dest.writeInt(this.getProjects().size());
+            for (Project item : this.getProjects()) {
+                if (!this.parcelableParents.contains(item)) {
+                    item.writeToParcel(this.parcelableParents, dest, flags);
+                } else {
+                    dest.writeParcelable(null, flags);
+                }
+            }
+        } else {
+            dest.writeInt(-1);
+        }
     }
     /**
      * Regenerated Parcel Constructor. 
@@ -122,7 +137,19 @@ public class Job implements Serializable, Parcelable {
             }
             this.setUsers(items);
         }
+
+        int nbProjects = parc.readInt();
+        if (nbProjects > -1) {
+            ArrayList<Project> items =
+                new ArrayList<Project>();
+            for (int i = 0; i < nbProjects; i++) {
+                items.add((Project) parc.readParcelable(
+                        Project.class.getClassLoader()));
+            }
+            this.setProjects(items);
+        }
     }
+
 
 
 
@@ -202,5 +229,19 @@ public class Job implements Serializable, Parcelable {
      */
     public void setUsers(final ArrayList<User> value) {
          this.users = value;
+    }
+     /**
+     * Get the Projects.
+     * @return the projects
+     */
+    public ArrayList<Project> getProjects() {
+         return this.projects;
+    }
+     /**
+     * Set the Projects.
+     * @param value the projects to set
+     */
+    public void setProjects(final ArrayList<Project> value) {
+         this.projects = value;
     }
 }

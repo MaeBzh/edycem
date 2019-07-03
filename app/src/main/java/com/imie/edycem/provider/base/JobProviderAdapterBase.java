@@ -26,8 +26,10 @@ import com.imie.edycem.provider.ProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.JobContract;
 import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.contract.ProjectContract;
 import com.imie.edycem.data.JobSQLiteAdapter;
 import com.imie.edycem.data.UserSQLiteAdapter;
+import com.imie.edycem.data.ProjectSQLiteAdapter;
 
 /**
  * JobProviderAdapterBase.
@@ -55,6 +57,9 @@ public abstract class JobProviderAdapterBase
     /** JOB_USERS. */
     protected static final int JOB_USERS =
             74655;
+    /** JOB_PROJECTS. */
+    protected static final int JOB_PROJECTS =
+            74656;
 
     /**
      * Static constructor.
@@ -75,6 +80,10 @@ public abstract class JobProviderAdapterBase
                 EdycemProvider.authority,
                 jobType + "/#" + "/users",
                 JOB_USERS);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                jobType + "/#" + "/projects",
+                JOB_PROJECTS);
     }
 
     /**
@@ -89,6 +98,7 @@ public abstract class JobProviderAdapterBase
         this.uriIds.add(JOB_ALL);
         this.uriIds.add(JOB_ONE);
         this.uriIds.add(JOB_USERS);
+        this.uriIds.add(JOB_PROJECTS);
     }
 
     @Override
@@ -112,6 +122,9 @@ public abstract class JobProviderAdapterBase
                 result = single + "job";
                 break;
             case JOB_USERS:
+                result = collection + "job";
+                break;
+            case JOB_PROJECTS:
                 result = collection + "job";
                 break;
             default:
@@ -220,6 +233,13 @@ public abstract class JobProviderAdapterBase
                 UserSQLiteAdapter usersAdapter = new UserSQLiteAdapter(this.ctx);
                 usersAdapter.open(this.getDb());
                 result = usersAdapter.getByJob(jobId, UserContract.ALIASED_COLS, selection, selectionArgs, null);
+                break;
+
+            case JOB_PROJECTS:
+                jobId = Integer.parseInt(uri.getPathSegments().get(1));
+                ProjectSQLiteAdapter projectsAdapter = new ProjectSQLiteAdapter(this.ctx);
+                projectsAdapter.open(this.getDb());
+                result = projectsAdapter.getByJob(jobId, ProjectContract.ALIASED_COLS, selection, selectionArgs, null);
                 break;
 
             default:

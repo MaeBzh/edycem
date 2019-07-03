@@ -180,6 +180,7 @@ public abstract class UserTestProviderBase extends TestDBBase {
                 try {
                     ContentValues values = UserContract.itemToContentValues(user);
                     values.remove(UserContract.COL_ID);
+                    values.remove(UserContract.COL_EMAIL);
 
                     result = this.provider.update(UserProviderAdapter.USER_URI, values, null, null);
                 } catch (Exception e) {

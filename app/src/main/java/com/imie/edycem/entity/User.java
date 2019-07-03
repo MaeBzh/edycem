@@ -28,9 +28,15 @@ public class User implements Serializable, Parcelable {
     @GeneratedValue(strategy = GeneratedValue.Strategy.MODE_IDENTITY)
     private int id;
     @Column(type = Column.Type.TEXT)
+    private String firstname;
+    @Column(type = Column.Type.TEXT)
+    private String lastname;
+    @Column(type = Column.Type.EMAIL)
+    private String email;
+    @Column(type = Column.Type.BOOLEAN)
+    private boolean isEligible;
+    @Column(type = Column.Type.TEXT)
     private String idSmartphone;
-    @Column(type = Column.Type.PASSWORD)
-    private String password;
     @Column(type = Column.Type.DATETIME)
     private DateTime dateRgpd;
 
@@ -75,20 +81,7 @@ public class User implements Serializable, Parcelable {
     public void setIdSmartphone(final String value) {
          this.idSmartphone = value;
     }
-     /**
-     * Get the Password.
-     * @return the password
-     */
-    public String getPassword() {
-         return this.password;
-    }
-     /**
-     * Set the Password.
-     * @param value the password to set
-     */
-    public void setPassword(final String value) {
-         this.password = value;
-    }
+
      /**
      * Get the DateRgpd.
      * @return the dateRgpd
@@ -117,15 +110,32 @@ public class User implements Serializable, Parcelable {
             this.parcelableParents.add(this);
         }
         dest.writeInt(this.getId());
-        if (this.getIdSmartphone() != null) {
+        if (this.getFirstname() != null) {
             dest.writeInt(1);
-            dest.writeString(this.getIdSmartphone());
+            dest.writeString(this.getFirstname());
         } else {
             dest.writeInt(0);
         }
-        if (this.getPassword() != null) {
+        if (this.getLastname() != null) {
             dest.writeInt(1);
-            dest.writeString(this.getPassword());
+            dest.writeString(this.getLastname());
+        } else {
+            dest.writeInt(0);
+        }
+        if (this.getEmail() != null) {
+            dest.writeInt(1);
+            dest.writeString(this.getEmail());
+        } else {
+            dest.writeInt(0);
+        }
+        if (this.isIsEligible()) {
+            dest.writeInt(1);
+        } else {
+            dest.writeInt(0);
+        }
+        if (this.getIdSmartphone() != null) {
+            dest.writeInt(1);
+            dest.writeString(this.getIdSmartphone());
         } else {
             dest.writeInt(0);
         }
@@ -165,13 +175,22 @@ public class User implements Serializable, Parcelable {
      */
     public void readFromParcel(Parcel parc) {
         this.setId(parc.readInt());
+        int firstnameBool = parc.readInt();
+        if (firstnameBool == 1) {
+            this.setFirstname(parc.readString());
+        }
+        int lastnameBool = parc.readInt();
+        if (lastnameBool == 1) {
+            this.setLastname(parc.readString());
+        }
+        int emailBool = parc.readInt();
+        if (emailBool == 1) {
+            this.setEmail(parc.readString());
+        }
+        this.setIsEligible(parc.readInt() == 1);
         int idSmartphoneBool = parc.readInt();
         if (idSmartphoneBool == 1) {
             this.setIdSmartphone(parc.readString());
-        }
-        int passwordBool = parc.readInt();
-        if (passwordBool == 1) {
-            this.setPassword(parc.readString());
         }
         if (parc.readInt() == 1) {
             this.setDateRgpd(
@@ -192,6 +211,7 @@ public class User implements Serializable, Parcelable {
             this.setUserWorkingTimes(items);
         }
     }
+
 
 
 
@@ -286,5 +306,61 @@ public class User implements Serializable, Parcelable {
      */
     public void setUserWorkingTimes(final ArrayList<WorkingTime> value) {
          this.userWorkingTimes = value;
+    }
+     /**
+     * Get the Firstname.
+     * @return the firstname
+     */
+    public String getFirstname() {
+         return this.firstname;
+    }
+     /**
+     * Set the Firstname.
+     * @param value the firstname to set
+     */
+    public void setFirstname(final String value) {
+         this.firstname = value;
+    }
+     /**
+     * Get the Lastname.
+     * @return the lastname
+     */
+    public String getLastname() {
+         return this.lastname;
+    }
+     /**
+     * Set the Lastname.
+     * @param value the lastname to set
+     */
+    public void setLastname(final String value) {
+         this.lastname = value;
+    }
+     /**
+     * Get the Email.
+     * @return the email
+     */
+    public String getEmail() {
+         return this.email;
+    }
+     /**
+     * Set the Email.
+     * @param value the email to set
+     */
+    public void setEmail(final String value) {
+         this.email = value;
+    }
+     /**
+     * Get the IsEligible.
+     * @return the isEligible
+     */
+    public boolean isIsEligible() {
+         return this.isEligible;
+    }
+     /**
+     * Set the IsEligible.
+     * @param value the isEligible to set
+     */
+    public void setIsEligible(final boolean value) {
+         this.isEligible = value;
     }
 }

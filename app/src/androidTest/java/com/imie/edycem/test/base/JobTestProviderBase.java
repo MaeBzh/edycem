@@ -20,6 +20,7 @@ import com.imie.edycem.data.JobSQLiteAdapter;
 
 import com.imie.edycem.entity.Job;
 import com.imie.edycem.entity.User;
+import com.imie.edycem.entity.Project;
 
 
 import java.util.ArrayList;
@@ -151,6 +152,9 @@ public abstract class JobTestProviderBase extends TestDBBase {
                 if (this.entity.getUsers() != null) {
                     job.getUsers().addAll(this.entity.getUsers());
                 }
+                if (this.entity.getProjects() != null) {
+                    job.getProjects().addAll(this.entity.getProjects());
+                }
 
                 ContentValues values = JobContract.itemToContentValues(job);
                 result = this.provider.update(
@@ -276,6 +280,20 @@ public abstract class JobTestProviderBase extends TestDBBase {
                     }
                     if(!found) {
                         job.getUsers().add(users);
+                    }
+                }
+            }
+            if (this.entity.getProjects() != null) {
+                for (Project projects : this.entity.getProjects()) {
+                    boolean found = false;
+                    for (Project projects2 : job.getProjects()) {
+                        if (projects.getId() == projects2.getId() ) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if(!found) {
+                        job.getProjects().add(projects);
                     }
                 }
             }

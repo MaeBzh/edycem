@@ -37,8 +37,11 @@ public abstract class UserUtilsBase {
         User user = new User();
 
         user.setId(TestUtils.generateRandomInt(0,100) + 1);
+        user.setFirstname("firstname_"+TestUtils.generateRandomString(10));
+        user.setLastname("lastname_"+TestUtils.generateRandomString(10));
+        user.setEmail("email_"+TestUtils.generateRandomString(10));
+        user.setIsEligible(TestUtils.generateRandomBool());
         user.setIdSmartphone("idSmartphone_"+TestUtils.generateRandomString(10));
-        user.setPassword("password_"+TestUtils.generateRandomString(10));
         user.setDateRgpd(TestUtils.generateRandomDateTime());
         user.setJob(JobUtils.generateRandom(ctx));
         ArrayList<WorkingTime> relatedUserWorkingTimess = new ArrayList<WorkingTime>();
@@ -61,8 +64,11 @@ public abstract class UserUtilsBase {
         Assert.assertNotNull(user2);
         if (user1!=null && user2 !=null){
             Assert.assertEquals(user1.getId(), user2.getId());
+            Assert.assertEquals(user1.getFirstname(), user2.getFirstname());
+            Assert.assertEquals(user1.getLastname(), user2.getLastname());
+            Assert.assertEquals(user1.getEmail(), user2.getEmail());
+            Assert.assertEquals(user1.isIsEligible(), user2.isIsEligible());
             Assert.assertEquals(user1.getIdSmartphone(), user2.getIdSmartphone());
-            Assert.assertEquals(user1.getPassword(), user2.getPassword());
             Assert.assertTrue(user1.getDateRgpd().isEqual(user2.getDateRgpd()));
             if (user1.getJob() != null
                     && user2.getJob() != null) {

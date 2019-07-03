@@ -19,6 +19,8 @@ import com.imie.edycem.entity.Job;
 import com.imie.edycem.test.utils.TestUtils;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.test.utils.UserUtils;
+import com.imie.edycem.entity.Project;
+import com.imie.edycem.test.utils.ProjectUtils;
 
 import java.util.ArrayList;
 
@@ -39,6 +41,9 @@ public abstract class JobUtilsBase {
         ArrayList<User> relatedUserss = new ArrayList<User>();
         relatedUserss.add(UserUtils.generateRandom(ctx));
         job.setUsers(relatedUserss);
+        ArrayList<Project> relatedProjectss = new ArrayList<Project>();
+        relatedProjectss.add(ProjectUtils.generateRandom(ctx));
+        job.setProjects(relatedProjectss);
 
         return job;
     }
@@ -73,6 +78,27 @@ public abstract class JobUtilsBase {
                                 String.format(
                                         "Couldn't find associated users (id = %s) in Job (id = %s)",
                                         users1.getId(),
+                                        job1.getId()),
+                                found);
+                    }
+                }
+            }
+            if (job1.getProjects() != null
+                    && job2.getProjects() != null) {
+                Assert.assertEquals(job1.getProjects().size(),
+                    job2.getProjects().size());
+                if (checkRecursiveId) {
+                    for (Project projects1 : job1.getProjects()) {
+                        boolean found = false;
+                        for (Project projects2 : job2.getProjects()) {
+                            if (projects1.getId() == projects2.getId()) {
+                                found = true;
+                            }
+                        }
+                        Assert.assertTrue(
+                                String.format(
+                                        "Couldn't find associated projects (id = %s) in Job (id = %s)",
+                                        projects1.getId(),
                                         job1.getId()),
                                 found);
                     }

@@ -20,6 +20,8 @@ import com.imie.edycem.test.utils.TestUtils;
 import com.imie.edycem.entity.WorkingTime;
 import com.imie.edycem.test.utils.WorkingTimeUtils;
 
+import com.imie.edycem.test.utils.JobUtils;
+
 import java.util.ArrayList;
 
 /** Project utils test class base. */
@@ -40,7 +42,7 @@ public abstract class ProjectUtilsBase {
         project.setCompany("company_"+TestUtils.generateRandomString(10));
         project.setClaimantName("claimantName_"+TestUtils.generateRandomString(10));
         project.setRelevantSite("relevantSite_"+TestUtils.generateRandomString(10));
-        project.setIsEligibleCir(TestUtils.generateRandomBool());
+        project.setEligibleCir(TestUtils.generateRandomInt(0,100));
         project.setAsPartOfPulpit(TestUtils.generateRandomBool());
         project.setDeadline(TestUtils.generateRandomDateTime());
         project.setDocuments("documents_"+TestUtils.generateRandomString(10));
@@ -48,6 +50,7 @@ public abstract class ProjectUtilsBase {
         ArrayList<WorkingTime> relatedProjectWorkingTimess = new ArrayList<WorkingTime>();
         relatedProjectWorkingTimess.add(WorkingTimeUtils.generateRandom(ctx));
         project.setProjectWorkingTimes(relatedProjectWorkingTimess);
+        project.setJob(JobUtils.generateRandom(ctx));
 
         return project;
     }
@@ -70,7 +73,7 @@ public abstract class ProjectUtilsBase {
             Assert.assertEquals(project1.getCompany(), project2.getCompany());
             Assert.assertEquals(project1.getClaimantName(), project2.getClaimantName());
             Assert.assertEquals(project1.getRelevantSite(), project2.getRelevantSite());
-            Assert.assertEquals(project1.isIsEligibleCir(), project2.isIsEligibleCir());
+            Assert.assertEquals(project1.getEligibleCir(), project2.getEligibleCir());
             Assert.assertEquals(project1.isAsPartOfPulpit(), project2.isAsPartOfPulpit());
             Assert.assertTrue(project1.getDeadline().isEqual(project2.getDeadline()));
             Assert.assertEquals(project1.getDocuments(), project2.getDocuments());
@@ -94,6 +97,13 @@ public abstract class ProjectUtilsBase {
                                         project1.getId()),
                                 found);
                     }
+                }
+            }
+            if (project1.getJob() != null
+                    && project2.getJob() != null) {
+                if (checkRecursiveId) {
+                    Assert.assertEquals(project1.getJob().getId(),
+                            project2.getJob().getId());
                 }
             }
         }

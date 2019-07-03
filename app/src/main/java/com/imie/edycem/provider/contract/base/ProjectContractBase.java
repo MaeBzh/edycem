@@ -19,6 +19,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.entity.Job;
 
 
 
@@ -74,12 +75,12 @@ public abstract class ProjectContractBase {
     public static final String ALIASED_COL_RELEVANTSITE =
             ProjectContract.TABLE_NAME + "." + COL_RELEVANTSITE;
 
-    /** isEligibleCir. */
-    public static final String COL_ISELIGIBLECIR =
-            "isEligibleCir";
+    /** eligibleCir. */
+    public static final String COL_ELIGIBLECIR =
+            "eligibleCir";
     /** Alias. */
-    public static final String ALIASED_COL_ISELIGIBLECIR =
-            ProjectContract.TABLE_NAME + "." + COL_ISELIGIBLECIR;
+    public static final String ALIASED_COL_ELIGIBLECIR =
+            ProjectContract.TABLE_NAME + "." + COL_ELIGIBLECIR;
 
     /** asPartOfPulpit. */
     public static final String COL_ASPARTOFPULPIT =
@@ -109,6 +110,13 @@ public abstract class ProjectContractBase {
     public static final String ALIASED_COL_ACTIVITYTYPE =
             ProjectContract.TABLE_NAME + "." + COL_ACTIVITYTYPE;
 
+    /** job_id. */
+    public static final String COL_JOB_ID =
+            "job_id";
+    /** Alias. */
+    public static final String ALIASED_COL_JOB_ID =
+            ProjectContract.TABLE_NAME + "." + COL_JOB_ID;
+
 
 
 
@@ -132,7 +140,7 @@ public abstract class ProjectContractBase {
         
         ProjectContract.COL_RELEVANTSITE,
         
-        ProjectContract.COL_ISELIGIBLECIR,
+        ProjectContract.COL_ELIGIBLECIR,
         
         ProjectContract.COL_ASPARTOFPULPIT,
         
@@ -141,6 +149,8 @@ public abstract class ProjectContractBase {
         ProjectContract.COL_DOCUMENTS,
         
         ProjectContract.COL_ACTIVITYTYPE,
+        
+        ProjectContract.COL_JOB_ID
     };
 
     /** Global Fields. */
@@ -158,7 +168,7 @@ public abstract class ProjectContractBase {
         
         ProjectContract.ALIASED_COL_RELEVANTSITE,
         
-        ProjectContract.ALIASED_COL_ISELIGIBLECIR,
+        ProjectContract.ALIASED_COL_ELIGIBLECIR,
         
         ProjectContract.ALIASED_COL_ASPARTOFPULPIT,
         
@@ -168,6 +178,8 @@ public abstract class ProjectContractBase {
         
         ProjectContract.ALIASED_COL_ACTIVITYTYPE,
         
+        
+        ProjectContract.ALIASED_COL_JOB_ID
     };
 
 
@@ -211,8 +223,8 @@ public abstract class ProjectContractBase {
                 result.put(ProjectContract.COL_RELEVANTSITE, (String) null);
             }
 
-             result.put(ProjectContract.COL_ISELIGIBLECIR,
-                item.isIsEligibleCir() ? 1 : 0);
+             result.put(ProjectContract.COL_ELIGIBLECIR,
+                String.valueOf(item.getEligibleCir()));
 
              result.put(ProjectContract.COL_ASPARTOFPULPIT,
                 item.isAsPartOfPulpit() ? 1 : 0);
@@ -238,7 +250,12 @@ public abstract class ProjectContractBase {
                 result.put(ProjectContract.COL_ACTIVITYTYPE, (String) null);
             }
 
- 
+              if (item.getJob() != null) {
+                result.put(ProjectContract.COL_JOB_ID,
+                    item.getJob().getId());
+            }
+
+
         return result;
     }
 
@@ -296,11 +313,11 @@ public abstract class ProjectContractBase {
                     result.setRelevantSite(cursor.getString(index));
             }
             }
-            index = cursor.getColumnIndex(ProjectContract.COL_ISELIGIBLECIR);
+            index = cursor.getColumnIndex(ProjectContract.COL_ELIGIBLECIR);
 
             if (index > -1) {
             if (!cursor.isNull(index)) {
-                    result.setIsEligibleCir(cursor.getInt(index) == 1);
+                    result.setEligibleCir(cursor.getInt(index));
             }
             }
             index = cursor.getColumnIndex(ProjectContract.COL_ASPARTOFPULPIT);
@@ -336,6 +353,16 @@ public abstract class ProjectContractBase {
             if (!cursor.isNull(index)) {
                     result.setActivityType(cursor.getString(index));
             }
+            }
+            if (result.getJob() == null) {
+                final Job job = new Job();
+                index = cursor.getColumnIndex(ProjectContract.COL_JOB_ID);
+
+                if (index > -1) {
+                    job.setId(cursor.getInt(index));
+                    result.setJob(job);
+                }
+
             }
 
         }

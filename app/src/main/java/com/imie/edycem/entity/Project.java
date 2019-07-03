@@ -10,6 +10,7 @@ import com.tactfactory.harmony.annotation.Column;
 import com.tactfactory.harmony.annotation.Entity;
 import com.tactfactory.harmony.annotation.GeneratedValue;
 import com.tactfactory.harmony.annotation.Id;
+import com.tactfactory.harmony.annotation.ManyToOne;
 import com.tactfactory.harmony.annotation.OneToMany;
 import com.tactfactory.harmony.annotation.Table;
 
@@ -36,8 +37,8 @@ public class Project implements Serializable, Parcelable {
     private String claimantName;
     @Column(type = Column.Type.TEXT, nullable = true)
     private String relevantSite;
-    @Column(type = Column.Type.BOOLEAN, nullable = true)
-    private boolean isEligibleCir;
+    @Column(type = Column.Type.INTEGER, nullable = true)
+    private int eligibleCir;
     @Column(type = Column.Type.BOOLEAN, nullable = true)
     private boolean asPartOfPulpit;
     @Column(type = Column.Type.DATETIME, nullable = true)
@@ -49,6 +50,8 @@ public class Project implements Serializable, Parcelable {
 
     @OneToMany(targetEntity = "WorkingTime", mappedBy = "project")
     private ArrayList<WorkingTime> projectWorkingTimes;
+    @ManyToOne(targetEntity = "Job", inversedBy = "projects")
+    private Job job;
 
 
     /**
@@ -142,20 +145,7 @@ public class Project implements Serializable, Parcelable {
     public void setRelevantSite(final String value) {
          this.relevantSite = value;
     }
-     /**
-     * Get the IsEligibleCir.
-     * @return the isEligibleCir
-     */
-    public boolean isIsEligibleCir() {
-         return this.isEligibleCir;
-    }
-     /**
-     * Set the IsEligibleCir.
-     * @param value the isEligibleCir to set
-     */
-    public void setIsEligibleCir(final boolean value) {
-         this.isEligibleCir = value;
-    }
+
      /**
      * Get the AsPartOfPulpit.
      * @return the asPartOfPulpit
@@ -256,11 +246,7 @@ public class Project implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
-        if (this.isIsEligibleCir()) {
-            dest.writeInt(1);
-        } else {
-            dest.writeInt(0);
-        }
+        dest.writeInt(this.getEligibleCir());
         if (this.isAsPartOfPulpit()) {
             dest.writeInt(1);
         } else {
@@ -298,6 +284,12 @@ public class Project implements Serializable, Parcelable {
         } else {
             dest.writeInt(-1);
         }
+        if (this.getJob() != null
+                    && !this.parcelableParents.contains(this.getJob())) {
+            this.getJob().writeToParcel(this.parcelableParents, dest, flags);
+        } else {
+            dest.writeParcelable(null, flags);
+        }
     }
     /**
      * Regenerated Parcel Constructor. 
@@ -328,7 +320,7 @@ public class Project implements Serializable, Parcelable {
         if (relevantSiteBool == 1) {
             this.setRelevantSite(parc.readString());
         }
-        this.setIsEligibleCir(parc.readInt() == 1);
+        this.setEligibleCir(parc.readInt());
         this.setAsPartOfPulpit(parc.readInt() == 1);
         if (parc.readInt() == 1) {
             this.setDeadline(
@@ -355,7 +347,9 @@ public class Project implements Serializable, Parcelable {
             }
             this.setProjectWorkingTimes(items);
         }
+        this.setJob((Job) parc.readParcelable(Job.class.getClassLoader()));
     }
+
 
 
 
@@ -435,5 +429,33 @@ public class Project implements Serializable, Parcelable {
      */
     public void setProjectWorkingTimes(final ArrayList<WorkingTime> value) {
          this.projectWorkingTimes = value;
+    }
+     /**
+     * Get the EligibleCir.
+     * @return the eligibleCir
+     */
+    public int getEligibleCir() {
+         return this.eligibleCir;
+    }
+     /**
+     * Set the EligibleCir.
+     * @param value the eligibleCir to set
+     */
+    public void setEligibleCir(final int value) {
+         this.eligibleCir = value;
+    }
+     /**
+     * Get the Job.
+     * @return the job
+     */
+    public Job getJob() {
+         return this.job;
+    }
+     /**
+     * Set the Job.
+     * @param value the job to set
+     */
+    public void setJob(final Job value) {
+         this.job = value;
     }
 }

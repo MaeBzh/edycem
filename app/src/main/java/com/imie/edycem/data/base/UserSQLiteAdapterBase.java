@@ -86,8 +86,11 @@ public abstract class UserSQLiteAdapterBase
         + UserContract.TABLE_NAME    + " ("
         
          + UserContract.COL_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+         + UserContract.COL_FIRSTNAME    + " VARCHAR NOT NULL,"
+         + UserContract.COL_LASTNAME    + " VARCHAR NOT NULL,"
+         + UserContract.COL_EMAIL    + " VARCHAR NOT NULL,"
+         + UserContract.COL_ISELIGIBLE    + " BOOLEAN NOT NULL,"
          + UserContract.COL_IDSMARTPHONE    + " VARCHAR NOT NULL,"
-         + UserContract.COL_PASSWORD    + " VARCHAR NOT NULL,"
          + UserContract.COL_DATERGPD    + " DATETIME NOT NULL,"
          + UserContract.COL_JOB_ID    + " INTEGER NOT NULL,"
 
@@ -95,6 +98,7 @@ public abstract class UserSQLiteAdapterBase
          + "FOREIGN KEY(" + UserContract.COL_JOB_ID + ") REFERENCES " 
              + JobContract.TABLE_NAME 
                 + " (" + JobContract.COL_ID + ")"
+        + ", UNIQUE(" + UserContract.COL_EMAIL + ")"
         + ");"
 ;
     }

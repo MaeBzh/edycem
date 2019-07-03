@@ -20,13 +20,18 @@ import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 
 
+import com.google.common.base.Strings;
+import com.google.common.collect.ObjectArrays;
 import com.imie.edycem.data.SQLiteAdapter;
 import com.imie.edycem.data.ProjectSQLiteAdapter;
 import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
+import com.imie.edycem.data.JobSQLiteAdapter;
 import com.imie.edycem.provider.contract.ProjectContract;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
+import com.imie.edycem.provider.contract.JobContract;
 import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.entity.Job;
 
 import com.imie.edycem.harmony.util.DateUtils;
 import com.imie.edycem.EdycemApplication;
@@ -86,13 +91,17 @@ public abstract class ProjectSQLiteAdapterBase
          + ProjectContract.COL_COMPANY    + " VARCHAR NOT NULL,"
          + ProjectContract.COL_CLAIMANTNAME    + " VARCHAR NOT NULL,"
          + ProjectContract.COL_RELEVANTSITE    + " VARCHAR,"
-         + ProjectContract.COL_ISELIGIBLECIR    + " BOOLEAN,"
+         + ProjectContract.COL_ELIGIBLECIR    + " INTEGER,"
          + ProjectContract.COL_ASPARTOFPULPIT    + " BOOLEAN,"
          + ProjectContract.COL_DEADLINE    + " DATETIME,"
          + ProjectContract.COL_DOCUMENTS    + " VARCHAR,"
-         + ProjectContract.COL_ACTIVITYTYPE    + " VARCHAR"
+         + ProjectContract.COL_ACTIVITYTYPE    + " VARCHAR,"
+         + ProjectContract.COL_JOB_ID    + " INTEGER NOT NULL,"
 
         
+         + "FOREIGN KEY(" + ProjectContract.COL_JOB_ID + ") REFERENCES " 
+             + JobContract.TABLE_NAME 
+                + " (" + JobContract.COL_ID + ")"
         + ");"
 ;
     }
@@ -163,9 +172,43 @@ public abstract class ProjectSQLiteAdapterBase
         result.setProjectWorkingTimes(projectWorkingTimesAdapter.cursorToItems(projectworkingtimesCursor));
 
         projectworkingtimesCursor.close();
+        if (result.getJob() != null) {
+            final JobSQLiteAdapter jobAdapter =
+                    new JobSQLiteAdapter(this.ctx);
+            jobAdapter.open(this.mDatabase);
+
+            result.setJob(jobAdapter.getByID(
+                            result.getJob().getId()));
+        }
         return result;
     }
 
+    /**
+     * Find & read Project by job.
+     * @param jobId jobId
+     * @param orderBy Order by string (can be null)
+     * @return List of Project entities
+     */
+     public android.database.Cursor getByJob(final int jobId, String[] projection, String selection, String[] selectionArgs, String orderBy) {
+        String idSelection = ProjectContract.COL_JOB_ID + "= ?";
+        String idSelectionArgs = String.valueOf(jobId);
+        if (!Strings.isNullOrEmpty(selection)) {
+            selection += " AND " + idSelection;
+            selectionArgs = ObjectArrays.concat(selectionArgs, idSelectionArgs);
+        } else {
+            selection = idSelection;
+            selectionArgs = new String[]{idSelectionArgs};
+        }
+        final android.database.Cursor cursor = this.query(
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                orderBy);
+
+        return cursor;
+     }
 
     /**
      * Read All Projects entities.

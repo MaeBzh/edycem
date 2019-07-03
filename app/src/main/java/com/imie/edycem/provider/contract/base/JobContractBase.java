@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import com.imie.edycem.entity.Job;
 import com.imie.edycem.entity.User;
+import com.imie.edycem.entity.Project;
 
 
 
@@ -66,6 +67,7 @@ public abstract class JobContractBase {
         
         JobContract.ALIASED_COL_NAME,
         
+        
     };
 
 
@@ -87,7 +89,7 @@ public abstract class JobContractBase {
                     item.getName());
             }
 
- 
+  
         return result;
     }
 

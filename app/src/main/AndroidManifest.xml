@@ -1,28 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.imie.edycem"
-    android:versionName="@string/app_version"
-    android:installLocation="auto">
+    android:installLocation="auto"
+    android:versionName="@string/app_version">
     <uses-permission android:name="android.permission.GET_TASKS" />
     <application
-        android:label="@string/app_name"
         android:name=".EdycemApplication"
+        android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
-        android:theme="@style/AppTheme"
-        android:allowBackup="true">
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
         <activity
             android:name=".HomeActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.login.LoginActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <provider
             android:name="com.imie.edycem.provider.EdycemProvider"
             android:authorities="com.imie.edycem.provider"
-            android:label="@string/app_provider_name"
             android:description="@string/app_provider_description"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/app_provider_name" />
     </application>
 </manifest>

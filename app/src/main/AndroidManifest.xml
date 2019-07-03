@@ -18,5 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider
+            android:name="com.imie.edycem.provider.EdycemProvider"
+            android:authorities="com.imie.edycem.provider"
+            android:label="@string/app_provider_name"
+            android:description="@string/app_provider_description"
+            android:exported="false" />
     </application>
 </manifest>

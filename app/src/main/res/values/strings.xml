@@ -1,4 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
-
+    <string name="activity_name_invalid_field_error">Field Name is invalid.</string>
+    <string name="activity_name_label">Name</string>
+    <string name="job_name_invalid_field_error">Field Name is invalid.</string>
+    <string name="job_name_label">Name</string>
+    <string name="project_activitytype_invalid_field_error">Field ActivityType is invalid.</string>
+    <string name="project_activitytype_label">ActivityType</string>
+    <string name="project_aspartofpulpit_label">AsPartOfPulpit</string>
+    <string name="project_claimantname_invalid_field_error">Field ClaimantName is invalid.</string>
+    <string name="project_claimantname_label">ClaimantName</string>
+    <string name="project_company_invalid_field_error">Field Company is invalid.</string>
+    <string name="project_company_label">Company</string>
+    <string name="project_deadline_date_title">Select deadline date</string>
+    <string name="project_deadline_invalid_field_error">Field Deadline is invalid.</string>
+    <string name="project_deadline_label">Deadline</string>
+    <string name="project_deadline_time_title">Select deadline time</string>
+    <string name="project_description_invalid_field_error">Field Description is invalid.</string>
+    <string name="project_description_label">Description</string>
+    <string name="project_documents_invalid_field_error">Field Documents is invalid.</string>
+    <string name="project_documents_label">Documents</string>
+    <string name="project_iseligiblecir_label">IsEligibleCir</string>
+    <string name="project_name_invalid_field_error">Field Name is invalid.</string>
+    <string name="project_name_label">Name</string>
+    <string name="project_relevantsite_invalid_field_error">Field RelevantSite is invalid.</string>
+    <string name="project_relevantsite_label">RelevantSite</string>
+    <string name="settings_rgpd_invalid_field_error">Field Rgpd is invalid.</string>
+    <string name="settings_rgpd_label">Rgpd</string>
+    <string name="task_name_invalid_field_error">Field Name is invalid.</string>
+    <string name="task_name_label">Name</string>
+    <string name="user_datergpd_date_title">Select dateRgpd date</string>
+    <string name="user_datergpd_invalid_field_error">Field DateRgpd is invalid.</string>
+    <string name="user_datergpd_label">DateRgpd</string>
+    <string name="user_datergpd_time_title">Select dateRgpd time</string>
+    <string name="user_idsmartphone_invalid_field_error">Field IdSmartphone is invalid.</string>
+    <string name="user_idsmartphone_label">IdSmartphone</string>
+    <string name="user_password_invalid_field_error">Field Password is invalid.</string>
+    <string name="user_password_label">Password</string>
+    <string name="workingtime_date_date_title">Select date date</string>
+    <string name="workingtime_date_invalid_field_error">Field Date is invalid.</string>
+    <string name="workingtime_date_label">Date</string>
+    <string name="workingtime_description_invalid_field_error">Field Description is invalid.</string>
+    <string name="workingtime_description_label">Description</string>
+    <string name="workingtime_spenttime_invalid_field_error">Field SpentTime is invalid.</string>
+    <string name="workingtime_spenttime_label">SpentTime</string>
+    <string name="app_provider_description">Provider of Edycem to access data</string>
+    <string name="app_provider_name">Provider of Edycem</string>
+    <string name="uri_not_supported">URI not supported</string>
 </resources>

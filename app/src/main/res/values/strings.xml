@@ -165,4 +165,6 @@
     <string name="welcome_text">Bienvenue sur votre gestionnaire de projet et de temps de travail</string>
     <string name="workingtime_date_date_title">Select date date</string>
     <string name="workingtime_description_label">Description</string>
+    <string name="authentication_ok" >Vous êtes bien connecté</string >
+    <string name="authentication_fail" >L\'authentification a échoué</string >
 </resources>

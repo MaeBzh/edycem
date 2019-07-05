@@ -1,21 +1,52 @@
 package com.imie.edycem.view.login;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.imie.edycem.R;
+import com.imie.edycem.criterias.base.CriteriaExpression;
+import com.imie.edycem.data.ActivityWebServiceClientAdapter;
+import com.imie.edycem.data.JobWebServiceClientAdapter;
+import com.imie.edycem.data.ProjectWebServiceClientAdapter;
+import com.imie.edycem.data.TaskWebServiceClientAdapter;
+import com.imie.edycem.data.UserWebServiceClientAdapter;
+import com.imie.edycem.entity.Activity;
+import com.imie.edycem.entity.Job;
+import com.imie.edycem.entity.Project;
+import com.imie.edycem.entity.Task;
+import com.imie.edycem.entity.User;
+import com.imie.edycem.provider.UserProviderAdapter;
+import com.imie.edycem.provider.contract.ActivityContract;
+import com.imie.edycem.provider.contract.JobContract;
+import com.imie.edycem.provider.contract.ProjectContract;
+import com.imie.edycem.provider.contract.TaskContract;
+import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.utils.ActivityProviderUtils;
+import com.imie.edycem.provider.utils.JobProviderUtils;
+import com.imie.edycem.provider.utils.ProjectProviderUtils;
+import com.imie.edycem.provider.utils.TaskProviderUtils;
+import com.imie.edycem.provider.utils.UserProviderUtils;
 import com.imie.edycem.view.workingtime.WorkingTimeActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginFragment extends Fragment {
 
     private EditText editEmail;
     private Button submitButton;
+    private ProgressBar progressBar;
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -27,14 +58,174 @@ public class LoginFragment extends Fragment {
 
     public void initComponents(View view) {
         this.editEmail = (EditText) view.findViewById(R.id.edit_email);
+        this.progressBar = (ProgressBar) view.findViewById(R.id.progress);
         this.submitButton = (Button) view.findViewById(R.id.button_submit);
         this.submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginFragment.this.getContext(), WorkingTimeActivity.class);
-                startActivity(intent)
-                ;
+                User user = new User();
+                user.setEmail(LoginFragment.this.editEmail.toString());
+                LoginFragment.this.progressBar.setVisibility(View.VISIBLE);
+                new LoginTask(LoginFragment.this.getContext()).execute(user);
             }
         });
+    }
+
+    /**
+     * Start new main activity with the connected user id's.
+     */
+    public void startMainActivity(User connectedUser) {
+        Intent intent = new Intent(this.getContext(), WorkingTimeActivity.class);
+        intent.putExtra(UserContract.PARCEL, (Parcelable) connectedUser);
+        this.getActivity().finish();
+        startActivity(intent);
+    }
+
+    /**
+     * Create a thread to use webservices retrieving the project, jobs, activities, tasks and users.
+     */
+    public class LoginTask extends AsyncTask<User, Void, User> {
+
+        /**
+         * Context from the fragment.
+         */
+        private Context currentContext;
+
+        /**
+         * Constructor.
+         *
+         * @param context Context
+         */
+        protected LoginTask(Context context) {
+
+            this.currentContext = context;
+
+        }
+
+        /**
+         * Call webservices for updating the database.
+         */
+        private void getDatas() {
+
+            List<Activity> activities = new ArrayList<>();
+            List<Task> tasks = new ArrayList<>();
+            List<Job> jobs = new ArrayList<>();
+            List<Project> projects = new ArrayList<>();
+            List<User> users = new ArrayList<>();
+
+            ActivityWebServiceClientAdapter activityWS = new ActivityWebServiceClientAdapter(this.currentContext);
+            ActivityProviderUtils activityProviderUtils = new ActivityProviderUtils(this.currentContext);
+            activityWS.getAll(activities);
+
+            for (Activity activity : activities) {
+                CriteriaExpression criteriaActivity = new CriteriaExpression(CriteriaExpression.GroupType.AND);
+                criteriaActivity.add(ActivityContract.COL_IDSERVER, String.valueOf(activity.getIdServer()));
+                List<Activity> query = activityProviderUtils.query(criteriaActivity);
+
+                if (query.isEmpty()) {
+                    activityProviderUtils.insert(activity);
+                }
+            }
+
+            TaskWebServiceClientAdapter taskWS = new TaskWebServiceClientAdapter(this.currentContext);
+            TaskProviderUtils taskProviderUtils = new TaskProviderUtils(this.currentContext);
+            taskWS.getAll(tasks);
+
+            for (Task task : tasks) {
+                CriteriaExpression criteriaTask = new CriteriaExpression(CriteriaExpression.GroupType.AND);
+                criteriaTask.add(TaskContract.COL_IDSERVER, String.valueOf(task.getIdServer()));
+                List<Task> queryTasks = taskProviderUtils.query(criteriaTask);
+
+                if (queryTasks.isEmpty()) {
+                    taskProviderUtils.insert(task);
+                }
+            }
+
+            JobWebServiceClientAdapter jobWS = new JobWebServiceClientAdapter(this.currentContext);
+            JobProviderUtils jobProviderUtils = new JobProviderUtils(this.currentContext);
+            jobWS.getAll(jobs);
+
+            for (Job job : jobs) {
+                CriteriaExpression criteriaJob = new CriteriaExpression(CriteriaExpression.GroupType.AND);
+                criteriaJob.add(JobContract.COL_IDSERVER, String.valueOf(job.getIdServer()));
+                List<Job> queryJobs = jobProviderUtils.query(criteriaJob);
+
+                if (queryJobs.isEmpty()) {
+                    jobProviderUtils.insert(job);
+                }
+            }
+
+            UserWebServiceClientAdapter userWS = new UserWebServiceClientAdapter(this.currentContext);
+            UserProviderUtils userProviderUtils = new UserProviderUtils(this.currentContext);
+            userWS.getAll(users);
+
+            for (User user : users) {
+                CriteriaExpression criteriaUser = new CriteriaExpression(CriteriaExpression.GroupType.AND);
+                criteriaUser.add(UserContract.COL_IDSERVER, String.valueOf(user.getIdServer()));
+                List<User> queryUsers = userProviderUtils.query(criteriaUser);
+
+                if (queryUsers.isEmpty()) {
+                    userProviderUtils.insert(user);
+                }
+            }
+
+            ProjectWebServiceClientAdapter projectWS = new ProjectWebServiceClientAdapter(this.currentContext);
+            ProjectProviderUtils projectProviderUtils = new ProjectProviderUtils(this.currentContext);
+            projectWS.getAll(projects);
+
+            for (Project project : projects) {
+                CriteriaExpression criteriaProject = new CriteriaExpression(CriteriaExpression.GroupType.AND);
+                criteriaProject.add(ProjectContract.COL_IDSERVER, String.valueOf(project.getIdServer()));
+                List<Project> queryProjects = projectProviderUtils.query(criteriaProject);
+
+                if (queryProjects.isEmpty()) {
+                    projectProviderUtils.insert(project);
+                }
+            }
+        }
+
+        @Override
+        protected User doInBackground(User... users) {
+
+            User user = users[0];
+            User result = new User();
+            UserWebServiceClientAdapter userWS =
+                    new UserWebServiceClientAdapter(this.currentContext);
+            if(userWS.get(user) == 0 ){
+                this.getDatas();
+            }
+            UserProviderUtils userProviderUtils = new UserProviderUtils(this.currentContext);
+            result = userProviderUtils.getWithEmail(LoginFragment.this.editEmail.toString());
+
+            return result;
+        }
+
+        /**
+         * Show the wrongLogin text view if the user has no authorization.
+         *
+         * @param result the result
+         */
+        @Override
+        protected void onPostExecute(User result) {
+            super.onPostExecute(result);
+
+            if (result != null) {
+
+                Toast.makeText(LoginFragment.this.getContext(),
+                        LoginFragment.this.getContext().getString(R.string.authentication_ok),
+                        Toast.LENGTH_SHORT)
+                        .show();
+                LoginFragment.this.startMainActivity(result);
+
+            } else {
+
+                Toast.makeText(LoginFragment.this.getContext(),
+                        LoginFragment.this.getContext().getString(R.string.authentication_fail),
+                        Toast.LENGTH_SHORT)
+                        .show();
+                LoginFragment.this.progressBar.setVisibility(View.GONE);
+                LoginFragment.this.editEmail.requestFocus();
+            }
+        }
     }
 }

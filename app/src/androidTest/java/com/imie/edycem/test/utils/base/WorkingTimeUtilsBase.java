@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 4, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.test.utils.base;
@@ -17,13 +17,17 @@ import com.imie.edycem.entity.WorkingTime;
 
 
 import com.imie.edycem.test.utils.TestUtils;
+import com.imie.edycem.entity.User;
+import com.imie.edycem.fixture.UserDataLoader;
 
-import com.imie.edycem.test.utils.UserUtils;
+import com.imie.edycem.entity.Project;
+import com.imie.edycem.fixture.ProjectDataLoader;
 
-import com.imie.edycem.test.utils.ProjectUtils;
+import com.imie.edycem.entity.Task;
+import com.imie.edycem.fixture.TaskDataLoader;
 
-import com.imie.edycem.test.utils.TaskUtils;
 
+import java.util.ArrayList;
 
 /** WorkingTime utils test class base. */
 public abstract class WorkingTimeUtilsBase {
@@ -41,9 +45,24 @@ public abstract class WorkingTimeUtilsBase {
         workingTime.setDate(TestUtils.generateRandomDate());
         workingTime.setSpentTime(TestUtils.generateRandomInt(0,100));
         workingTime.setDescription("description_"+TestUtils.generateRandomString(10));
-        workingTime.setUser(UserUtils.generateRandom(ctx));
-        workingTime.setProject(ProjectUtils.generateRandom(ctx));
-        workingTime.setTask(TaskUtils.generateRandom(ctx));
+        ArrayList<User> users =
+            new ArrayList<User>();
+        users.addAll(UserDataLoader.getInstance(ctx).getMap().values());
+        if (!users.isEmpty()) {
+            workingTime.setUser(users.get(TestUtils.generateRandomInt(0, users.size())));
+        }
+        ArrayList<Project> projects =
+            new ArrayList<Project>();
+        projects.addAll(ProjectDataLoader.getInstance(ctx).getMap().values());
+        if (!projects.isEmpty()) {
+            workingTime.setProject(projects.get(TestUtils.generateRandomInt(0, projects.size())));
+        }
+        ArrayList<Task> tasks =
+            new ArrayList<Task>();
+        tasks.addAll(TaskDataLoader.getInstance(ctx).getMap().values());
+        if (!tasks.isEmpty()) {
+            workingTime.setTask(tasks.get(TestUtils.generateRandomInt(0, tasks.size())));
+        }
 
         return workingTime;
     }

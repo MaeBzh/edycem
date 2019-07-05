@@ -5,19 +5,19 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.test.base;
 
-
+import java.io.File;
 
 import com.imie.edycem.provider.EdycemProvider;
-
-
-
+import com.imie.edycem.EdycemApplication;
+import com.imie.edycem.fixture.DataLoader;
+import com.imie.edycem.harmony.util.DatabaseUtil;
 import com.imie.edycem.data.EdycemSQLiteOpenHelper;
-
+import com.imie.edycem.data.base.SQLiteAdapterBase;
 
 import android.content.BroadcastReceiver;
 import android.content.ContentProvider;
@@ -26,7 +26,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
-
+import android.database.sqlite.SQLiteDatabase;
 import android.test.AndroidTestCase;
 import android.test.IsolatedContext;
 import android.test.RenamingDelegatingContext;
@@ -124,5 +124,52 @@ public class TestContextMock {
         EdycemSQLiteOpenHelper.isJUnit = true;
         this.setMockContext();
 
+        String dbPath =
+                this.androidTestCase.getContext()
+                        .getDatabasePath(SQLiteAdapterBase.DB_NAME)
+                        .getAbsolutePath() + ".test";
+
+        File cacheDbFile = new File(dbPath);
+
+        if (!cacheDbFile.exists() || !DataLoader.hasFixturesBeenLoaded) {
+            if (EdycemApplication.DEBUG) {
+                android.util.Log.d("TEST", "Create new Database cache");
+            }
+
+            // Create initial database
+            EdycemSQLiteOpenHelper helper =
+                    new EdycemSQLiteOpenHelper(
+                        this.getMockContext(),
+                        SQLiteAdapterBase.DB_NAME,
+                        null,
+                        EdycemApplication.getVersionCode(
+                                this.getMockContext()));
+
+            SQLiteDatabase db = helper.getWritableDatabase();
+            EdycemSQLiteOpenHelper.clearDatabase(db);
+
+            db.beginTransaction();
+            DataLoader dataLoader = new DataLoader(this.getMockContext());
+            dataLoader.clean();
+            dataLoader.loadData(db,
+                        DataLoader.MODE_APP |
+                        DataLoader.MODE_DEBUG |
+                        DataLoader.MODE_TEST);
+            db.setTransactionSuccessful();
+            db.endTransaction();
+            db.close();
+
+            DatabaseUtil.exportDB(this.getMockContext(),
+                    cacheDbFile,
+                    SQLiteAdapterBase.DB_NAME);
+        } else {
+            if (EdycemApplication.DEBUG) {
+                android.util.Log.d("TEST", "Re use old Database cache");
+            }
+            DatabaseUtil.importDB(this.getMockContext(),
+                    cacheDbFile,
+                    SQLiteAdapterBase.DB_NAME,
+                    false);
+        }
     }
 }

@@ -6,7 +6,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 4, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -26,12 +26,15 @@ import com.imie.edycem.data.SQLiteAdapter;
 import com.imie.edycem.data.ProjectSQLiteAdapter;
 import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
 import com.imie.edycem.data.JobSQLiteAdapter;
+import com.imie.edycem.data.UserSQLiteAdapter;
 import com.imie.edycem.provider.contract.ProjectContract;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.provider.contract.JobContract;
+import com.imie.edycem.provider.contract.UserContract;
 import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.WorkingTime;
 import com.imie.edycem.entity.Job;
+import com.imie.edycem.entity.User;
 
 import com.imie.edycem.harmony.util.DateUtils;
 import com.imie.edycem.EdycemApplication;
@@ -88,8 +91,9 @@ public abstract class ProjectSQLiteAdapterBase
          + ProjectContract.COL_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT,"
          + ProjectContract.COL_NAME    + " VARCHAR NOT NULL,"
          + ProjectContract.COL_DESCRIPTION    + " VARCHAR NOT NULL,"
-         + ProjectContract.COL_COMPANY    + " VARCHAR NOT NULL,"
-         + ProjectContract.COL_CLAIMANTNAME    + " VARCHAR NOT NULL,"
+         + ProjectContract.COL_CREATEDAT    + " DATETIME,"
+         + ProjectContract.COL_COMPANY    + " VARCHAR,"
+         + ProjectContract.COL_CLAIMANTNAME    + " VARCHAR,"
          + ProjectContract.COL_RELEVANTSITE    + " VARCHAR,"
          + ProjectContract.COL_ELIGIBLECIR    + " INTEGER,"
          + ProjectContract.COL_ASPARTOFPULPIT    + " BOOLEAN,"
@@ -98,11 +102,15 @@ public abstract class ProjectSQLiteAdapterBase
          + ProjectContract.COL_ACTIVITYTYPE    + " VARCHAR,"
          + ProjectContract.COL_ISVALIDATE    + " BOOLEAN NOT NULL,"
          + ProjectContract.COL_JOB_ID    + " INTEGER NOT NULL,"
+         + ProjectContract.COL_CREATOR_ID    + " INTEGER,"
 
         
          + "FOREIGN KEY(" + ProjectContract.COL_JOB_ID + ") REFERENCES " 
              + JobContract.TABLE_NAME 
-                + " (" + JobContract.COL_ID + ")"
+                + " (" + JobContract.COL_ID + "),"
+         + "FOREIGN KEY(" + ProjectContract.COL_CREATOR_ID + ") REFERENCES " 
+             + UserContract.TABLE_NAME 
+                + " (" + UserContract.COL_ID + ")"
         + ");"
 ;
     }
@@ -181,6 +189,14 @@ public abstract class ProjectSQLiteAdapterBase
             result.setJob(jobAdapter.getByID(
                             result.getJob().getId()));
         }
+        if (result.getCreator() != null) {
+            final UserSQLiteAdapter creatorAdapter =
+                    new UserSQLiteAdapter(this.ctx);
+            creatorAdapter.open(this.mDatabase);
+
+            result.setCreator(creatorAdapter.getByID(
+                            result.getCreator().getId()));
+        }
         return result;
     }
 
@@ -193,6 +209,32 @@ public abstract class ProjectSQLiteAdapterBase
      public android.database.Cursor getByJob(final int jobId, String[] projection, String selection, String[] selectionArgs, String orderBy) {
         String idSelection = ProjectContract.COL_JOB_ID + "= ?";
         String idSelectionArgs = String.valueOf(jobId);
+        if (!Strings.isNullOrEmpty(selection)) {
+            selection += " AND " + idSelection;
+            selectionArgs = ObjectArrays.concat(selectionArgs, idSelectionArgs);
+        } else {
+            selection = idSelection;
+            selectionArgs = new String[]{idSelectionArgs};
+        }
+        final android.database.Cursor cursor = this.query(
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                orderBy);
+
+        return cursor;
+     }
+    /**
+     * Find & read Project by creator.
+     * @param creatorId creatorId
+     * @param orderBy Order by string (can be null)
+     * @return List of Project entities
+     */
+     public android.database.Cursor getByCreator(final int creatorId, String[] projection, String selection, String[] selectionArgs, String orderBy) {
+        String idSelection = ProjectContract.COL_CREATOR_ID + "= ?";
+        String idSelectionArgs = String.valueOf(creatorId);
         if (!Strings.isNullOrEmpty(selection)) {
             selection += " AND " + idSelection;
             selectionArgs = ObjectArrays.concat(selectionArgs, idSelectionArgs);

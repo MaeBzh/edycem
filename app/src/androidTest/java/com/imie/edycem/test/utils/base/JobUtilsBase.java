@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.test.utils.base;
@@ -18,9 +18,11 @@ import com.imie.edycem.entity.Job;
 
 import com.imie.edycem.test.utils.TestUtils;
 import com.imie.edycem.entity.User;
-import com.imie.edycem.test.utils.UserUtils;
+import com.imie.edycem.fixture.UserDataLoader;
+
 import com.imie.edycem.entity.Project;
-import com.imie.edycem.test.utils.ProjectUtils;
+import com.imie.edycem.fixture.ProjectDataLoader;
+
 
 import java.util.ArrayList;
 
@@ -38,12 +40,22 @@ public abstract class JobUtilsBase {
 
         job.setId(TestUtils.generateRandomInt(0,100) + 1);
         job.setName("name_"+TestUtils.generateRandomString(10));
+        ArrayList<User> userss =
+            new ArrayList<User>();
+        userss.addAll(UserDataLoader.getInstance(ctx).getMap().values());
         ArrayList<User> relatedUserss = new ArrayList<User>();
-        relatedUserss.add(UserUtils.generateRandom(ctx));
-        job.setUsers(relatedUserss);
+        if (!userss.isEmpty()) {
+            relatedUserss.add(userss.get(TestUtils.generateRandomInt(0, userss.size())));
+            job.setUsers(relatedUserss);
+        }
+        ArrayList<Project> projectss =
+            new ArrayList<Project>();
+        projectss.addAll(ProjectDataLoader.getInstance(ctx).getMap().values());
         ArrayList<Project> relatedProjectss = new ArrayList<Project>();
-        relatedProjectss.add(ProjectUtils.generateRandom(ctx));
-        job.setProjects(relatedProjectss);
+        if (!projectss.isEmpty()) {
+            relatedProjectss.add(projectss.get(TestUtils.generateRandomInt(0, projectss.size())));
+            job.setProjects(relatedProjectss);
+        }
 
         return job;
     }

@@ -6,7 +6,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-
+import com.imie.edycem.data.EdycemSQLiteOpenHelper;
 import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.data.ProjectSQLiteAdapter;
@@ -40,6 +40,7 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
+import com.imie.edycem.fixture.DataLoader;
 
 
 /**
@@ -134,6 +135,9 @@ public class EdycemSQLiteOpenHelperBase extends SQLiteOpenHelper {
             }
             db.execSQL(SettingsSQLiteAdapter.getSchema());
             db.execSQL("PRAGMA foreign_keys = ON;");
+            if (!EdycemSQLiteOpenHelper.isJUnit) {
+                this.loadData(db);
+            }
         }
 
     }
@@ -181,6 +185,19 @@ public class EdycemSQLiteOpenHelperBase extends SQLiteOpenHelper {
         // TODO : Upgrade your tables !
     }
 
+    /**
+     * Loads data from the fixture files.
+     * @param db The database to populate with fixtures
+     */
+    private void loadData(final SQLiteDatabase db) {
+        final DataLoader dataLoader = new DataLoader(this.ctx);
+        dataLoader.clean();
+        int mode = DataLoader.MODE_APP;
+        if (EdycemApplication.DEBUG) {
+            mode = DataLoader.MODE_APP | DataLoader.MODE_DEBUG;
+        }
+        dataLoader.loadData(db, mode);
+    }
 
     /**
      * Creates a empty database on the system and rewrites it with your own

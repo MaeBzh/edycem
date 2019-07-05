@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.test.base;
@@ -17,6 +17,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 import com.imie.edycem.data.SettingsSQLiteAdapter;
 import com.imie.edycem.entity.Settings;
 
+import com.imie.edycem.fixture.SettingsDataLoader;
 
 import com.imie.edycem.test.utils.*;
 
@@ -45,6 +46,13 @@ public abstract class SettingsTestDBBase extends TestDBBase {
         this.adapter = new SettingsSQLiteAdapter(this.ctx);
         this.adapter.open();
 
+        this.entities = new ArrayList<Settings>();        
+        this.entities.addAll(SettingsDataLoader.getInstance(this.ctx).getMap().values());
+        if (entities.size()>0){
+            this.entity = this.entities.get(TestUtils.generateRandomInt(0,entities.size()-1));
+        }
+
+        this.nbEntities += SettingsDataLoader.getInstance(this.ctx).getMap().size();
     }
 
     /* (non-Javadoc)

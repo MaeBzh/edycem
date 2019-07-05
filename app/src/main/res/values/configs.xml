@@ -1,6 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string name="app_name">Edycem</string>
     <string name="app_version">0.1.0</string>
     <string name="device_type">phone</string>
+    <string name="image_url_prefix_dev">http://127.0.0.1:80</string>
+    <string name="image_url_prefix_prod">http://127.0.0.1:80</string>
+    <string name="rest_check_ssl">true</string>
+    <string name="rest_ssl">ca.cert</string>
+    <string name="rest_url_dev">http://127.0.0.1:80/api_dev/</string>
+    <string name="rest_url_prod">http://127.0.0.1:80/api/</string>
 </resources>

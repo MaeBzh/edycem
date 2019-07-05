@@ -13,9 +13,12 @@ import com.tactfactory.harmony.annotation.Id;
 import com.tactfactory.harmony.annotation.ManyToOne;
 import com.tactfactory.harmony.annotation.OneToMany;
 import com.tactfactory.harmony.annotation.Table;
+import com.tactfactory.harmony.bundles.rest.annotation.Rest;
+import com.tactfactory.harmony.bundles.rest.annotation.RestField;
 
 import org.joda.time.DateTime;
 
+@Rest
 @Entity
 @Table
 public class Project implements Serializable, Parcelable {
@@ -27,13 +30,18 @@ public class Project implements Serializable, Parcelable {
     @Column(type = Column.Type.INTEGER, hidden = true)
     @GeneratedValue(strategy = GeneratedValue.Strategy.MODE_IDENTITY)
     private int id;
+    @RestField(name = "id")
+    @Column(type = Column.Type.INTEGER, nullable = true)
+    private int idServer;
     @Column(type = Column.Type.TEXT)
     private String name;
     @Column(type = Column.Type.TEXT)
-    private  String description;
-    @Column(type = Column.Type.TEXT)
+    private String description;
+    @Column(type = Column.Type.DATETIME, nullable = true)
+    private DateTime createdAt;
+    @Column(type = Column.Type.TEXT, nullable = true)
     private String company;
-    @Column(type = Column.Type.TEXT)
+    @Column(type = Column.Type.TEXT, nullable = true)
     private String claimantName;
     @Column(type = Column.Type.TEXT, nullable = true)
     private String relevantSite;
@@ -54,6 +62,9 @@ public class Project implements Serializable, Parcelable {
     private ArrayList<WorkingTime> projectWorkingTimes;
     @ManyToOne(targetEntity = "Job", inversedBy = "projects")
     private Job job;
+    @ManyToOne(targetEntity = "User", inversedBy = "createdProjects")
+    @Column(nullable = true)
+    private User creator;
 
 
     /**
@@ -230,6 +241,13 @@ public class Project implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
+        if (this.getCreatedAt() != null) {
+            dest.writeInt(1);
+            dest.writeString(ISODateTimeFormat.dateTime().print(
+                    this.getCreatedAt()));
+        } else {
+            dest.writeInt(0);
+        }
         if (this.getCompany() != null) {
             dest.writeInt(1);
             dest.writeString(this.getCompany());
@@ -297,6 +315,12 @@ public class Project implements Serializable, Parcelable {
         } else {
             dest.writeParcelable(null, flags);
         }
+        if (this.getCreator() != null
+                    && !this.parcelableParents.contains(this.getCreator())) {
+            this.getCreator().writeToParcel(this.parcelableParents, dest, flags);
+        } else {
+            dest.writeParcelable(null, flags);
+        }
     }
     /**
      * Regenerated Parcel Constructor. 
@@ -314,6 +338,12 @@ public class Project implements Serializable, Parcelable {
         int descriptionBool = parc.readInt();
         if (descriptionBool == 1) {
             this.setDescription(parc.readString());
+        }
+        if (parc.readInt() == 1) {
+            this.setCreatedAt(
+                    ISODateTimeFormat.dateTimeParser()
+                            .withOffsetParsed().parseDateTime(
+                                    parc.readString()));
         }
         int companyBool = parc.readInt();
         if (companyBool == 1) {
@@ -356,7 +386,13 @@ public class Project implements Serializable, Parcelable {
             this.setProjectWorkingTimes(items);
         }
         this.setJob((Job) parc.readParcelable(Job.class.getClassLoader()));
+        this.setCreator((User) parc.readParcelable(User.class.getClassLoader()));
     }
+
+
+
+
+
 
 
 
@@ -480,5 +516,33 @@ public class Project implements Serializable, Parcelable {
      */
     public void setIsValidate(final boolean value) {
          this.isValidate = value;
+    }
+     /**
+     * Get the Creator.
+     * @return the creator
+     */
+    public User getCreator() {
+         return this.creator;
+    }
+     /**
+     * Set the Creator.
+     * @param value the creator to set
+     */
+    public void setCreator(final User value) {
+         this.creator = value;
+    }
+     /**
+     * Get the CreatedAt.
+     * @return the createdAt
+     */
+    public DateTime getCreatedAt() {
+         return this.createdAt;
+    }
+     /**
+     * Set the CreatedAt.
+     * @param value the createdAt to set
+     */
+    public void setCreatedAt(final DateTime value) {
+         this.createdAt = value;
     }
 }

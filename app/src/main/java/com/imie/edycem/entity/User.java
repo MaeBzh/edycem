@@ -13,9 +13,12 @@ import com.tactfactory.harmony.annotation.Id;
 import com.tactfactory.harmony.annotation.ManyToOne;
 import com.tactfactory.harmony.annotation.OneToMany;
 import com.tactfactory.harmony.annotation.Table;
+import com.tactfactory.harmony.bundles.rest.annotation.Rest;
+import com.tactfactory.harmony.bundles.rest.annotation.RestField;
 
 import org.joda.time.DateTime;
 
+@Rest
 @Entity
 @Table
 public class User implements Serializable, Parcelable {
@@ -27,6 +30,9 @@ public class User implements Serializable, Parcelable {
     @Column(type = Column.Type.INTEGER, hidden = true)
     @GeneratedValue(strategy = GeneratedValue.Strategy.MODE_IDENTITY)
     private int id;
+    @RestField(name = "id")
+    @Column(type = Column.Type.INTEGER, nullable = true)
+    private int idServer;
     @Column(type = Column.Type.TEXT)
     private String firstname;
     @Column(type = Column.Type.TEXT)
@@ -37,13 +43,15 @@ public class User implements Serializable, Parcelable {
     private boolean isEligible;
     @Column(type = Column.Type.TEXT)
     private String idSmartphone;
-    @Column(type = Column.Type.DATETIME)
+    @Column(type = Column.Type.DATETIME, nullable = true)
     private DateTime dateRgpd;
 
     @ManyToOne(targetEntity = "Job", inversedBy = "users")
     private Job job;
     @OneToMany(targetEntity = "WorkingTime", mappedBy = "user")
     private ArrayList<WorkingTime> userWorkingTimes;
+    @OneToMany(targetEntity = "Project", mappedBy = "creator")
+    private ArrayList<Project> createdProjects;
 
 
     /**
@@ -165,6 +173,19 @@ public class User implements Serializable, Parcelable {
         } else {
             dest.writeInt(-1);
         }
+
+        if (this.getCreatedProjects() != null) {
+            dest.writeInt(this.getCreatedProjects().size());
+            for (Project item : this.getCreatedProjects()) {
+                if (!this.parcelableParents.contains(item)) {
+                    item.writeToParcel(this.parcelableParents, dest, flags);
+                } else {
+                    dest.writeParcelable(null, flags);
+                }
+            }
+        } else {
+            dest.writeInt(-1);
+        }
     }
     /**
      * Regenerated Parcel Constructor. 
@@ -210,7 +231,23 @@ public class User implements Serializable, Parcelable {
             }
             this.setUserWorkingTimes(items);
         }
+
+        int nbCreatedProjects = parc.readInt();
+        if (nbCreatedProjects > -1) {
+            ArrayList<Project> items =
+                new ArrayList<Project>();
+            for (int i = 0; i < nbCreatedProjects; i++) {
+                items.add((Project) parc.readParcelable(
+                        Project.class.getClassLoader()));
+            }
+            this.setCreatedProjects(items);
+        }
     }
+
+
+
+
+
 
 
 
@@ -363,5 +400,19 @@ public class User implements Serializable, Parcelable {
      */
     public void setIsEligible(final boolean value) {
          this.isEligible = value;
+    }
+     /**
+     * Get the CreatedProjects.
+     * @return the createdProjects
+     */
+    public ArrayList<Project> getCreatedProjects() {
+         return this.createdProjects;
+    }
+     /**
+     * Set the CreatedProjects.
+     * @param value the createdProjects to set
+     */
+    public void setCreatedProjects(final ArrayList<Project> value) {
+         this.createdProjects = value;
     }
 }

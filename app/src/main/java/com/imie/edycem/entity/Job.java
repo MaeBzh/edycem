@@ -11,7 +11,10 @@ import com.tactfactory.harmony.annotation.GeneratedValue;
 import com.tactfactory.harmony.annotation.Id;
 import com.tactfactory.harmony.annotation.OneToMany;
 import com.tactfactory.harmony.annotation.Table;
+import com.tactfactory.harmony.bundles.rest.annotation.Rest;
+import com.tactfactory.harmony.bundles.rest.annotation.RestField;
 
+@Rest
 @Entity
 @Table
 public class Job implements Serializable, Parcelable {
@@ -23,6 +26,9 @@ public class Job implements Serializable, Parcelable {
     @Column(type = Column.Type.INTEGER, hidden = true)
     @GeneratedValue(strategy = GeneratedValue.Strategy.MODE_IDENTITY)
     private int id;
+    @RestField(name = "id")
+    @Column(type = Column.Type.INTEGER, nullable = true)
+    private int idServer;
     @Column(type = Column.Type.TEXT)
     private String name;
 
@@ -149,6 +155,11 @@ public class Job implements Serializable, Parcelable {
             this.setProjects(items);
         }
     }
+
+
+
+
+
 
 
 

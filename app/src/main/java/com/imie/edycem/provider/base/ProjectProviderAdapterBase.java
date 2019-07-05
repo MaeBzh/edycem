@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.provider.base;
@@ -29,6 +29,7 @@ import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.data.ProjectSQLiteAdapter;
 import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
 import com.imie.edycem.data.JobSQLiteAdapter;
+import com.imie.edycem.data.UserSQLiteAdapter;
 
 /**
  * ProjectProviderAdapterBase.
@@ -59,6 +60,9 @@ public abstract class ProjectProviderAdapterBase
     /** PROJECT_JOB. */
     protected static final int PROJECT_JOB =
             1355342588;
+    /** PROJECT_CREATOR. */
+    protected static final int PROJECT_CREATOR =
+            1355342589;
 
     /**
      * Static constructor.
@@ -83,6 +87,10 @@ public abstract class ProjectProviderAdapterBase
                 EdycemProvider.authority,
                 projectType + "/#" + "/job",
                 PROJECT_JOB);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                projectType + "/#" + "/creator",
+                PROJECT_CREATOR);
     }
 
     /**
@@ -98,6 +106,7 @@ public abstract class ProjectProviderAdapterBase
         this.uriIds.add(PROJECT_ONE);
         this.uriIds.add(PROJECT_PROJECTWORKINGTIMES);
         this.uriIds.add(PROJECT_JOB);
+        this.uriIds.add(PROJECT_CREATOR);
     }
 
     @Override
@@ -124,6 +133,9 @@ public abstract class ProjectProviderAdapterBase
                 result = collection + "project";
                 break;
             case PROJECT_JOB:
+                result = single + "project";
+                break;
+            case PROJECT_CREATOR:
                 result = single + "project";
                 break;
             default:
@@ -248,6 +260,22 @@ public abstract class ProjectProviderAdapterBase
                     JobSQLiteAdapter jobAdapter = new JobSQLiteAdapter(this.ctx);
                     jobAdapter.open(this.getDb());
                     result = jobAdapter.query(jobId);
+                }
+                break;
+
+            case PROJECT_CREATOR:
+                projectCursor = this.queryById(
+                        uri.getPathSegments().get(1));
+
+                if (projectCursor.getCount() > 0) {
+                    projectCursor.moveToFirst();
+                    int creatorId = projectCursor.getInt(
+                            projectCursor.getColumnIndex(
+                                    ProjectContract.COL_CREATOR_ID));
+
+                    UserSQLiteAdapter userAdapter = new UserSQLiteAdapter(this.ctx);
+                    userAdapter.open(this.getDb());
+                    result = userAdapter.query(creatorId);
                 }
                 break;
 

@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.provider.utils.base;
@@ -33,14 +33,17 @@ import com.imie.edycem.criterias.base.CriteriaExpression.GroupType;
 import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.WorkingTime;
 import com.imie.edycem.entity.Job;
+import com.imie.edycem.entity.User;
 
 import com.imie.edycem.provider.ProjectProviderAdapter;
 import com.imie.edycem.provider.WorkingTimeProviderAdapter;
 import com.imie.edycem.provider.JobProviderAdapter;
+import com.imie.edycem.provider.UserProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.ProjectContract;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.provider.contract.JobContract;
+import com.imie.edycem.provider.contract.UserContract;
 
 /**
  * Project Provider Utils Base.
@@ -183,6 +186,10 @@ public abstract class ProjectProviderUtilsBase
             if (result.getJob() != null) {
                 result.setJob(
                     this.getAssociateJob(result));
+            }
+            if (result.getCreator() != null) {
+                result.setCreator(
+                    this.getAssociateCreator(result));
             }
         }
         cursor.close();
@@ -371,6 +378,33 @@ public abstract class ProjectProviderUtilsBase
             result = null;
         }
         jobCursor.close();
+
+        return result;
+    }
+
+    /**
+     * Get associate Creator.
+     * @param item Project
+     * @return User
+     */
+    public User getAssociateCreator(
+            final Project item) {
+        User result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor userCursor = prov.query(
+                UserProviderAdapter.USER_URI,
+                UserContract.ALIASED_COLS,
+                UserContract.ALIASED_COL_ID + "= ?",
+                new String[]{String.valueOf(item.getCreator().getId())},
+                null);
+
+        if (userCursor.getCount() > 0) {
+            userCursor.moveToFirst();
+            result = UserContract.cursorToItem(userCursor);
+        } else {
+            result = null;
+        }
+        userCursor.close();
 
         return result;
     }

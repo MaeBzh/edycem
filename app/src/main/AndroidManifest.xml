@@ -4,6 +4,8 @@
     android:installLocation="auto"
     android:versionName="@string/app_version">
     <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".EdycemApplication"
         android:allowBackup="true"

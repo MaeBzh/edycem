@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.test.base;
@@ -17,6 +17,7 @@ import android.test.suitebuilder.annotation.SmallTest;
 import com.imie.edycem.data.JobSQLiteAdapter;
 import com.imie.edycem.entity.Job;
 
+import com.imie.edycem.fixture.JobDataLoader;
 
 import com.imie.edycem.test.utils.*;
 
@@ -45,6 +46,13 @@ public abstract class JobTestDBBase extends TestDBBase {
         this.adapter = new JobSQLiteAdapter(this.ctx);
         this.adapter.open();
 
+        this.entities = new ArrayList<Job>();        
+        this.entities.addAll(JobDataLoader.getInstance(this.ctx).getMap().values());
+        if (entities.size()>0){
+            this.entity = this.entities.get(TestUtils.generateRandomInt(0,entities.size()-1));
+        }
+
+        this.nbEntities += JobDataLoader.getInstance(this.ctx).getMap().size();
     }
 
     /* (non-Javadoc)

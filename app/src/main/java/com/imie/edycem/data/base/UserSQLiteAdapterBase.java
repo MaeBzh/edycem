@@ -6,7 +6,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -26,12 +26,15 @@ import com.imie.edycem.data.SQLiteAdapter;
 import com.imie.edycem.data.UserSQLiteAdapter;
 import com.imie.edycem.data.JobSQLiteAdapter;
 import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
+import com.imie.edycem.data.ProjectSQLiteAdapter;
 import com.imie.edycem.provider.contract.UserContract;
 import com.imie.edycem.provider.contract.JobContract;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
+import com.imie.edycem.provider.contract.ProjectContract;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.entity.Job;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.entity.Project;
 
 import com.imie.edycem.harmony.util.DateUtils;
 import com.imie.edycem.EdycemApplication;
@@ -91,7 +94,7 @@ public abstract class UserSQLiteAdapterBase
          + UserContract.COL_EMAIL    + " VARCHAR NOT NULL,"
          + UserContract.COL_ISELIGIBLE    + " BOOLEAN NOT NULL,"
          + UserContract.COL_IDSMARTPHONE    + " VARCHAR NOT NULL,"
-         + UserContract.COL_DATERGPD    + " DATETIME NOT NULL,"
+         + UserContract.COL_DATERGPD    + " DATETIME,"
          + UserContract.COL_JOB_ID    + " INTEGER NOT NULL,"
 
         
@@ -177,6 +180,19 @@ public abstract class UserSQLiteAdapterBase
         result.setUserWorkingTimes(userWorkingTimesAdapter.cursorToItems(userworkingtimesCursor));
 
         userworkingtimesCursor.close();
+        final ProjectSQLiteAdapter createdProjectsAdapter =
+                new ProjectSQLiteAdapter(this.ctx);
+        createdProjectsAdapter.open(this.mDatabase);
+        android.database.Cursor createdprojectsCursor = createdProjectsAdapter
+                    .getByCreator(
+                            result.getId(),
+                            ProjectContract.ALIASED_COLS,
+                            null,
+                            null,
+                            null);
+        result.setCreatedProjects(createdProjectsAdapter.cursorToItems(createdprojectsCursor));
+
+        createdprojectsCursor.close();
         return result;
     }
 
@@ -255,6 +271,16 @@ public abstract class UserSQLiteAdapterBase
                         : item.getUserWorkingTimes()) {
                 workingtime.setUser(item);
                 userWorkingTimesAdapter.insertOrUpdate(workingtime);
+            }
+        }
+        if (item.getCreatedProjects() != null) {
+            ProjectSQLiteAdapterBase createdProjectsAdapter =
+                    new ProjectSQLiteAdapter(this.ctx);
+            createdProjectsAdapter.open(this.mDatabase);
+            for (Project project
+                        : item.getCreatedProjects()) {
+                project.setCreator(item);
+                createdProjectsAdapter.insertOrUpdate(project);
             }
         }
         return insertResult;

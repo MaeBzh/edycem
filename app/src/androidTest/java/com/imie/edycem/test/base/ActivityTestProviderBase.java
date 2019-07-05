@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.test.base;
@@ -21,6 +21,7 @@ import com.imie.edycem.data.ActivitySQLiteAdapter;
 import com.imie.edycem.entity.Activity;
 import com.imie.edycem.entity.Task;
 
+import com.imie.edycem.fixture.ActivityDataLoader;
 
 import java.util.ArrayList;
 import com.imie.edycem.test.utils.*;
@@ -60,6 +61,13 @@ public abstract class ActivityTestProviderBase extends TestDBBase {
 
         this.adapter = new ActivitySQLiteAdapter(this.ctx);
 
+        this.entities = new ArrayList<Activity>();
+        this.entities.addAll(ActivityDataLoader.getInstance(this.ctx).getMap().values());
+        if (this.entities.size()>0) {
+            this.entity = this.entities.get(TestUtils.generateRandomInt(0,entities.size()-1));
+        }
+
+        this.nbEntities += ActivityDataLoader.getInstance(this.ctx).getMap().size();
         this.provider = this.getContext().getContentResolver();
         this.providerUtils = new ActivityProviderUtils(this.getContext());
     }

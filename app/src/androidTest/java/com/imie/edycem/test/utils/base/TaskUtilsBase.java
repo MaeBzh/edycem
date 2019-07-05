@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.test.utils.base;
@@ -17,10 +17,12 @@ import com.imie.edycem.entity.Task;
 
 
 import com.imie.edycem.test.utils.TestUtils;
+import com.imie.edycem.entity.Activity;
+import com.imie.edycem.fixture.ActivityDataLoader;
 
-import com.imie.edycem.test.utils.ActivityUtils;
 import com.imie.edycem.entity.WorkingTime;
-import com.imie.edycem.test.utils.WorkingTimeUtils;
+import com.imie.edycem.fixture.WorkingTimeDataLoader;
+
 
 import java.util.ArrayList;
 
@@ -38,10 +40,20 @@ public abstract class TaskUtilsBase {
 
         task.setId(TestUtils.generateRandomInt(0,100) + 1);
         task.setName("name_"+TestUtils.generateRandomString(10));
-        task.setActivity(ActivityUtils.generateRandom(ctx));
+        ArrayList<Activity> activitys =
+            new ArrayList<Activity>();
+        activitys.addAll(ActivityDataLoader.getInstance(ctx).getMap().values());
+        if (!activitys.isEmpty()) {
+            task.setActivity(activitys.get(TestUtils.generateRandomInt(0, activitys.size())));
+        }
+        ArrayList<WorkingTime> taskWorkingTimess =
+            new ArrayList<WorkingTime>();
+        taskWorkingTimess.addAll(WorkingTimeDataLoader.getInstance(ctx).getMap().values());
         ArrayList<WorkingTime> relatedTaskWorkingTimess = new ArrayList<WorkingTime>();
-        relatedTaskWorkingTimess.add(WorkingTimeUtils.generateRandom(ctx));
-        task.setTaskWorkingTimes(relatedTaskWorkingTimess);
+        if (!taskWorkingTimess.isEmpty()) {
+            relatedTaskWorkingTimess.add(taskWorkingTimess.get(TestUtils.generateRandomInt(0, taskWorkingTimess.size())));
+            task.setTaskWorkingTimes(relatedTaskWorkingTimess);
+        }
 
         return task;
     }

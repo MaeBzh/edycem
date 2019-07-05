@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.test.utils.base;
@@ -18,7 +18,8 @@ import com.imie.edycem.entity.Activity;
 
 import com.imie.edycem.test.utils.TestUtils;
 import com.imie.edycem.entity.Task;
-import com.imie.edycem.test.utils.TaskUtils;
+import com.imie.edycem.fixture.TaskDataLoader;
+
 
 import java.util.ArrayList;
 
@@ -36,9 +37,14 @@ public abstract class ActivityUtilsBase {
 
         activity.setId(TestUtils.generateRandomInt(0,100) + 1);
         activity.setName("name_"+TestUtils.generateRandomString(10));
+        ArrayList<Task> taskss =
+            new ArrayList<Task>();
+        taskss.addAll(TaskDataLoader.getInstance(ctx).getMap().values());
         ArrayList<Task> relatedTaskss = new ArrayList<Task>();
-        relatedTaskss.add(TaskUtils.generateRandom(ctx));
-        activity.setTasks(relatedTaskss);
+        if (!taskss.isEmpty()) {
+            relatedTaskss.add(taskss.get(TestUtils.generateRandomInt(0, taskss.size())));
+            activity.setTasks(relatedTaskss);
+        }
 
         return activity;
     }

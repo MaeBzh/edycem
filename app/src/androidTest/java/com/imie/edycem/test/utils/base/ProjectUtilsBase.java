@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 4, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.test.utils.base;
@@ -18,9 +18,14 @@ import com.imie.edycem.entity.Project;
 
 import com.imie.edycem.test.utils.TestUtils;
 import com.imie.edycem.entity.WorkingTime;
-import com.imie.edycem.test.utils.WorkingTimeUtils;
+import com.imie.edycem.fixture.WorkingTimeDataLoader;
 
-import com.imie.edycem.test.utils.JobUtils;
+import com.imie.edycem.entity.Job;
+import com.imie.edycem.fixture.JobDataLoader;
+
+import com.imie.edycem.entity.User;
+import com.imie.edycem.fixture.UserDataLoader;
+
 
 import java.util.ArrayList;
 
@@ -39,6 +44,7 @@ public abstract class ProjectUtilsBase {
         project.setId(TestUtils.generateRandomInt(0,100) + 1);
         project.setName("name_"+TestUtils.generateRandomString(10));
         project.setDescription("description_"+TestUtils.generateRandomString(10));
+        project.setCreatedAt(TestUtils.generateRandomDateTime());
         project.setCompany("company_"+TestUtils.generateRandomString(10));
         project.setClaimantName("claimantName_"+TestUtils.generateRandomString(10));
         project.setRelevantSite("relevantSite_"+TestUtils.generateRandomString(10));
@@ -48,10 +54,26 @@ public abstract class ProjectUtilsBase {
         project.setDocuments("documents_"+TestUtils.generateRandomString(10));
         project.setActivityType("activityType_"+TestUtils.generateRandomString(10));
         project.setIsValidate(TestUtils.generateRandomBool());
+        ArrayList<WorkingTime> projectWorkingTimess =
+            new ArrayList<WorkingTime>();
+        projectWorkingTimess.addAll(WorkingTimeDataLoader.getInstance(ctx).getMap().values());
         ArrayList<WorkingTime> relatedProjectWorkingTimess = new ArrayList<WorkingTime>();
-        relatedProjectWorkingTimess.add(WorkingTimeUtils.generateRandom(ctx));
-        project.setProjectWorkingTimes(relatedProjectWorkingTimess);
-        project.setJob(JobUtils.generateRandom(ctx));
+        if (!projectWorkingTimess.isEmpty()) {
+            relatedProjectWorkingTimess.add(projectWorkingTimess.get(TestUtils.generateRandomInt(0, projectWorkingTimess.size())));
+            project.setProjectWorkingTimes(relatedProjectWorkingTimess);
+        }
+        ArrayList<Job> jobs =
+            new ArrayList<Job>();
+        jobs.addAll(JobDataLoader.getInstance(ctx).getMap().values());
+        if (!jobs.isEmpty()) {
+            project.setJob(jobs.get(TestUtils.generateRandomInt(0, jobs.size())));
+        }
+        ArrayList<User> creators =
+            new ArrayList<User>();
+        creators.addAll(UserDataLoader.getInstance(ctx).getMap().values());
+        if (!creators.isEmpty()) {
+            project.setCreator(creators.get(TestUtils.generateRandomInt(0, creators.size())));
+        }
 
         return project;
     }
@@ -71,6 +93,7 @@ public abstract class ProjectUtilsBase {
             Assert.assertEquals(project1.getId(), project2.getId());
             Assert.assertEquals(project1.getName(), project2.getName());
             Assert.assertEquals(project1.getDescription(), project2.getDescription());
+            Assert.assertTrue(project1.getCreatedAt().isEqual(project2.getCreatedAt()));
             Assert.assertEquals(project1.getCompany(), project2.getCompany());
             Assert.assertEquals(project1.getClaimantName(), project2.getClaimantName());
             Assert.assertEquals(project1.getRelevantSite(), project2.getRelevantSite());
@@ -106,6 +129,13 @@ public abstract class ProjectUtilsBase {
                 if (checkRecursiveId) {
                     Assert.assertEquals(project1.getJob().getId(),
                             project2.getJob().getId());
+                }
+            }
+            if (project1.getCreator() != null
+                    && project2.getCreator() != null) {
+                if (checkRecursiveId) {
+                    Assert.assertEquals(project1.getCreator().getId(),
+                            project2.getCreator().getId());
                 }
             }
         }

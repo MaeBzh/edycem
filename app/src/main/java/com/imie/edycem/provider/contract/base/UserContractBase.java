@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.provider.contract.base;
@@ -20,6 +20,7 @@ import org.joda.time.format.ISODateTimeFormat;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.entity.Job;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.entity.Project;
 
 
 
@@ -136,6 +137,7 @@ public abstract class UserContractBase {
         
         UserContract.ALIASED_COL_JOB_ID,
         
+        
     };
 
 
@@ -178,6 +180,8 @@ public abstract class UserContractBase {
              if (item.getDateRgpd() != null) {
                 result.put(UserContract.COL_DATERGPD,
                     item.getDateRgpd().toString(ISODateTimeFormat.dateTime()));
+            } else {
+                result.put(UserContract.COL_DATERGPD, (String) null);
             }
 
              if (item.getJob() != null) {
@@ -185,7 +189,7 @@ public abstract class UserContractBase {
                     item.getJob().getId());
             }
 
- 
+  
         return result;
     }
 
@@ -244,13 +248,15 @@ public abstract class UserContractBase {
             index = cursor.getColumnIndex(UserContract.COL_DATERGPD);
 
             if (index > -1) {
-                final DateTime dtDateRgpd =
+            if (!cursor.isNull(index)) {
+                    final DateTime dtDateRgpd =
                         DateUtils.formatISOStringToDateTime(cursor.getString(index));
-                if (dtDateRgpd != null) {
-                        result.setDateRgpd(dtDateRgpd);
-                } else {
-                    result.setDateRgpd(new DateTime());
-                }
+                    if (dtDateRgpd != null) {
+                            result.setDateRgpd(dtDateRgpd);
+                    } else {
+                        result.setDateRgpd(new DateTime());
+                    }
+            }
             }
             if (result.getJob() == null) {
                 final Job job = new Job();

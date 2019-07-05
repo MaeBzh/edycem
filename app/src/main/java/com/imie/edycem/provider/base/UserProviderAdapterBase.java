@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.provider.base;
@@ -26,9 +26,11 @@ import com.imie.edycem.provider.ProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.UserContract;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
+import com.imie.edycem.provider.contract.ProjectContract;
 import com.imie.edycem.data.UserSQLiteAdapter;
 import com.imie.edycem.data.JobSQLiteAdapter;
 import com.imie.edycem.data.WorkingTimeSQLiteAdapter;
+import com.imie.edycem.data.ProjectSQLiteAdapter;
 
 /**
  * UserProviderAdapterBase.
@@ -59,6 +61,9 @@ public abstract class UserProviderAdapterBase
     /** USER_USERWORKINGTIMES. */
     protected static final int USER_USERWORKINGTIMES =
             2645998;
+    /** USER_CREATEDPROJECTS. */
+    protected static final int USER_CREATEDPROJECTS =
+            2645999;
 
     /**
      * Static constructor.
@@ -83,6 +88,10 @@ public abstract class UserProviderAdapterBase
                 EdycemProvider.authority,
                 userType + "/#" + "/userworkingtimes",
                 USER_USERWORKINGTIMES);
+        EdycemProvider.getUriMatcher().addURI(
+                EdycemProvider.authority,
+                userType + "/#" + "/createdprojects",
+                USER_CREATEDPROJECTS);
     }
 
     /**
@@ -98,6 +107,7 @@ public abstract class UserProviderAdapterBase
         this.uriIds.add(USER_ONE);
         this.uriIds.add(USER_JOB);
         this.uriIds.add(USER_USERWORKINGTIMES);
+        this.uriIds.add(USER_CREATEDPROJECTS);
     }
 
     @Override
@@ -124,6 +134,9 @@ public abstract class UserProviderAdapterBase
                 result = single + "user";
                 break;
             case USER_USERWORKINGTIMES:
+                result = collection + "user";
+                break;
+            case USER_CREATEDPROJECTS:
                 result = collection + "user";
                 break;
             default:
@@ -249,6 +262,13 @@ public abstract class UserProviderAdapterBase
                 WorkingTimeSQLiteAdapter userWorkingTimesAdapter = new WorkingTimeSQLiteAdapter(this.ctx);
                 userWorkingTimesAdapter.open(this.getDb());
                 result = userWorkingTimesAdapter.getByUser(userId, WorkingTimeContract.ALIASED_COLS, selection, selectionArgs, null);
+                break;
+
+            case USER_CREATEDPROJECTS:
+                userId = Integer.parseInt(uri.getPathSegments().get(1));
+                ProjectSQLiteAdapter createdProjectsAdapter = new ProjectSQLiteAdapter(this.ctx);
+                createdProjectsAdapter.open(this.getDb());
+                result = createdProjectsAdapter.getByCreator(userId, ProjectContract.ALIASED_COLS, selection, selectionArgs, null);
                 break;
 
             default:

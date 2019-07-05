@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 4, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.provider.contract.base;
@@ -20,6 +20,7 @@ import org.joda.time.format.ISODateTimeFormat;
 import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.WorkingTime;
 import com.imie.edycem.entity.Job;
+import com.imie.edycem.entity.User;
 
 
 
@@ -53,6 +54,13 @@ public abstract class ProjectContractBase {
     /** Alias. */
     public static final String ALIASED_COL_DESCRIPTION =
             ProjectContract.TABLE_NAME + "." + COL_DESCRIPTION;
+
+    /** createdAt. */
+    public static final String COL_CREATEDAT =
+            "createdAt";
+    /** Alias. */
+    public static final String ALIASED_COL_CREATEDAT =
+            ProjectContract.TABLE_NAME + "." + COL_CREATEDAT;
 
     /** company. */
     public static final String COL_COMPANY =
@@ -124,6 +132,13 @@ public abstract class ProjectContractBase {
     public static final String ALIASED_COL_JOB_ID =
             ProjectContract.TABLE_NAME + "." + COL_JOB_ID;
 
+    /** creator_id. */
+    public static final String COL_CREATOR_ID =
+            "creator_id";
+    /** Alias. */
+    public static final String ALIASED_COL_CREATOR_ID =
+            ProjectContract.TABLE_NAME + "." + COL_CREATOR_ID;
+
 
 
 
@@ -140,6 +155,8 @@ public abstract class ProjectContractBase {
         ProjectContract.COL_NAME,
         
         ProjectContract.COL_DESCRIPTION,
+        
+        ProjectContract.COL_CREATEDAT,
         
         ProjectContract.COL_COMPANY,
         
@@ -159,7 +176,9 @@ public abstract class ProjectContractBase {
         
         ProjectContract.COL_ISVALIDATE,
         
-        ProjectContract.COL_JOB_ID
+        ProjectContract.COL_JOB_ID,
+        
+        ProjectContract.COL_CREATOR_ID
     };
 
     /** Global Fields. */
@@ -170,6 +189,8 @@ public abstract class ProjectContractBase {
         ProjectContract.ALIASED_COL_NAME,
         
         ProjectContract.ALIASED_COL_DESCRIPTION,
+        
+        ProjectContract.ALIASED_COL_CREATEDAT,
         
         ProjectContract.ALIASED_COL_COMPANY,
         
@@ -190,7 +211,9 @@ public abstract class ProjectContractBase {
         ProjectContract.ALIASED_COL_ISVALIDATE,
         
         
-        ProjectContract.ALIASED_COL_JOB_ID
+        ProjectContract.ALIASED_COL_JOB_ID,
+        
+        ProjectContract.ALIASED_COL_CREATOR_ID
     };
 
 
@@ -217,14 +240,25 @@ public abstract class ProjectContractBase {
                     item.getDescription());
             }
 
+             if (item.getCreatedAt() != null) {
+                result.put(ProjectContract.COL_CREATEDAT,
+                    item.getCreatedAt().toString(ISODateTimeFormat.dateTime()));
+            } else {
+                result.put(ProjectContract.COL_CREATEDAT, (String) null);
+            }
+
              if (item.getCompany() != null) {
                 result.put(ProjectContract.COL_COMPANY,
                     item.getCompany());
+            } else {
+                result.put(ProjectContract.COL_COMPANY, (String) null);
             }
 
              if (item.getClaimantName() != null) {
                 result.put(ProjectContract.COL_CLAIMANTNAME,
                     item.getClaimantName());
+            } else {
+                result.put(ProjectContract.COL_CLAIMANTNAME, (String) null);
             }
 
              if (item.getRelevantSite() != null) {
@@ -269,6 +303,13 @@ public abstract class ProjectContractBase {
                     item.getJob().getId());
             }
 
+             if (item.getCreator() != null) {
+                result.put(ProjectContract.COL_CREATOR_ID,
+                    item.getCreator().getId());
+            } else {
+                result.put(ProjectContract.COL_CREATOR_ID, (String) null);
+            }
+
 
         return result;
     }
@@ -310,15 +351,32 @@ public abstract class ProjectContractBase {
             if (index > -1) {
                 result.setDescription(cursor.getString(index));
             }
+            index = cursor.getColumnIndex(ProjectContract.COL_CREATEDAT);
+
+            if (index > -1) {
+            if (!cursor.isNull(index)) {
+                    final DateTime dtCreatedAt =
+                        DateUtils.formatISOStringToDateTime(cursor.getString(index));
+                    if (dtCreatedAt != null) {
+                            result.setCreatedAt(dtCreatedAt);
+                    } else {
+                        result.setCreatedAt(new DateTime());
+                    }
+            }
+            }
             index = cursor.getColumnIndex(ProjectContract.COL_COMPANY);
 
             if (index > -1) {
-                result.setCompany(cursor.getString(index));
+            if (!cursor.isNull(index)) {
+                    result.setCompany(cursor.getString(index));
+            }
             }
             index = cursor.getColumnIndex(ProjectContract.COL_CLAIMANTNAME);
 
             if (index > -1) {
-                result.setClaimantName(cursor.getString(index));
+            if (!cursor.isNull(index)) {
+                    result.setClaimantName(cursor.getString(index));
+            }
             }
             index = cursor.getColumnIndex(ProjectContract.COL_RELEVANTSITE);
 
@@ -380,6 +438,18 @@ public abstract class ProjectContractBase {
                 if (index > -1) {
                     job.setId(cursor.getInt(index));
                     result.setJob(job);
+                }
+
+            }
+            if (result.getCreator() == null) {
+                final User creator = new User();
+                index = cursor.getColumnIndex(ProjectContract.COL_CREATOR_ID);
+
+                if (index > -1) {
+                    if (!cursor.isNull(index)) {
+                        creator.setId(cursor.getInt(index));
+                        result.setCreator(creator);
+                    }
                 }
 
             }

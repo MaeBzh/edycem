@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.provider.utils.base;
@@ -33,14 +33,17 @@ import com.imie.edycem.criterias.base.CriteriaExpression.GroupType;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.entity.Job;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.entity.Project;
 
 import com.imie.edycem.provider.UserProviderAdapter;
 import com.imie.edycem.provider.JobProviderAdapter;
 import com.imie.edycem.provider.WorkingTimeProviderAdapter;
+import com.imie.edycem.provider.ProjectProviderAdapter;
 import com.imie.edycem.provider.EdycemProvider;
 import com.imie.edycem.provider.contract.UserContract;
 import com.imie.edycem.provider.contract.JobContract;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
+import com.imie.edycem.provider.contract.ProjectContract;
 
 /**
  * User Provider Utils Base.
@@ -99,6 +102,30 @@ public abstract class UserProviderUtilsBase
                     .withValueBackReference(
                             WorkingTimeContract
                                     .COL_USER_ID,
+                            0)
+                    .withSelection(
+                            crit.toSQLiteSelection(),
+                            crit.toSQLiteSelectionArgs())
+                    .build());
+        }
+        if (item.getCreatedProjects() != null && item.getCreatedProjects().size() > 0) {
+            CriteriaExpression crit = new CriteriaExpression(GroupType.AND);
+            Criterion inCrit = new Criterion();
+            crit.add(inCrit);
+
+            inCrit.setKey(ProjectContract.COL_ID);
+            inCrit.setType(Type.IN);
+            ArrayValue inValue = new ArrayValue();
+            inCrit.addValue(inValue);
+
+            for (int i = 0; i < item.getCreatedProjects().size(); i++) {
+                inValue.addValue(String.valueOf(item.getCreatedProjects().get(i).getId()));
+            }
+
+            operations.add(ContentProviderOperation.newUpdate(ProjectProviderAdapter.PROJECT_URI)
+                    .withValueBackReference(
+                            ProjectContract
+                                    .COL_CREATOR_ID,
                             0)
                     .withSelection(
                             crit.toSQLiteSelection(),
@@ -184,6 +211,8 @@ public abstract class UserProviderUtilsBase
             }
             result.setUserWorkingTimes(
                 this.getAssociateUserWorkingTimes(result));
+            result.setCreatedProjects(
+                this.getAssociateCreatedProjects(result));
         }
         cursor.close();
 
@@ -310,6 +339,55 @@ public abstract class UserProviderUtilsBase
                     .build());
         }
 
+        if (item.getCreatedProjects() != null && item.getCreatedProjects().size() > 0) {
+            String selection;
+            String[] selectionArgs;
+            // Set new createdProjects for User
+            CriteriaExpression createdProjectsCrit =
+                        new CriteriaExpression(GroupType.AND);
+            Criterion crit = new Criterion();
+            ArrayValue values = new ArrayValue();
+            crit.setType(Type.IN);
+            crit.setKey(ProjectContract.COL_ID);
+            crit.addValue(values);
+            createdProjectsCrit.add(crit);
+
+
+            for (Project createdProjects : item.getCreatedProjects()) {
+                values.addValue(
+                    String.valueOf(createdProjects.getId()));
+            }
+            selection = createdProjectsCrit.toSQLiteSelection();
+            selectionArgs = createdProjectsCrit.toSQLiteSelectionArgs();
+
+            operations.add(ContentProviderOperation.newUpdate(
+                    ProjectProviderAdapter.PROJECT_URI)
+                    .withValue(
+                            ProjectContract.COL_CREATOR_ID,
+                            item.getId())
+                    .withSelection(
+                            selection,
+                            selectionArgs)
+                    .build());
+
+            // Remove old associated createdProjects
+            crit.setType(Type.NOT_IN);
+            createdProjectsCrit.add(ProjectContract.COL_CREATOR_ID,
+                    String.valueOf(item.getId()),
+                    Type.EQUALS);
+
+
+            operations.add(ContentProviderOperation.newUpdate(
+                    ProjectProviderAdapter.PROJECT_URI)
+                    .withValue(
+                            ProjectContract.COL_CREATOR_ID,
+                            null)
+                    .withSelection(
+                            createdProjectsCrit.toSQLiteSelection(),
+                            createdProjectsCrit.toSQLiteSelectionArgs())
+                    .build());
+        }
+
 
         try {
             ContentProviderResult[] results = prov.applyBatch(EdycemProvider.authority, operations);
@@ -371,6 +449,30 @@ public abstract class UserProviderUtilsBase
         result = WorkingTimeContract.cursorToItems(
                         workingTimeCursor);
         workingTimeCursor.close();
+
+        return result;
+    }
+
+    /**
+     * Get associate CreatedProjects.
+     * @param item User
+     * @return Project
+     */
+    public ArrayList<Project> getAssociateCreatedProjects(
+            final User item) {
+        ArrayList<Project> result;
+        ContentResolver prov = this.getContext().getContentResolver();
+        android.database.Cursor projectCursor = prov.query(
+                ProjectProviderAdapter.PROJECT_URI,
+                ProjectContract.ALIASED_COLS,
+                ProjectContract.ALIASED_COL_CREATOR_ID
+                        + "= ?",
+                new String[]{String.valueOf(item.getId())},
+                null);
+
+        result = ProjectContract.cursorToItems(
+                        projectCursor);
+        projectCursor.close();
 
         return result;
     }

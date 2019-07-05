@@ -42,6 +42,7 @@ public abstract class ProjectUtilsBase {
         Project project = new Project();
 
         project.setId(TestUtils.generateRandomInt(0,100) + 1);
+        project.setIdServer(TestUtils.generateRandomInt(0,100));
         project.setName("name_"+TestUtils.generateRandomString(10));
         project.setDescription("description_"+TestUtils.generateRandomString(10));
         project.setCreatedAt(TestUtils.generateRandomDateTime());
@@ -91,6 +92,7 @@ public abstract class ProjectUtilsBase {
         Assert.assertNotNull(project2);
         if (project1!=null && project2 !=null){
             Assert.assertEquals(project1.getId(), project2.getId());
+            Assert.assertEquals(project1.getIdServer(), project2.getIdServer());
             Assert.assertEquals(project1.getName(), project2.getName());
             Assert.assertEquals(project1.getDescription(), project2.getDescription());
             Assert.assertTrue(project1.getCreatedAt().isEqual(project2.getCreatedAt()));

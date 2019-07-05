@@ -229,6 +229,7 @@ public class Project implements Serializable, Parcelable {
             this.parcelableParents.add(this);
         }
         dest.writeInt(this.getId());
+        dest.writeInt(this.getIdServer());
         if (this.getName() != null) {
             dest.writeInt(1);
             dest.writeString(this.getName());
@@ -331,6 +332,7 @@ public class Project implements Serializable, Parcelable {
      */
     public void readFromParcel(Parcel parc) {
         this.setId(parc.readInt());
+        this.setIdServer(parc.readInt());
         int nameBool = parc.readInt();
         if (nameBool == 1) {
             this.setName(parc.readString());
@@ -388,6 +390,7 @@ public class Project implements Serializable, Parcelable {
         this.setJob((Job) parc.readParcelable(Job.class.getClassLoader()));
         this.setCreator((User) parc.readParcelable(User.class.getClassLoader()));
     }
+
 
 
 
@@ -544,5 +547,19 @@ public class Project implements Serializable, Parcelable {
      */
     public void setCreatedAt(final DateTime value) {
          this.createdAt = value;
+    }
+     /**
+     * Get the IdServer.
+     * @return the idServer
+     */
+    public int getIdServer() {
+         return this.idServer;
+    }
+     /**
+     * Set the IdServer.
+     * @param value the idServer to set
+     */
+    public void setIdServer(final int value) {
+         this.idServer = value;
     }
 }

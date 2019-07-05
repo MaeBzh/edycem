@@ -86,6 +86,7 @@ public class Job implements Serializable, Parcelable {
             this.parcelableParents.add(this);
         }
         dest.writeInt(this.getId());
+        dest.writeInt(this.getIdServer());
         if (this.getName() != null) {
             dest.writeInt(1);
             dest.writeString(this.getName());
@@ -128,6 +129,7 @@ public class Job implements Serializable, Parcelable {
      */
     public void readFromParcel(Parcel parc) {
         this.setId(parc.readInt());
+        this.setIdServer(parc.readInt());
         int nameBool = parc.readInt();
         if (nameBool == 1) {
             this.setName(parc.readString());
@@ -155,6 +157,7 @@ public class Job implements Serializable, Parcelable {
             this.setProjects(items);
         }
     }
+
 
 
 
@@ -255,5 +258,19 @@ public class Job implements Serializable, Parcelable {
      */
     public void setProjects(final ArrayList<Project> value) {
          this.projects = value;
+    }
+     /**
+     * Get the IdServer.
+     * @return the idServer
+     */
+    public int getIdServer() {
+         return this.idServer;
+    }
+     /**
+     * Set the IdServer.
+     * @param value the idServer to set
+     */
+    public void setIdServer(final int value) {
+         this.idServer = value;
     }
 }

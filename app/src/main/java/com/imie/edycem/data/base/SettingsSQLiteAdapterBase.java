@@ -6,7 +6,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -76,6 +76,7 @@ public abstract class SettingsSQLiteAdapterBase
         + SettingsContract.TABLE_NAME    + " ("
         
          + SettingsContract.COL_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+         + SettingsContract.COL_IDSERVER    + " INTEGER,"
          + SettingsContract.COL_RGPD    + " VARCHAR NOT NULL"
 
         

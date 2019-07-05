@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.provider.contract.base;
@@ -35,6 +35,13 @@ public abstract class SettingsContractBase {
     public static final String ALIASED_COL_ID =
             SettingsContract.TABLE_NAME + "." + COL_ID;
 
+    /** idServer. */
+    public static final String COL_IDSERVER =
+            "idServer";
+    /** Alias. */
+    public static final String ALIASED_COL_IDSERVER =
+            SettingsContract.TABLE_NAME + "." + COL_IDSERVER;
+
     /** rgpd. */
     public static final String COL_RGPD =
             "rgpd";
@@ -55,6 +62,8 @@ public abstract class SettingsContractBase {
         
         SettingsContract.COL_ID,
         
+        SettingsContract.COL_IDSERVER,
+        
         SettingsContract.COL_RGPD
     };
 
@@ -62,6 +71,8 @@ public abstract class SettingsContractBase {
     public static final String[] ALIASED_COLS = new String[] {
         
         SettingsContract.ALIASED_COL_ID,
+        
+        SettingsContract.ALIASED_COL_IDSERVER,
         
         SettingsContract.ALIASED_COL_RGPD
     };
@@ -79,6 +90,9 @@ public abstract class SettingsContractBase {
 
              result.put(SettingsContract.COL_ID,
                 String.valueOf(item.getId()));
+
+             result.put(SettingsContract.COL_IDSERVER,
+                String.valueOf(item.getIdServer()));
 
              if (item.getRgpd() != null) {
                 result.put(SettingsContract.COL_RGPD,
@@ -115,6 +129,13 @@ public abstract class SettingsContractBase {
 
             if (index > -1) {
                 result.setId(cursor.getInt(index));
+            }
+            index = cursor.getColumnIndex(SettingsContract.COL_IDSERVER);
+
+            if (index > -1) {
+            if (!cursor.isNull(index)) {
+                    result.setIdServer(cursor.getInt(index));
+            }
             }
             index = cursor.getColumnIndex(SettingsContract.COL_RGPD);
 

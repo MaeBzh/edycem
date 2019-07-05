@@ -39,6 +39,7 @@ public abstract class JobUtilsBase {
         Job job = new Job();
 
         job.setId(TestUtils.generateRandomInt(0,100) + 1);
+        job.setIdServer(TestUtils.generateRandomInt(0,100));
         job.setName("name_"+TestUtils.generateRandomString(10));
         ArrayList<User> userss =
             new ArrayList<User>();
@@ -73,6 +74,7 @@ public abstract class JobUtilsBase {
         Assert.assertNotNull(job2);
         if (job1!=null && job2 !=null){
             Assert.assertEquals(job1.getId(), job2.getId());
+            Assert.assertEquals(job1.getIdServer(), job2.getIdServer());
             Assert.assertEquals(job1.getName(), job2.getName());
             if (job1.getUsers() != null
                     && job2.getUsers() != null) {

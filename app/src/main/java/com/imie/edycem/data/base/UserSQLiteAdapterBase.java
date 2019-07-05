@@ -89,6 +89,7 @@ public abstract class UserSQLiteAdapterBase
         + UserContract.TABLE_NAME    + " ("
         
          + UserContract.COL_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+         + UserContract.COL_IDSERVER    + " INTEGER,"
          + UserContract.COL_FIRSTNAME    + " VARCHAR NOT NULL,"
          + UserContract.COL_LASTNAME    + " VARCHAR NOT NULL,"
          + UserContract.COL_EMAIL    + " VARCHAR NOT NULL,"

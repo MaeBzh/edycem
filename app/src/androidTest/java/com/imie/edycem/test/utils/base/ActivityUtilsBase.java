@@ -36,6 +36,7 @@ public abstract class ActivityUtilsBase {
         Activity activity = new Activity();
 
         activity.setId(TestUtils.generateRandomInt(0,100) + 1);
+        activity.setIdServer(TestUtils.generateRandomInt(0,100));
         activity.setName("name_"+TestUtils.generateRandomString(10));
         ArrayList<Task> taskss =
             new ArrayList<Task>();
@@ -62,6 +63,7 @@ public abstract class ActivityUtilsBase {
         Assert.assertNotNull(activity2);
         if (activity1!=null && activity2 !=null){
             Assert.assertEquals(activity1.getId(), activity2.getId());
+            Assert.assertEquals(activity1.getIdServer(), activity2.getIdServer());
             Assert.assertEquals(activity1.getName(), activity2.getName());
             if (activity1.getTasks() != null
                     && activity2.getTasks() != null) {

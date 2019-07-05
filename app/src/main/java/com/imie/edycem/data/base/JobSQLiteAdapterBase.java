@@ -6,7 +6,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -82,6 +82,7 @@ public abstract class JobSQLiteAdapterBase
         + JobContract.TABLE_NAME    + " ("
         
          + JobContract.COL_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+         + JobContract.COL_IDSERVER    + " INTEGER,"
          + JobContract.COL_NAME    + " VARCHAR NOT NULL"
 
         

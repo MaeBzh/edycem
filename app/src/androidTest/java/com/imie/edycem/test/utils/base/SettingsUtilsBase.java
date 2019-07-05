@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.test.utils.base;
@@ -32,6 +32,7 @@ public abstract class SettingsUtilsBase {
         Settings settings = new Settings();
 
         settings.setId(TestUtils.generateRandomInt(0,100) + 1);
+        settings.setIdServer(TestUtils.generateRandomInt(0,100));
         settings.setRgpd("rgpd_"+TestUtils.generateRandomString(10));
 
         return settings;
@@ -50,6 +51,7 @@ public abstract class SettingsUtilsBase {
         Assert.assertNotNull(settings2);
         if (settings1!=null && settings2 !=null){
             Assert.assertEquals(settings1.getId(), settings2.getId());
+            Assert.assertEquals(settings1.getIdServer(), settings2.getIdServer());
             Assert.assertEquals(settings1.getRgpd(), settings2.getRgpd());
         }
 

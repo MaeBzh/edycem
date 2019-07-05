@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.provider.contract.base;
@@ -36,6 +36,13 @@ public abstract class ActivityContractBase {
     public static final String ALIASED_COL_ID =
             ActivityContract.TABLE_NAME + "." + COL_ID;
 
+    /** idServer. */
+    public static final String COL_IDSERVER =
+            "idServer";
+    /** Alias. */
+    public static final String ALIASED_COL_IDSERVER =
+            ActivityContract.TABLE_NAME + "." + COL_IDSERVER;
+
     /** name. */
     public static final String COL_NAME =
             "name";
@@ -56,6 +63,8 @@ public abstract class ActivityContractBase {
         
         ActivityContract.COL_ID,
         
+        ActivityContract.COL_IDSERVER,
+        
         ActivityContract.COL_NAME,
     };
 
@@ -63,6 +72,8 @@ public abstract class ActivityContractBase {
     public static final String[] ALIASED_COLS = new String[] {
         
         ActivityContract.ALIASED_COL_ID,
+        
+        ActivityContract.ALIASED_COL_IDSERVER,
         
         ActivityContract.ALIASED_COL_NAME,
         
@@ -81,6 +92,9 @@ public abstract class ActivityContractBase {
 
              result.put(ActivityContract.COL_ID,
                 String.valueOf(item.getId()));
+
+             result.put(ActivityContract.COL_IDSERVER,
+                String.valueOf(item.getIdServer()));
 
              if (item.getName() != null) {
                 result.put(ActivityContract.COL_NAME,
@@ -117,6 +131,13 @@ public abstract class ActivityContractBase {
 
             if (index > -1) {
                 result.setId(cursor.getInt(index));
+            }
+            index = cursor.getColumnIndex(ActivityContract.COL_IDSERVER);
+
+            if (index > -1) {
+            if (!cursor.isNull(index)) {
+                    result.setIdServer(cursor.getInt(index));
+            }
             }
             index = cursor.getColumnIndex(ActivityContract.COL_NAME);
 

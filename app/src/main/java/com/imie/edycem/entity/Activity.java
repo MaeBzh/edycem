@@ -86,6 +86,7 @@ public class Activity implements Serializable, Parcelable {
             this.parcelableParents.add(this);
         }
         dest.writeInt(this.getId());
+        dest.writeInt(this.getIdServer());
         if (this.getName() != null) {
             dest.writeInt(1);
             dest.writeString(this.getName());
@@ -115,6 +116,7 @@ public class Activity implements Serializable, Parcelable {
      */
     public void readFromParcel(Parcel parc) {
         this.setId(parc.readInt());
+        this.setIdServer(parc.readInt());
         int nameBool = parc.readInt();
         if (nameBool == 1) {
             this.setName(parc.readString());
@@ -131,6 +133,7 @@ public class Activity implements Serializable, Parcelable {
             this.setTasks(items);
         }
     }
+
 
 
 
@@ -217,5 +220,19 @@ public class Activity implements Serializable, Parcelable {
      */
     public void setTasks(final ArrayList<Task> value) {
          this.tasks = value;
+    }
+     /**
+     * Get the IdServer.
+     * @return the idServer
+     */
+    public int getIdServer() {
+         return this.idServer;
+    }
+     /**
+     * Set the IdServer.
+     * @param value the idServer to set
+     */
+    public void setIdServer(final int value) {
+         this.idServer = value;
     }
 }

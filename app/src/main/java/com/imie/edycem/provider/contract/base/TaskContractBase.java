@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.provider.contract.base;
@@ -37,6 +37,13 @@ public abstract class TaskContractBase {
     public static final String ALIASED_COL_ID =
             TaskContract.TABLE_NAME + "." + COL_ID;
 
+    /** idServer. */
+    public static final String COL_IDSERVER =
+            "idServer";
+    /** Alias. */
+    public static final String ALIASED_COL_IDSERVER =
+            TaskContract.TABLE_NAME + "." + COL_IDSERVER;
+
     /** name. */
     public static final String COL_NAME =
             "name";
@@ -64,6 +71,8 @@ public abstract class TaskContractBase {
         
         TaskContract.COL_ID,
         
+        TaskContract.COL_IDSERVER,
+        
         TaskContract.COL_NAME,
         
         TaskContract.COL_ACTIVITY_ID,
@@ -73,6 +82,8 @@ public abstract class TaskContractBase {
     public static final String[] ALIASED_COLS = new String[] {
         
         TaskContract.ALIASED_COL_ID,
+        
+        TaskContract.ALIASED_COL_IDSERVER,
         
         TaskContract.ALIASED_COL_NAME,
         
@@ -93,6 +104,9 @@ public abstract class TaskContractBase {
 
              result.put(TaskContract.COL_ID,
                 String.valueOf(item.getId()));
+
+             result.put(TaskContract.COL_IDSERVER,
+                String.valueOf(item.getIdServer()));
 
              if (item.getName() != null) {
                 result.put(TaskContract.COL_NAME,
@@ -134,6 +148,13 @@ public abstract class TaskContractBase {
 
             if (index > -1) {
                 result.setId(cursor.getInt(index));
+            }
+            index = cursor.getColumnIndex(TaskContract.COL_IDSERVER);
+
+            if (index > -1) {
+            if (!cursor.isNull(index)) {
+                    result.setIdServer(cursor.getInt(index));
+            }
             }
             index = cursor.getColumnIndex(TaskContract.COL_NAME);
 

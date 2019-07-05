@@ -118,6 +118,7 @@ public class User implements Serializable, Parcelable {
             this.parcelableParents.add(this);
         }
         dest.writeInt(this.getId());
+        dest.writeInt(this.getIdServer());
         if (this.getFirstname() != null) {
             dest.writeInt(1);
             dest.writeString(this.getFirstname());
@@ -196,6 +197,7 @@ public class User implements Serializable, Parcelable {
      */
     public void readFromParcel(Parcel parc) {
         this.setId(parc.readInt());
+        this.setIdServer(parc.readInt());
         int firstnameBool = parc.readInt();
         if (firstnameBool == 1) {
             this.setFirstname(parc.readString());
@@ -243,6 +245,7 @@ public class User implements Serializable, Parcelable {
             this.setCreatedProjects(items);
         }
     }
+
 
 
 
@@ -414,5 +417,19 @@ public class User implements Serializable, Parcelable {
      */
     public void setCreatedProjects(final ArrayList<Project> value) {
          this.createdProjects = value;
+    }
+     /**
+     * Get the IdServer.
+     * @return the idServer
+     */
+    public int getIdServer() {
+         return this.idServer;
+    }
+     /**
+     * Set the IdServer.
+     * @param value the idServer to set
+     */
+    public void setIdServer(final int value) {
+         this.idServer = value;
     }
 }

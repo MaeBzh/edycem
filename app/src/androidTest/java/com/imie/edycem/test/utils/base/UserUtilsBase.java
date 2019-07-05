@@ -42,6 +42,7 @@ public abstract class UserUtilsBase {
         User user = new User();
 
         user.setId(TestUtils.generateRandomInt(0,100) + 1);
+        user.setIdServer(TestUtils.generateRandomInt(0,100));
         user.setFirstname("firstname_"+TestUtils.generateRandomString(10));
         user.setLastname("lastname_"+TestUtils.generateRandomString(10));
         user.setEmail("email_"+TestUtils.generateRandomString(10));
@@ -87,6 +88,7 @@ public abstract class UserUtilsBase {
         Assert.assertNotNull(user2);
         if (user1!=null && user2 !=null){
             Assert.assertEquals(user1.getId(), user2.getId());
+            Assert.assertEquals(user1.getIdServer(), user2.getIdServer());
             Assert.assertEquals(user1.getFirstname(), user2.getFirstname());
             Assert.assertEquals(user1.getLastname(), user2.getLastname());
             Assert.assertEquals(user1.getEmail(), user2.getEmail());

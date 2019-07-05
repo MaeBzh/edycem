@@ -89,6 +89,7 @@ public abstract class ProjectSQLiteAdapterBase
         + ProjectContract.TABLE_NAME    + " ("
         
          + ProjectContract.COL_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+         + ProjectContract.COL_IDSERVER    + " INTEGER,"
          + ProjectContract.COL_NAME    + " VARCHAR NOT NULL,"
          + ProjectContract.COL_DESCRIPTION    + " VARCHAR NOT NULL,"
          + ProjectContract.COL_CREATEDAT    + " DATETIME,"

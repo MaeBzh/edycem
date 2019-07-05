@@ -41,6 +41,13 @@ public abstract class UserContractBase {
     public static final String ALIASED_COL_ID =
             UserContract.TABLE_NAME + "." + COL_ID;
 
+    /** idServer. */
+    public static final String COL_IDSERVER =
+            "idServer";
+    /** Alias. */
+    public static final String ALIASED_COL_IDSERVER =
+            UserContract.TABLE_NAME + "." + COL_IDSERVER;
+
     /** firstname. */
     public static final String COL_FIRSTNAME =
             "firstname";
@@ -103,6 +110,8 @@ public abstract class UserContractBase {
         
         UserContract.COL_ID,
         
+        UserContract.COL_IDSERVER,
+        
         UserContract.COL_FIRSTNAME,
         
         UserContract.COL_LASTNAME,
@@ -122,6 +131,8 @@ public abstract class UserContractBase {
     public static final String[] ALIASED_COLS = new String[] {
         
         UserContract.ALIASED_COL_ID,
+        
+        UserContract.ALIASED_COL_IDSERVER,
         
         UserContract.ALIASED_COL_FIRSTNAME,
         
@@ -153,6 +164,9 @@ public abstract class UserContractBase {
 
              result.put(UserContract.COL_ID,
                 String.valueOf(item.getId()));
+
+             result.put(UserContract.COL_IDSERVER,
+                String.valueOf(item.getIdServer()));
 
              if (item.getFirstname() != null) {
                 result.put(UserContract.COL_FIRSTNAME,
@@ -219,6 +233,13 @@ public abstract class UserContractBase {
 
             if (index > -1) {
                 result.setId(cursor.getInt(index));
+            }
+            index = cursor.getColumnIndex(UserContract.COL_IDSERVER);
+
+            if (index > -1) {
+            if (!cursor.isNull(index)) {
+                    result.setIdServer(cursor.getInt(index));
+            }
             }
             index = cursor.getColumnIndex(UserContract.COL_FIRSTNAME);
 

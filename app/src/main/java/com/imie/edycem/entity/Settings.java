@@ -80,6 +80,7 @@ public class Settings implements Serializable, Parcelable {
             this.parcelableParents.add(this);
         }
         dest.writeInt(this.getId());
+        dest.writeInt(this.getIdServer());
         if (this.getRgpd() != null) {
             dest.writeInt(1);
             dest.writeString(this.getRgpd());
@@ -96,11 +97,13 @@ public class Settings implements Serializable, Parcelable {
      */
     public void readFromParcel(Parcel parc) {
         this.setId(parc.readInt());
+        this.setIdServer(parc.readInt());
         int rgpdBool = parc.readInt();
         if (rgpdBool == 1) {
             this.setRgpd(parc.readString());
         }
     }
+
 
 
 
@@ -174,4 +177,18 @@ public class Settings implements Serializable, Parcelable {
         }
     };
 
+     /**
+     * Get the IdServer.
+     * @return the idServer
+     */
+    public int getIdServer() {
+         return this.idServer;
+    }
+     /**
+     * Set the IdServer.
+     * @param value the idServer to set
+     */
+    public void setIdServer(final int value) {
+         this.idServer = value;
+    }
 }

@@ -6,7 +6,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 5, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -84,6 +84,7 @@ public abstract class TaskSQLiteAdapterBase
         + TaskContract.TABLE_NAME    + " ("
         
          + TaskContract.COL_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT,"
+         + TaskContract.COL_IDSERVER    + " INTEGER,"
          + TaskContract.COL_NAME    + " VARCHAR NOT NULL,"
          + TaskContract.COL_ACTIVITY_ID    + " INTEGER NOT NULL,"
 

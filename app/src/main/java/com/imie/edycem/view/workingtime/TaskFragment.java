@@ -9,19 +9,18 @@ import android.widget.EditText;
 
 import com.imie.edycem.R;
 
-public class UserAndJobFragment extends Fragment {
+public class TaskFragment extends Fragment {
 
-    private EditText editEmail;
+    private static final int KEYPOSITION = 0;
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user_and_job, container, false);
+        View view = inflater.inflate(R.layout.fragment_task, container, false);
 
         this.initComponents(view);
         return view;
     }
 
     public void initComponents(View view) {
-
     }
 }

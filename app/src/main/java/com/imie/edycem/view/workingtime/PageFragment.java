@@ -10,44 +10,46 @@ import com.imie.edycem.R;
 
 public class PageFragment extends Fragment {
 
-    private static final String KEY_POSITION ="position";
+    private static final String KEY_POSITION = "position";
 
 
-    public PageFragment() { }
+    public PageFragment() {
+    }
 
-    public static PageFragment newInstance(int position, int color) {
+    public static PageFragment newInstance(int position) {
 
         PageFragment frag = new PageFragment();
 
-        // 2.2 Create bundle and add it some data
         Bundle args = new Bundle();
         args.putInt(KEY_POSITION, position);
         frag.setArguments(args);
 
-        return(frag);
+        return (frag);
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View result = inflater.inflate(R.layout.fragment_page, container, false);
-
-
-
-        // 4 - Get widgets from layout and serialise it
-        LinearLayout rootView= (LinearLayout) result.findViewById(R.id.fragment_page_rootview);
-        TextView textView= (TextView) result.findViewById(R.id.fragment_page_title);
-
-        // 5 - Get data from Bundle (created in method newInstance)
         int position = getArguments().getInt(KEY_POSITION, -1);
-        int color = getArguments().getInt(KEY_COLOR, -1);
 
-        // 6 - Update widgets with it
-        rootView.setBackgroundColor(color);
-        textView.setText("Page numéro "+position);
+        View result = null;
 
-        Log.e(getClass().getSimpleName(), "onCreateView called for fragment number "+position);
+        switch (position) {
+            case 0:
+                result = inflater.inflate(R.layout.fragment_user_and_job, container, false);
+                break;
+            case 1:
+                result = inflater.inflate(R.layout.fragment_projects, container, false);
+                break;
+            case 2:
+                result = inflater.inflate(R.layout.fragment_task, container, false);
+                break;
+            case 3:
+                result = inflater.inflate(R.layout.fragment_working_time, container,false);
+            default:
+                break;
+        }
 
         return result;
     }

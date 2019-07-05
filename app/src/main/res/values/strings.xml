@@ -4,6 +4,8 @@
     <string name="activity_name_label">Name</string>
     <string name="activity_tasks_invalid_field_error">Field Tasks is invalid.</string>
     <string name="activity_tasks_label">Tasks</string>
+    <string name="choose_project">Choisissez un projet</string>
+    <string name="choose_task">Choisissez une tâche</string>
     <string name="connection">Connexion</string>
     <string name="job_name_invalid_field_error">Field Name is invalid.</string>
     <string name="job_name_label">Name</string>
@@ -11,7 +13,9 @@
     <string name="job_projects_label">Projects</string>
     <string name="job_users_invalid_field_error">Field Users is invalid.</string>
     <string name="job_users_label">Users</string>
+    <string name="label_email">Adresse e-mail</string>
     <string name="label_id">Identifiant</string>
+    <string name="next">Suivant</string>
     <string name="password">Mot de passe</string>
     <string name="project_activitytype_invalid_field_error">Field ActivityType is invalid.</string>
     <string name="project_activitytype_label">ActivityType</string>
@@ -30,8 +34,10 @@
     <string name="project_documents_label">Documents</string>
     <string name="project_eligiblecir_label">EligibleCir</string>
     <string name="project_iseligiblecir_label">IsEligibleCir</string>
+    <string name="project_isvalidate_label">IsValidate</string>
     <string name="project_job_invalid_field_error">Field Job is invalid.</string>
     <string name="project_job_label">Job</string>
+    <string name="project_name">Nom du projet</string>
     <string name="project_name_invalid_field_error">Field Name is invalid.</string>
     <string name="project_name_label">Name</string>
     <string name="project_projectworkingtimes_invalid_field_error">Field ProjectWorkingTimes is invalid.</string>
@@ -40,8 +46,29 @@
     <string name="project_relevantsite_label">RelevantSite</string>
     <string name="project_workingtimes_invalid_field_error">Field WorkingTimes is invalid.</string>
     <string name="project_workingtimes_label">WorkingTimes</string>
+    <string name="see_more">Voir plus de projets</string>
     <string name="settings_rgpd_invalid_field_error">Field Rgpd is invalid.</string>
     <string name="settings_rgpd_label">Rgpd</string>
+    <string name="experimental_site">Suivi chantier expérimental</string>
+    <string name="technic_point">Point technique</string>
+    <string name="specifications">Définition du cahier des charges</string>
+    <string name="prototyping">Prototypage</string>
+    <string name="lab_test">Essai labo</string>
+    <string name="central_test">Essai centrale</string>
+    <string name="technological_watch">Veille technologique</string>
+    <string name="analysis">Analyse</string>
+    <string-array name="spinner_jobs">
+        <item>Prefa</item>
+        <item>BPE</item>
+    </string-array>
+    <string-array name="spinner_users">
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+    </string-array>
     <string name="submit">Valider</string>
     <string name="task_activity_invalid_field_error">Field Activity is invalid.</string>
     <string name="task_activity_label">Activity</string>
@@ -51,6 +78,10 @@
     <string name="task_tasks_label">Tasks</string>
     <string name="task_taskworkingtimes_invalid_field_error">Field TaskWorkingTimes is invalid.</string>
     <string name="task_taskworkingtimes_label">TaskWorkingTimes</string>
+    <string name="title_dev">Développement produit</string>
+    <string name="title_innovation">Innovation</string>
+    <string name="title_labo">Gestion laboratoire</string>
+    <string name="title_sourcing">Sourcing produit</string>
     <string name="user_datergpd_date_title">Select dateRgpd date</string>
     <string name="user_datergpd_invalid_field_error">Field DateRgpd is invalid.</string>
     <string name="user_datergpd_label">DateRgpd</string>
@@ -66,21 +97,10 @@
     <string name="user_job_label">Job</string>
     <string name="user_lastname_invalid_field_error">Field Lastname is invalid.</string>
     <string name="user_lastname_label">Lastname</string>
-    <string name="app_provider_description">Provider of Edycem to access data</string>
-    <string name="app_provider_name">Provider of Edycem</string>
-    <string name="uri_not_supported">URI not supported</string>
-    <string name="user_password_invalid_field_error">Field Password is invalid.</string>
-    <string name="user_password_label">Password</string>
     <string name="user_userworkingtimes_invalid_field_error">Field UserWorkingTimes is invalid.</string>
     <string name="user_userworkingtimes_label">UserWorkingTimes</string>
-    <string name="user_workingtimes_invalid_field_error">Field WorkingTimes is invalid.</string>
-    <string name="user_workingtimes_label">WorkingTimes</string>
-    <string name="welcome_text">Bienvenue sur votre gestionnaire de projet et de temps de travail</string>
-    <string name="workingtime_date_date_title">Select date date</string>
-    <string name="workingtime_date_invalid_field_error">Field Date is invalid.</string>
     <string name="workingtime_date_label">Date</string>
     <string name="workingtime_description_invalid_field_error">Field Description is invalid.</string>
-    <string name="workingtime_description_label">Description</string>
     <string name="workingtime_project_invalid_field_error">Field Project is invalid.</string>
     <string name="workingtime_project_label">Project</string>
     <string name="workingtime_spenttime_invalid_field_error">Field SpentTime is invalid.</string>
@@ -88,5 +108,20 @@
     <string name="workingtime_task_invalid_field_error">Field Task is invalid.</string>
     <string name="workingtime_task_label">Task</string>
     <string name="workingtime_user_invalid_field_error">Field User is invalid.</string>
+    <string name="app_provider_description">Provider of Edycem to access data</string>
+    <string name="app_provider_name">Provider of Edycem</string>
+    <string name="uri_not_supported">URI not supported</string>
+    <string name="user_password_invalid_field_error">Field Password is invalid.</string>
+    <string name="user_password_label">Password</string>
+    <string name="user_workingtimes_invalid_field_error">Field WorkingTimes is invalid.</string>
+    <string name="user_workingtimes_label">WorkingTimes</string>
+    <string name="welcome_text">Bienvenue sur votre gestionnaire de projet et de temps de travail</string>
+    <string name="workingtime_date_date_title">Select date date</string>
+    <string name="workingtime_date_invalid_field_error">Field Date is invalid.</string>
+    <string name="workingtime_description_label">Description</string>
     <string name="workingtime_user_label">User</string>
+    <string name="btn_previous" >Précédent</string >
+    <string name="title_activity" >Choisissez une activité</string >
+    <string name="title_task" >Choisissez une tâche</string >
+    <string name="enter_working_time" >Entrez votre temps</string >
 </resources>

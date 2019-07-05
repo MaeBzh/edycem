@@ -47,6 +47,8 @@ public class Project implements Serializable, Parcelable {
     private String documents;
     @Column(type = Column.Type.TEXT, nullable = true)
     private String activityType;
+    @Column(type = Column.Type.BOOLEAN)
+    private boolean isValidate;
 
     @OneToMany(targetEntity = "WorkingTime", mappedBy = "project")
     private ArrayList<WorkingTime> projectWorkingTimes;
@@ -271,6 +273,11 @@ public class Project implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
+        if (this.isIsValidate()) {
+            dest.writeInt(1);
+        } else {
+            dest.writeInt(0);
+        }
 
         if (this.getProjectWorkingTimes() != null) {
             dest.writeInt(this.getProjectWorkingTimes().size());
@@ -336,6 +343,7 @@ public class Project implements Serializable, Parcelable {
         if (activityTypeBool == 1) {
             this.setActivityType(parc.readString());
         }
+        this.setIsValidate(parc.readInt() == 1);
 
         int nbProjectWorkingTimes = parc.readInt();
         if (nbProjectWorkingTimes > -1) {
@@ -349,6 +357,7 @@ public class Project implements Serializable, Parcelable {
         }
         this.setJob((Job) parc.readParcelable(Job.class.getClassLoader()));
     }
+
 
 
 
@@ -457,5 +466,19 @@ public class Project implements Serializable, Parcelable {
      */
     public void setJob(final Job value) {
          this.job = value;
+    }
+     /**
+     * Get the IsValidate.
+     * @return the isValidate
+     */
+    public boolean isIsValidate() {
+         return this.isValidate;
+    }
+     /**
+     * Set the IsValidate.
+     * @param value the isValidate to set
+     */
+    public void setIsValidate(final boolean value) {
+         this.isValidate = value;
     }
 }

@@ -26,6 +26,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".view.workingtime.WorkingTimeActivity"
+            android:screenOrientation="portrait" />
         <provider
             android:name="com.imie.edycem.provider.EdycemProvider"
             android:authorities="com.imie.edycem.provider"

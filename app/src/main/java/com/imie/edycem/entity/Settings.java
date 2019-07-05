@@ -105,6 +105,7 @@ public class Settings implements Serializable, Parcelable {
 
 
 
+
     /**
      * Parcel Constructor.
      *

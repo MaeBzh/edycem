@@ -159,6 +159,7 @@ public class Job implements Serializable, Parcelable {
 
 
 
+
     /**
      * Parcel Constructor.
      *

@@ -221,6 +221,7 @@ public class User implements Serializable, Parcelable {
 
 
 
+
     /**
      * Parcel Constructor.
      *

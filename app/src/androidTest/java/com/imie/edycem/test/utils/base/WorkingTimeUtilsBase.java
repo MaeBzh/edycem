@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 4, 2019
  *
  */
 package com.imie.edycem.test.utils.base;
@@ -39,7 +39,7 @@ public abstract class WorkingTimeUtilsBase {
 
         workingTime.setId(TestUtils.generateRandomInt(0,100) + 1);
         workingTime.setDate(TestUtils.generateRandomDate());
-        workingTime.setSpentTime("spentTime_"+TestUtils.generateRandomString(10));
+        workingTime.setSpentTime(TestUtils.generateRandomInt(0,100));
         workingTime.setDescription("description_"+TestUtils.generateRandomString(10));
         workingTime.setUser(UserUtils.generateRandom(ctx));
         workingTime.setProject(ProjectUtils.generateRandom(ctx));

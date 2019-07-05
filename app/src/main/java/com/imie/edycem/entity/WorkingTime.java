@@ -28,8 +28,8 @@ public class WorkingTime implements Serializable, Parcelable {
     private int id;
     @Column(type = Column.Type.DATE)
     private DateTime date;
-    @Column(type = Column.Type.TEXT)
-    private String spentTime;
+    @Column(type = Column.Type.INTEGER)
+    private int spentTime;
     @Column(type = Column.Type.TEXT)
     private String description;
 
@@ -75,20 +75,7 @@ public class WorkingTime implements Serializable, Parcelable {
     public void setDate(final DateTime value) {
          this.date = value;
     }
-     /**
-     * Get the SpentTime.
-     * @return the spentTime
-     */
-    public String getSpentTime() {
-         return this.spentTime;
-    }
-     /**
-     * Set the SpentTime.
-     * @param value the spentTime to set
-     */
-    public void setSpentTime(final String value) {
-         this.spentTime = value;
-    }
+
      /**
      * Get the Description.
      * @return the description
@@ -124,12 +111,7 @@ public class WorkingTime implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
-        if (this.getSpentTime() != null) {
-            dest.writeInt(1);
-            dest.writeString(this.getSpentTime());
-        } else {
-            dest.writeInt(0);
-        }
+        dest.writeInt(this.getSpentTime());
         if (this.getDescription() != null) {
             dest.writeInt(1);
             dest.writeString(this.getDescription());
@@ -170,10 +152,7 @@ public class WorkingTime implements Serializable, Parcelable {
                             .withOffsetParsed().parseDateTime(
                                     parc.readString()));
         }
-        int spentTimeBool = parc.readInt();
-        if (spentTimeBool == 1) {
-            this.setSpentTime(parc.readString());
-        }
+        this.setSpentTime(parc.readInt());
         int descriptionBool = parc.readInt();
         if (descriptionBool == 1) {
             this.setDescription(parc.readString());
@@ -182,6 +161,7 @@ public class WorkingTime implements Serializable, Parcelable {
         this.setProject((Project) parc.readParcelable(Project.class.getClassLoader()));
         this.setTask((Task) parc.readParcelable(Task.class.getClassLoader()));
     }
+
 
 
 
@@ -290,5 +270,19 @@ public class WorkingTime implements Serializable, Parcelable {
      */
     public void setTask(final Task value) {
          this.task = value;
+    }
+     /**
+     * Get the SpentTime.
+     * @return the spentTime
+     */
+    public int getSpentTime() {
+         return this.spentTime;
+    }
+     /**
+     * Set the SpentTime.
+     * @param value the spentTime to set
+     */
+    public void setSpentTime(final int value) {
+         this.spentTime = value;
     }
 }

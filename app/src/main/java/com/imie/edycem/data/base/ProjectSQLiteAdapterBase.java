@@ -6,7 +6,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 4, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -96,6 +96,7 @@ public abstract class ProjectSQLiteAdapterBase
          + ProjectContract.COL_DEADLINE    + " DATETIME,"
          + ProjectContract.COL_DOCUMENTS    + " VARCHAR,"
          + ProjectContract.COL_ACTIVITYTYPE    + " VARCHAR,"
+         + ProjectContract.COL_ISVALIDATE    + " BOOLEAN NOT NULL,"
          + ProjectContract.COL_JOB_ID    + " INTEGER NOT NULL,"
 
         

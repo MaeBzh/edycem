@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 4, 2019
  *
  */
 package com.imie.edycem.provider.contract.base;
@@ -110,6 +110,13 @@ public abstract class ProjectContractBase {
     public static final String ALIASED_COL_ACTIVITYTYPE =
             ProjectContract.TABLE_NAME + "." + COL_ACTIVITYTYPE;
 
+    /** isValidate. */
+    public static final String COL_ISVALIDATE =
+            "isValidate";
+    /** Alias. */
+    public static final String ALIASED_COL_ISVALIDATE =
+            ProjectContract.TABLE_NAME + "." + COL_ISVALIDATE;
+
     /** job_id. */
     public static final String COL_JOB_ID =
             "job_id";
@@ -150,6 +157,8 @@ public abstract class ProjectContractBase {
         
         ProjectContract.COL_ACTIVITYTYPE,
         
+        ProjectContract.COL_ISVALIDATE,
+        
         ProjectContract.COL_JOB_ID
     };
 
@@ -177,6 +186,8 @@ public abstract class ProjectContractBase {
         ProjectContract.ALIASED_COL_DOCUMENTS,
         
         ProjectContract.ALIASED_COL_ACTIVITYTYPE,
+        
+        ProjectContract.ALIASED_COL_ISVALIDATE,
         
         
         ProjectContract.ALIASED_COL_JOB_ID
@@ -249,6 +260,9 @@ public abstract class ProjectContractBase {
             } else {
                 result.put(ProjectContract.COL_ACTIVITYTYPE, (String) null);
             }
+
+             result.put(ProjectContract.COL_ISVALIDATE,
+                item.isIsValidate() ? 1 : 0);
 
               if (item.getJob() != null) {
                 result.put(ProjectContract.COL_JOB_ID,
@@ -353,6 +367,11 @@ public abstract class ProjectContractBase {
             if (!cursor.isNull(index)) {
                     result.setActivityType(cursor.getString(index));
             }
+            }
+            index = cursor.getColumnIndex(ProjectContract.COL_ISVALIDATE);
+
+            if (index > -1) {
+                result.setIsValidate(cursor.getInt(index) == 1);
             }
             if (result.getJob() == null) {
                 final Job job = new Job();

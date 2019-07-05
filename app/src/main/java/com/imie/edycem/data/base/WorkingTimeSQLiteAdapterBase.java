@@ -6,7 +6,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 4, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -90,7 +90,7 @@ public abstract class WorkingTimeSQLiteAdapterBase
         
          + WorkingTimeContract.COL_ID    + " INTEGER PRIMARY KEY AUTOINCREMENT,"
          + WorkingTimeContract.COL_DATE    + " DATE NOT NULL,"
-         + WorkingTimeContract.COL_SPENTTIME    + " VARCHAR NOT NULL,"
+         + WorkingTimeContract.COL_SPENTTIME    + " INTEGER NOT NULL,"
          + WorkingTimeContract.COL_DESCRIPTION    + " VARCHAR NOT NULL,"
          + WorkingTimeContract.COL_USER_ID    + " INTEGER NOT NULL,"
          + WorkingTimeContract.COL_PROJECT_ID    + " INTEGER NOT NULL,"

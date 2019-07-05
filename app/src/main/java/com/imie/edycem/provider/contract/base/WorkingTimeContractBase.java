@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 3, 2019
+ * Last update : Jul 4, 2019
  *
  */
 package com.imie.edycem.provider.contract.base;
@@ -146,10 +146,8 @@ public abstract class WorkingTimeContractBase {
                     item.getDate().toString(ISODateTimeFormat.dateTime()));
             }
 
-             if (item.getSpentTime() != null) {
-                result.put(WorkingTimeContract.COL_SPENTTIME,
-                    item.getSpentTime());
-            }
+             result.put(WorkingTimeContract.COL_SPENTTIME,
+                String.valueOf(item.getSpentTime()));
 
              if (item.getDescription() != null) {
                 result.put(WorkingTimeContract.COL_DESCRIPTION,
@@ -216,7 +214,7 @@ public abstract class WorkingTimeContractBase {
             index = cursor.getColumnIndex(WorkingTimeContract.COL_SPENTTIME);
 
             if (index > -1) {
-                result.setSpentTime(cursor.getString(index));
+                result.setSpentTime(cursor.getInt(index));
             }
             index = cursor.getColumnIndex(WorkingTimeContract.COL_DESCRIPTION);
 

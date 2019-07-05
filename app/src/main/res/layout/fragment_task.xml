@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white" >
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/button_selector_blue"
+        android:text="@string/next"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_dev" />
+
+    <Spinner
+        android:id="@+id/spinner_sourcing"
+        android:layout_width="371dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:entries="@array/spinner_sourcing"
+        app:layout_constraintBottom_toTopOf="@+id/spinner_innovation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <Spinner
+        android:id="@+id/spinner_innovation"
+        android:layout_width="371dp"
+        android:layout_height="wrap_content"
+        android:entries="@array/spinner_innovation"
+        app:layout_constraintBottom_toTopOf="@+id/spinner_labo"
+        app:layout_constraintEnd_toEndOf="@+id/spinner_sourcing"
+        app:layout_constraintStart_toStartOf="@+id/spinner_sourcing"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_sourcing" />
+
+    <Spinner
+        android:id="@+id/spinner_labo"
+        android:layout_width="371dp"
+        android:layout_height="wrap_content"
+        android:entries="@array/spinner_labo"
+        app:layout_constraintBottom_toTopOf="@+id/spinner_dev"
+        app:layout_constraintEnd_toEndOf="@+id/spinner_innovation"
+        app:layout_constraintStart_toStartOf="@+id/spinner_innovation"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_innovation" />
+
+    <Spinner
+        android:id="@+id/spinner_dev"
+        android:layout_width="369dp"
+        android:layout_height="24dp"
+        android:entries="@array/spinner_dev"
+        app:layout_constraintBottom_toTopOf="@+id/btn_next"
+        app:layout_constraintEnd_toEndOf="@+id/spinner_labo"
+        app:layout_constraintStart_toStartOf="@+id/spinner_labo"
+        app:layout_constraintTop_toBottomOf="@+id/spinner_labo" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="59dp"
+        android:layout_height="19dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/spinner_sourcing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+</android.support.constraint.ConstraintLayout >

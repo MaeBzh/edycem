@@ -5,11 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.EditText;
 
 import com.imie.edycem.R;
 
 public class UserAndJobFragment extends Fragment {
+
+    private EditText editEmail;
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -20,5 +22,6 @@ public class UserAndJobFragment extends Fragment {
     }
 
     public void initComponents(View view) {
+
     }
 }

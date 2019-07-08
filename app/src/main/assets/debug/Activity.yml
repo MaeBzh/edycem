@@ -1,0 +1,17 @@
+Activity:
+#   Activity_name:
+#      id:
+#      name:
+#      tasks:
+
+ Activity_0:
+   name: "Sourcing produit"
+
+ Activity_1:
+   name: "Innovation"
+
+ Activity_2:
+   name: "Gestion laboratoire"
+
+ Activity_3:
+   name: "Développement produit"

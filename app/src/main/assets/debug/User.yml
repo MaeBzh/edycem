@@ -1,0 +1,26 @@
+User:
+#   User_name:
+#      id:
+#      firstname:
+#      lastname:
+#      email:
+#      isEligible:
+#      idSmartphone:
+#      dateRgpd:
+#      job:
+#      userWorkingTimes:
+#      createdProjects:
+
+ User_0:
+   firstname: "Ricky"
+   lastname: "Bobby"
+   email: "ricky.bobby@mail.com"
+   idSmartphone: "RICBOB"
+   job: Job_0
+
+ User_1:
+   firstname: "Toto"
+   lastname: "Titi"
+   email: "toto.titi@mail.com"
+   idSmartphone: "TOTTIT"
+   job: Job_1

@@ -195,7 +195,7 @@ public class LoginFragment extends Fragment {
                 this.getDatas();
             }
             UserProviderUtils userProviderUtils = new UserProviderUtils(this.currentContext);
-            result = userProviderUtils.getWithEmail(LoginFragment.this.editEmail.toString());
+//            result = userProviderUtils.getWithEmail(LoginFragment.this.editEmail.toString());
 
             return result;
         }

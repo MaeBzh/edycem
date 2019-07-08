@@ -1,0 +1,38 @@
+Task:
+#   Task_name:
+#      id:
+#      name:
+#      activity:
+#      taskWorkingTimes:
+
+ Task_0:
+   name: "Veille technologique"
+   activity: Activity_0
+
+ Task_1:
+   name: "Analyse"
+   activity: Activity_0
+
+ Task_2:
+   name: "Définition du cahier des charges"
+   activity: Activity_1
+
+ Task_3:
+   name: "Prototypage"
+   activity: Activity_1
+
+ Task_4:
+   name: "Essai labo"
+   activity: Activity_2
+
+ Task_5:
+   name: "Essai centrale"
+   activity: Activity_2
+
+ Task_6:
+   name: "Suivi chantier expérimental"
+   activity: Activity_3
+
+ Task_7:
+   name: "Point technique"
+   activity: Activity_3

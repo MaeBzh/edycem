@@ -1,0 +1,13 @@
+Job:
+#   Job_name:
+#      id:
+#      name:
+#      users:
+#      projects:
+
+ Job_0:
+   name: "BPE"
+
+ Job_1:
+   name: "Prefa"
+

@@ -6,7 +6,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 5, 2019
+ * Last update : Jul 8, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -96,6 +96,7 @@ public abstract class UserSQLiteAdapterBase
          + UserContract.COL_ISELIGIBLE    + " BOOLEAN NOT NULL,"
          + UserContract.COL_IDSMARTPHONE    + " VARCHAR NOT NULL,"
          + UserContract.COL_DATERGPD    + " DATETIME,"
+         + UserContract.COL_TOKEN    + " VARCHAR,"
          + UserContract.COL_JOB_ID    + " INTEGER NOT NULL,"
 
         
@@ -324,10 +325,10 @@ public abstract class UserSQLiteAdapterBase
         final ContentValues values =
                 UserContract.itemToContentValues(item);
         final String whereClause =
-                 UserContract.COL_ID
+                 UserContract.COL_EMAIL
                  + " = ?";
         final String[] whereArgs =
-                new String[] {String.valueOf(item.getId()) };
+                new String[] {String.valueOf(item.getEmail()) };
 
         return this.update(
                 values,

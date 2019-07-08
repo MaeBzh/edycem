@@ -2,9 +2,9 @@
  * SettingsWebServiceClientAdapterBase.java, Edycem Android
  *
  * Copyright 2019
- * Description :
+ * Description : 
  * Author(s)   : Harmony
- * Licence     :
+ * Licence     : 
  * Last update : Jul 8, 2019
  *
  */
@@ -33,42 +33,31 @@ import com.imie.edycem.data.RestClient.Verb;
 import com.imie.edycem.provider.contract.SettingsContract;
 
 
+
 /**
+ *
  * <b><i>This class will be overwrited whenever you regenerate the project with Harmony.
  * You should edit SettingsWebServiceClientAdapter class instead of this one or you will lose all your modifications.</i></b>
+ *
  */
 public abstract class SettingsWebServiceClientAdapterBase
         extends WebServiceClientAdapter<Settings> {
-    /**
-     * SettingsWebServiceClientAdapterBase TAG.
-     */
+    /** SettingsWebServiceClientAdapterBase TAG. */
     protected static final String TAG = "SettingsWSClientAdapter";
 
-    /**
-     * JSON Object Settings pattern.
-     */
+    /** JSON Object Settings pattern. */
     protected static String JSON_OBJECT_SETTINGS = "Settings";
-    /**
-     * JSON_ID attributes.
-     */
+    /** JSON_ID attributes. */
     protected static String JSON_ID = "id";
-    /**
-     * JSON_IDSERVER attributes.
-     */
+    /** JSON_IDSERVER attributes. */
     protected static String JSON_IDSERVER = "id";
-    /**
-     * JSON_RGPD attributes.
-     */
+    /** JSON_RGPD attributes. */
     protected static String JSON_RGPD = "rgpd";
 
-    /**
-     * Rest Date Format pattern.
-     */
+    /** Rest Date Format pattern. */
     public static final String REST_UPDATE_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
-    /**
-     * Time pattern.
-     */
+    /** Time pattern.*/
     public static final String TIME_FORMAT = "HH:mm:ss";
 
     /**
@@ -84,10 +73,10 @@ public abstract class SettingsWebServiceClientAdapterBase
      * Constructor with overriden port.
      *
      * @param context The context
-     * @param port    The overriden port
+     * @param port The overriden port
      */
     public SettingsWebServiceClientAdapterBase(Context context,
-                                               Integer port) {
+        Integer port) {
         this(context, null, port);
     }
 
@@ -95,11 +84,11 @@ public abstract class SettingsWebServiceClientAdapterBase
      * Constructor with overriden port and host.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
+     * @param host The overriden host
+     * @param port The overriden port
      */
     public SettingsWebServiceClientAdapterBase(Context context,
-                                               String host, Integer port) {
+            String host, Integer port) {
         this(context, host, port, null);
     }
 
@@ -107,12 +96,12 @@ public abstract class SettingsWebServiceClientAdapterBase
      * Constructor with overriden port, host and scheme.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
-     * @param scheme  The overriden scheme
+     * @param host The overriden host
+     * @param port The overriden port
+     * @param scheme The overriden scheme
      */
     public SettingsWebServiceClientAdapterBase(Context context,
-                                               String host, Integer port, String scheme) {
+            String host, Integer port, String scheme) {
         this(context, host, port, scheme, null);
     }
 
@@ -120,30 +109,31 @@ public abstract class SettingsWebServiceClientAdapterBase
      * Constructor with overriden port, host, scheme and prefix.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
-     * @param scheme  The overriden scheme
-     * @param prefix  The overriden prefix
+     * @param host The overriden host
+     * @param port The overriden port
+     * @param scheme The overriden scheme
+     * @param prefix The overriden prefix
      */
     public SettingsWebServiceClientAdapterBase(Context context,
-                                               String host, Integer port, String scheme, String prefix) {
+            String host, Integer port, String scheme, String prefix) {
         super(context, host, port, scheme, prefix);
 
-
+        
     }
 
     /**
-     * Retrieve all the Settingss in the given list. Uses the route : /settings.
-     *
+     * Retrieve all the Settingss in the given list. Uses the route : Settings.
      * @param settingss : The list in which the Settingss will be returned
      * @return The number of Settingss returned
      */
     public int getAll(List<Settings> settingss) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.GET,
-                "settings",
-                null);
+                    Verb.GET,
+                    String.format(
+                        this.getUri() + "%s",
+                        REST_FORMAT),
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -166,19 +156,18 @@ public abstract class SettingsWebServiceClientAdapterBase
 
     /**
      * Retrieve one Settings. Uses the route : Settings/%id%.
-     *
      * @param settings : The Settings to retrieve (set the ID)
      * @return -1 if an error has occurred. 0 if not.
      */
     public int get(Settings settings) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.GET,
-                String.format(
+                    Verb.GET,
+                    String.format(
                         this.getUri() + "/%s%s",
                         settings.getId(),
                         REST_FORMAT),
-                null);
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -196,19 +185,18 @@ public abstract class SettingsWebServiceClientAdapterBase
 
     /**
      * Update a Settings. Uses the route : Settings/%id%.
-     *
      * @param settings : The Settings to update
      * @return -1 if an error has occurred. 0 if not.
      */
     public int update(Settings settings) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.PUT,
-                String.format(
+                    Verb.PUT,
+                    String.format(
                         this.getUri() + "/%s%s",
                         settings.getId(),
                         REST_FORMAT),
-                itemToJson(settings));
+                    itemToJson(settings));
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -225,19 +213,18 @@ public abstract class SettingsWebServiceClientAdapterBase
 
     /**
      * Delete a Settings. Uses the route : Settings/%id%.
-     *
      * @param settings : The Settings to delete (only the id is necessary)
      * @return -1 if an error has occurred. 0 if not.
      */
     public int delete(Settings settings) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.DELETE,
-                String.format(
+                    Verb.DELETE,
+                    String.format(
                         this.getUri() + "/%s%s",
                         settings.getId(),
                         REST_FORMAT),
-                null);
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             result = 0;
@@ -251,6 +238,7 @@ public abstract class SettingsWebServiceClientAdapterBase
      * Tests if the json is a valid Settings Object.
      *
      * @param json The json
+     *
      * @return True if valid
      */
     public boolean isValidJSON(JSONObject json) {
@@ -262,8 +250,7 @@ public abstract class SettingsWebServiceClientAdapterBase
 
     /**
      * Extract a Settings from a JSONObject describing a Settings.
-     *
-     * @param json     The JSONObject describing the Settings
+     * @param json The JSONObject describing the Settings
      * @param settings The returned Settings
      * @return true if a Settings was found. false if not
      */
@@ -299,7 +286,6 @@ public abstract class SettingsWebServiceClientAdapterBase
 
     /**
      * Convert a Settings to a JSONObject.
-     *
      * @param settings The Settings to convert
      * @return The converted Settings
      */
@@ -322,7 +308,6 @@ public abstract class SettingsWebServiceClientAdapterBase
 
     /**
      * Convert a <T> to a JSONObject.
-     *
      * @param item The <T> to convert
      * @return The converted <T>
      */
@@ -340,7 +325,6 @@ public abstract class SettingsWebServiceClientAdapterBase
 
     /**
      * Converts a content value reprensenting a Settings to a JSONObject.
-     *
      * @param values The content values
      * @return The JSONObject
      */
@@ -363,17 +347,16 @@ public abstract class SettingsWebServiceClientAdapterBase
 
     /**
      * Extract a list of <T> from a JSONObject describing an array of <T> given the array name.
-     *
-     * @param json      The JSONObject describing the array of <T>
-     * @param items     The returned list of <T>
+     * @param json The JSONObject describing the array of <T>
+     * @param items The returned list of <T>
      * @param paramName The name of the array
-     * @param limit     Limit the number of items to parse
+     * @param limit Limit the number of items to parse
      * @return The number of <T> found in the JSON
      */
     public int extractItems(JSONObject json,
-                            String paramName,
-                            List<Settings> items,
-                            int limit) throws JSONException {
+            String paramName,
+            List<Settings> items,
+            int limit) throws JSONException {
 
         JSONArray itemArray = json.optJSONArray(paramName);
 
@@ -396,7 +379,7 @@ public abstract class SettingsWebServiceClientAdapterBase
 
         if (!json.isNull("Meta")) {
             JSONObject meta = json.optJSONObject("Meta");
-            result = meta.optInt("nbt", 0);
+            result = meta.optInt("nbt",0);
         }
 
         return result;
@@ -404,15 +387,14 @@ public abstract class SettingsWebServiceClientAdapterBase
 
     /**
      * Extract a list of <T> from a JSONObject describing an array of <T> given the array name.
-     *
-     * @param json      The JSONObject describing the array of <T>
-     * @param items     The returned list of <T>
+     * @param json The JSONObject describing the array of <T>
+     * @param items The returned list of <T>
      * @param paramName The name of the array
      * @return The number of <T> found in the JSON
      */
     public int extractItems(JSONObject json,
-                            String paramName,
-                            List<Settings> items) throws JSONException {
+            String paramName,
+            List<Settings> items) throws JSONException {
 
         return this.extractItems(json, paramName, items, 0);
     }

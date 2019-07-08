@@ -36,6 +36,7 @@
         android:layout_marginTop="50dp"
         android:ems="10"
         android:hint="@string/label_email"
+        android:text="arnal.duncan@gmail.com"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

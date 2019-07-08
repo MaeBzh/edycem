@@ -55,6 +55,8 @@ public abstract class TaskWebServiceClientAdapterBase
     protected static String JSON_IDSERVER = "id";
     /** JSON_NAME attributes. */
     protected static String JSON_NAME = "name";
+    /** JSON_DEFAULTTIME attributes. */
+    protected static String JSON_DEFAULTTIME = "defaultTime";
     /** JSON_ACTIVITY attributes. */
     protected static String JSON_ACTIVITY = "activity";
     /** JSON_TASKWORKINGTIMES attributes. */
@@ -128,7 +130,7 @@ public abstract class TaskWebServiceClientAdapterBase
     }
 
     /**
-     * Retrieve all the Tasks in the given list. Uses the route : /tasks.
+     * Retrieve all the Tasks in the given list. Uses the route : Task.
      * @param tasks : The list in which the Tasks will be returned
      * @return The number of Tasks returned
      */
@@ -136,7 +138,9 @@ public abstract class TaskWebServiceClientAdapterBase
         int result = -1;
         String response = this.invokeRequest(
                     Verb.GET,
-                "tasks",
+                    String.format(
+                        this.getUri() + "%s",
+                        REST_FORMAT),
                     null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
@@ -310,6 +314,12 @@ public abstract class TaskWebServiceClientAdapterBase
                             json.getString(TaskWebServiceClientAdapter.JSON_NAME));
                 }
 
+                if (json.has(TaskWebServiceClientAdapter.JSON_DEFAULTTIME)
+                        && !json.isNull(TaskWebServiceClientAdapter.JSON_DEFAULTTIME)) {
+                    task.setDefaultTime(
+                            json.getInt(TaskWebServiceClientAdapter.JSON_DEFAULTTIME));
+                }
+
                 if (json.has(TaskWebServiceClientAdapter.JSON_ACTIVITY)
                         && !json.isNull(TaskWebServiceClientAdapter.JSON_ACTIVITY)) {
 
@@ -369,6 +379,8 @@ public abstract class TaskWebServiceClientAdapterBase
                     task.getIdServer());
             params.put(TaskWebServiceClientAdapter.JSON_NAME,
                     task.getName());
+            params.put(TaskWebServiceClientAdapter.JSON_DEFAULTTIME,
+                    task.getDefaultTime());
 
             if (task.getActivity() != null) {
                 ActivityWebServiceClientAdapter activityAdapter =
@@ -425,6 +437,8 @@ public abstract class TaskWebServiceClientAdapterBase
                     values.get(TaskContract.COL_IDSERVER));
             params.put(TaskWebServiceClientAdapter.JSON_NAME,
                     values.get(TaskContract.COL_NAME));
+            params.put(TaskWebServiceClientAdapter.JSON_DEFAULTTIME,
+                    values.get(TaskContract.COL_DEFAULTTIME));
             ActivityWebServiceClientAdapter activityAdapter =
                     new ActivityWebServiceClientAdapter(this.context);
 

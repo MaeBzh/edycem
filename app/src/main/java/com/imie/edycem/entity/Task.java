@@ -32,6 +32,8 @@ public class Task implements Serializable, Parcelable {
     private int idServer;
     @Column(type = Column.Type.TEXT)
     private String name;
+    @Column(type = Column.Type.INTEGER)
+    private int defaultTime;
     
     @ManyToOne(targetEntity = "Activity", inversedBy = "tasks")
     private Activity activity;
@@ -94,6 +96,7 @@ public class Task implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
+        dest.writeInt(this.getDefaultTime());
         if (this.getActivity() != null
                     && !this.parcelableParents.contains(this.getActivity())) {
             this.getActivity().writeToParcel(this.parcelableParents, dest, flags);
@@ -128,6 +131,7 @@ public class Task implements Serializable, Parcelable {
         if (nameBool == 1) {
             this.setName(parc.readString());
         }
+        this.setDefaultTime(parc.readInt());
         this.setActivity((Activity) parc.readParcelable(Activity.class.getClassLoader()));
 
         int nbTaskWorkingTimes = parc.readInt();
@@ -141,6 +145,7 @@ public class Task implements Serializable, Parcelable {
             this.setTaskWorkingTimes(items);
         }
     }
+
 
 
 
@@ -248,5 +253,19 @@ public class Task implements Serializable, Parcelable {
      */
     public void setIdServer(final int value) {
          this.idServer = value;
+    }
+     /**
+     * Get the DefaultTime.
+     * @return the defaultTime
+     */
+    public int getDefaultTime() {
+         return this.defaultTime;
+    }
+     /**
+     * Set the DefaultTime.
+     * @param value the defaultTime to set
+     */
+    public void setDefaultTime(final int value) {
+         this.defaultTime = value;
     }
 }

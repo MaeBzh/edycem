@@ -7,6 +7,6 @@
     <string name="image_url_prefix_prod">http://127.0.0.1:80</string>
     <string name="rest_check_ssl">true</string>
     <string name="rest_ssl">ca.cert</string>
-    <string name="rest_url_dev">http://127.0.0.1:80/api_dev/</string>
-    <string name="rest_url_prod">http://127.0.0.1:80/api/</string>
+    <string name="rest_url_dev">http://df9997e5.ngrok.io/api/</string>
+    <string name="rest_url_prod">http://df9997e5.ngrok.io/api/</string>
 </resources>

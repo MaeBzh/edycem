@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 5, 2019
+ * Last update : Jul 8, 2019
  *
  */
 package com.imie.edycem.test.utils.base;
@@ -49,6 +49,7 @@ public abstract class UserUtilsBase {
         user.setIsEligible(TestUtils.generateRandomBool());
         user.setIdSmartphone("idSmartphone_"+TestUtils.generateRandomString(10));
         user.setDateRgpd(TestUtils.generateRandomDateTime());
+        user.setToken("token_"+TestUtils.generateRandomString(10));
         ArrayList<Job> jobs =
             new ArrayList<Job>();
         jobs.addAll(JobDataLoader.getInstance(ctx).getMap().values());
@@ -95,6 +96,7 @@ public abstract class UserUtilsBase {
             Assert.assertEquals(user1.isIsEligible(), user2.isIsEligible());
             Assert.assertEquals(user1.getIdSmartphone(), user2.getIdSmartphone());
             Assert.assertTrue(user1.getDateRgpd().isEqual(user2.getDateRgpd()));
+            Assert.assertEquals(user1.getToken(), user2.getToken());
             if (user1.getJob() != null
                     && user2.getJob() != null) {
                 if (checkRecursiveId) {

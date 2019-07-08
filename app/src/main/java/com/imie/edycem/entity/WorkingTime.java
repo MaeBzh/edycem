@@ -12,9 +12,10 @@ import com.tactfactory.harmony.annotation.GeneratedValue;
 import com.tactfactory.harmony.annotation.Id;
 import com.tactfactory.harmony.annotation.ManyToOne;
 import com.tactfactory.harmony.annotation.Table;
+import com.tactfactory.harmony.bundles.rest.annotation.Rest;
 
 import org.joda.time.DateTime;
-
+@Rest
 @Entity
 @Table
 public class WorkingTime implements Serializable, Parcelable {
@@ -161,6 +162,7 @@ public class WorkingTime implements Serializable, Parcelable {
         this.setProject((Project) parc.readParcelable(Project.class.getClassLoader()));
         this.setTask((Task) parc.readParcelable(Task.class.getClassLoader()));
     }
+
 
 
 

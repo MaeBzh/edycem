@@ -32,7 +32,7 @@ public class WorkingTimeActivity extends AppCompatActivity {
     }
 
     public void previousPage(View view) {
-        if(view.getId() == R.id.btn_next) {
+        if(view.getId() == R.id.btn_previous) {
             this.viewPager.setCurrentItem(this.viewPager.getCurrentItem() - 1, true);
         }
     }

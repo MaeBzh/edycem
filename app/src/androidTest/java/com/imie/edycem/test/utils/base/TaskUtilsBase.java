@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 5, 2019
+ * Last update : Jul 8, 2019
  *
  */
 package com.imie.edycem.test.utils.base;
@@ -41,6 +41,7 @@ public abstract class TaskUtilsBase {
         task.setId(TestUtils.generateRandomInt(0,100) + 1);
         task.setIdServer(TestUtils.generateRandomInt(0,100));
         task.setName("name_"+TestUtils.generateRandomString(10));
+        task.setDefaultTime(TestUtils.generateRandomInt(0,100));
         ArrayList<Activity> activitys =
             new ArrayList<Activity>();
         activitys.addAll(ActivityDataLoader.getInstance(ctx).getMap().values());
@@ -74,6 +75,7 @@ public abstract class TaskUtilsBase {
             Assert.assertEquals(task1.getId(), task2.getId());
             Assert.assertEquals(task1.getIdServer(), task2.getIdServer());
             Assert.assertEquals(task1.getName(), task2.getName());
+            Assert.assertEquals(task1.getDefaultTime(), task2.getDefaultTime());
             if (task1.getActivity() != null
                     && task2.getActivity() != null) {
                 if (checkRecursiveId) {

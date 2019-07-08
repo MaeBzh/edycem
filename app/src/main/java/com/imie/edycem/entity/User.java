@@ -41,10 +41,14 @@ public class User implements Serializable, Parcelable {
     private String email;
     @Column(type = Column.Type.BOOLEAN)
     private boolean isEligible;
+    @RestField(name = "smartphone_id")
     @Column(type = Column.Type.TEXT)
     private String idSmartphone;
     @Column(type = Column.Type.DATETIME, nullable = true)
     private DateTime dateRgpd;
+    @RestField(name = "api_token")
+    @Column(type = Column.Type.STRING, nullable = true)
+    private String token;
 
     @ManyToOne(targetEntity = "Job", inversedBy = "users")
     private Job job;
@@ -155,6 +159,12 @@ public class User implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
+        if (this.getToken() != null) {
+            dest.writeInt(1);
+            dest.writeString(this.getToken());
+        } else {
+            dest.writeInt(0);
+        }
         if (this.getJob() != null
                     && !this.parcelableParents.contains(this.getJob())) {
             this.getJob().writeToParcel(this.parcelableParents, dest, flags);
@@ -221,6 +231,10 @@ public class User implements Serializable, Parcelable {
                             .withOffsetParsed().parseDateTime(
                                     parc.readString()));
         }
+        int tokenBool = parc.readInt();
+        if (tokenBool == 1) {
+            this.setToken(parc.readString());
+        }
         this.setJob((Job) parc.readParcelable(Job.class.getClassLoader()));
 
         int nbUserWorkingTimes = parc.readInt();
@@ -245,6 +259,7 @@ public class User implements Serializable, Parcelable {
             this.setCreatedProjects(items);
         }
     }
+
 
 
 
@@ -431,5 +446,19 @@ public class User implements Serializable, Parcelable {
      */
     public void setIdServer(final int value) {
          this.idServer = value;
+    }
+     /**
+     * Get the Token.
+     * @return the token
+     */
+    public String getToken() {
+         return this.token;
+    }
+     /**
+     * Set the Token.
+     * @param value the token to set
+     */
+    public void setToken(final String value) {
+         this.token = value;
     }
 }

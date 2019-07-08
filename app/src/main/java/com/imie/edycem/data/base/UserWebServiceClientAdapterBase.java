@@ -2,9 +2,9 @@
  * UserWebServiceClientAdapterBase.java, Edycem Android
  *
  * Copyright 2019
- * Description :
+ * Description : 
  * Author(s)   : Harmony
- * Licence     :
+ * Licence     : 
  * Last update : Jul 8, 2019
  *
  */
@@ -15,9 +15,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.joda.time.format.DateTimeFormatter;
-
 import com.imie.edycem.harmony.util.DateUtils;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.joda.time.format.DateTimeFormat;
@@ -42,73 +40,47 @@ import com.imie.edycem.entity.Project;
 
 
 /**
+ *
  * <b><i>This class will be overwrited whenever you regenerate the project with Harmony.
  * You should edit UserWebServiceClientAdapter class instead of this one or you will lose all your modifications.</i></b>
+ *
  */
 public abstract class UserWebServiceClientAdapterBase
         extends WebServiceClientAdapter<User> {
-    /**
-     * UserWebServiceClientAdapterBase TAG.
-     */
+    /** UserWebServiceClientAdapterBase TAG. */
     protected static final String TAG = "UserWSClientAdapter";
 
-    /**
-     * JSON Object User pattern.
-     */
+    /** JSON Object User pattern. */
     protected static String JSON_OBJECT_USER = "User";
-    /**
-     * JSON_ID attributes.
-     */
+    /** JSON_ID attributes. */
     protected static String JSON_ID = "id";
-    /**
-     * JSON_IDSERVER attributes.
-     */
+    /** JSON_IDSERVER attributes. */
     protected static String JSON_IDSERVER = "id";
-    /**
-     * JSON_FIRSTNAME attributes.
-     */
+    /** JSON_FIRSTNAME attributes. */
     protected static String JSON_FIRSTNAME = "firstname";
-    /**
-     * JSON_LASTNAME attributes.
-     */
+    /** JSON_LASTNAME attributes. */
     protected static String JSON_LASTNAME = "lastname";
-    /**
-     * JSON_EMAIL attributes.
-     */
+    /** JSON_EMAIL attributes. */
     protected static String JSON_EMAIL = "email";
-    /**
-     * JSON_ISELIGIBLE attributes.
-     */
+    /** JSON_ISELIGIBLE attributes. */
     protected static String JSON_ISELIGIBLE = "isEligible";
-    /**
-     * JSON_IDSMARTPHONE attributes.
-     */
-    protected static String JSON_IDSMARTPHONE = "idSmartphone";
-    /**
-     * JSON_DATERGPD attributes.
-     */
+    /** JSON_IDSMARTPHONE attributes. */
+    protected static String JSON_IDSMARTPHONE = "smartphone_id";
+    /** JSON_DATERGPD attributes. */
     protected static String JSON_DATERGPD = "dateRgpd";
-    /**
-     * JSON_JOB attributes.
-     */
+    /** JSON_TOKEN attributes. */
+    protected static String JSON_TOKEN = "api_token";
+    /** JSON_JOB attributes. */
     protected static String JSON_JOB = "job";
-    /**
-     * JSON_USERWORKINGTIMES attributes.
-     */
+    /** JSON_USERWORKINGTIMES attributes. */
     protected static String JSON_USERWORKINGTIMES = "userWorkingTimes";
-    /**
-     * JSON_CREATEDPROJECTS attributes.
-     */
+    /** JSON_CREATEDPROJECTS attributes. */
     protected static String JSON_CREATEDPROJECTS = "createdProjects";
 
-    /**
-     * Rest Date Format pattern.
-     */
+    /** Rest Date Format pattern. */
     public static final String REST_UPDATE_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
-    /**
-     * Time pattern.
-     */
+    /** Time pattern.*/
     public static final String TIME_FORMAT = "HH:mm:ss";
 
     /**
@@ -124,10 +96,10 @@ public abstract class UserWebServiceClientAdapterBase
      * Constructor with overriden port.
      *
      * @param context The context
-     * @param port    The overriden port
+     * @param port The overriden port
      */
     public UserWebServiceClientAdapterBase(Context context,
-                                           Integer port) {
+        Integer port) {
         this(context, null, port);
     }
 
@@ -135,11 +107,11 @@ public abstract class UserWebServiceClientAdapterBase
      * Constructor with overriden port and host.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
+     * @param host The overriden host
+     * @param port The overriden port
      */
     public UserWebServiceClientAdapterBase(Context context,
-                                           String host, Integer port) {
+            String host, Integer port) {
         this(context, host, port, null);
     }
 
@@ -147,12 +119,12 @@ public abstract class UserWebServiceClientAdapterBase
      * Constructor with overriden port, host and scheme.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
-     * @param scheme  The overriden scheme
+     * @param host The overriden host
+     * @param port The overriden port
+     * @param scheme The overriden scheme
      */
     public UserWebServiceClientAdapterBase(Context context,
-                                           String host, Integer port, String scheme) {
+            String host, Integer port, String scheme) {
         this(context, host, port, scheme, null);
     }
 
@@ -160,30 +132,31 @@ public abstract class UserWebServiceClientAdapterBase
      * Constructor with overriden port, host, scheme and prefix.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
-     * @param scheme  The overriden scheme
-     * @param prefix  The overriden prefix
+     * @param host The overriden host
+     * @param port The overriden port
+     * @param scheme The overriden scheme
+     * @param prefix The overriden prefix
      */
     public UserWebServiceClientAdapterBase(Context context,
-                                           String host, Integer port, String scheme, String prefix) {
+            String host, Integer port, String scheme, String prefix) {
         super(context, host, port, scheme, prefix);
 
-
+        
     }
 
     /**
-     * Retrieve all the Users in the given list. Uses the route : /users.
-     *
+     * Retrieve all the Users in the given list. Uses the route : User.
      * @param users : The list in which the Users will be returned
      * @return The number of Users returned
      */
     public int getAll(List<User> users) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.GET,
-                "users",
-                null);
+                    Verb.GET,
+                    String.format(
+                        this.getUri() + "%s",
+                        REST_FORMAT),
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -206,19 +179,18 @@ public abstract class UserWebServiceClientAdapterBase
 
     /**
      * Retrieve one User. Uses the route : User/%id%.
-     *
      * @param user : The User to retrieve (set the ID)
      * @return -1 if an error has occurred. 0 if not.
      */
     public int get(User user) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.GET,
-                String.format(
+                    Verb.GET,
+                    String.format(
                         this.getUri() + "/%s%s",
                         user.getId(),
                         REST_FORMAT),
-                null);
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -236,19 +208,18 @@ public abstract class UserWebServiceClientAdapterBase
 
     /**
      * Update a User. Uses the route : User/%id%.
-     *
      * @param user : The User to update
      * @return -1 if an error has occurred. 0 if not.
      */
     public int update(User user) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.PUT,
-                String.format(
+                    Verb.PUT,
+                    String.format(
                         this.getUri() + "/%s%s",
                         user.getId(),
                         REST_FORMAT),
-                itemToJson(user));
+                    itemToJson(user));
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -265,19 +236,18 @@ public abstract class UserWebServiceClientAdapterBase
 
     /**
      * Delete a User. Uses the route : User/%id%.
-     *
      * @param user : The User to delete (only the id is necessary)
      * @return -1 if an error has occurred. 0 if not.
      */
     public int delete(User user) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.DELETE,
-                String.format(
+                    Verb.DELETE,
+                    String.format(
                         this.getUri() + "/%s%s",
                         user.getId(),
                         REST_FORMAT),
-                null);
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             result = 0;
@@ -288,20 +258,19 @@ public abstract class UserWebServiceClientAdapterBase
 
     /**
      * Get the Users associated with a Job. Uses the route : job/%Job_id%/user.
-     *
      * @param users : The list in which the Users will be returned
-     * @param job   : The associated job
+     * @param job : The associated job
      * @return The number of Users returned
      */
     public int getByJob(List<User> users, Job job) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.GET,
-                String.format(
+                    Verb.GET,
+                    String.format(
                         this.getUri() + "/%s%s",
                         job.getId(),
                         REST_FORMAT),
-                null);
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -316,10 +285,13 @@ public abstract class UserWebServiceClientAdapterBase
     }
 
 
+
+
     /**
      * Tests if the json is a valid User Object.
      *
      * @param json The json
+     *
      * @return True if valid
      */
     public boolean isValidJSON(JSONObject json) {
@@ -331,7 +303,6 @@ public abstract class UserWebServiceClientAdapterBase
 
     /**
      * Extract a User from a JSONObject describing a User.
-     *
      * @param json The JSONObject describing the User
      * @param user The returned User
      * @return true if a User was found. false if not
@@ -391,10 +362,16 @@ public abstract class UserWebServiceClientAdapterBase
                         user.setDateRgpd(
                                 dateRgpdFormatter.withOffsetParsed().parseDateTime(
                                         json.getString(
-                                                UserWebServiceClientAdapter.JSON_DATERGPD)));
+                                        UserWebServiceClientAdapter.JSON_DATERGPD)));
                     } catch (IllegalArgumentException e) {
                         Log.e(TAG, e.getMessage());
                     }
+                }
+
+                if (json.has(UserWebServiceClientAdapter.JSON_TOKEN)
+                        && !json.isNull(UserWebServiceClientAdapter.JSON_TOKEN)) {
+                    user.setToken(
+                            json.getString(UserWebServiceClientAdapter.JSON_TOKEN));
                 }
 
                 if (json.has(UserWebServiceClientAdapter.JSON_JOB)
@@ -409,7 +386,7 @@ public abstract class UserWebServiceClientAdapterBase
                         if (jobAdapter.extract(
                                 json.optJSONObject(
                                         UserWebServiceClientAdapter.JSON_JOB),
-                                job)) {
+                                        job)) {
                             user.setJob(job);
                         }
                     } catch (Exception e) {
@@ -462,7 +439,6 @@ public abstract class UserWebServiceClientAdapterBase
 
     /**
      * Convert a User to a JSONObject.
-     *
      * @param user The User to convert
      * @return The converted User
      */
@@ -488,6 +464,8 @@ public abstract class UserWebServiceClientAdapterBase
                 params.put(UserWebServiceClientAdapter.JSON_DATERGPD,
                         user.getDateRgpd().toString(REST_UPDATE_DATE_FORMAT));
             }
+            params.put(UserWebServiceClientAdapter.JSON_TOKEN,
+                    user.getToken());
 
             if (user.getJob() != null) {
                 JobWebServiceClientAdapter jobAdapter =
@@ -522,7 +500,6 @@ public abstract class UserWebServiceClientAdapterBase
 
     /**
      * Convert a <T> to a JSONObject.
-     *
      * @param item The <T> to convert
      * @return The converted <T>
      */
@@ -540,7 +517,6 @@ public abstract class UserWebServiceClientAdapterBase
 
     /**
      * Converts a content value reprensenting a User to a JSONObject.
-     *
      * @param values The content values
      * @return The JSONObject
      */
@@ -565,6 +541,8 @@ public abstract class UserWebServiceClientAdapterBase
             params.put(UserWebServiceClientAdapter.JSON_DATERGPD,
                     new DateTime(values.get(
                             UserContract.COL_DATERGPD)).toString(REST_UPDATE_DATE_FORMAT));
+            params.put(UserWebServiceClientAdapter.JSON_TOKEN,
+                    values.get(UserContract.COL_TOKEN));
             JobWebServiceClientAdapter jobAdapter =
                     new JobWebServiceClientAdapter(this.context);
 
@@ -579,17 +557,16 @@ public abstract class UserWebServiceClientAdapterBase
 
     /**
      * Extract a list of <T> from a JSONObject describing an array of <T> given the array name.
-     *
-     * @param json      The JSONObject describing the array of <T>
-     * @param items     The returned list of <T>
+     * @param json The JSONObject describing the array of <T>
+     * @param items The returned list of <T>
      * @param paramName The name of the array
-     * @param limit     Limit the number of items to parse
+     * @param limit Limit the number of items to parse
      * @return The number of <T> found in the JSON
      */
     public int extractItems(JSONObject json,
-                            String paramName,
-                            List<User> items,
-                            int limit) throws JSONException {
+            String paramName,
+            List<User> items,
+            int limit) throws JSONException {
 
         JSONArray itemArray = json.optJSONArray(paramName);
 
@@ -612,7 +589,7 @@ public abstract class UserWebServiceClientAdapterBase
 
         if (!json.isNull("Meta")) {
             JSONObject meta = json.optJSONObject("Meta");
-            result = meta.optInt("nbt", 0);
+            result = meta.optInt("nbt",0);
         }
 
         return result;
@@ -620,15 +597,14 @@ public abstract class UserWebServiceClientAdapterBase
 
     /**
      * Extract a list of <T> from a JSONObject describing an array of <T> given the array name.
-     *
-     * @param json      The JSONObject describing the array of <T>
-     * @param items     The returned list of <T>
+     * @param json The JSONObject describing the array of <T>
+     * @param items The returned list of <T>
      * @param paramName The name of the array
      * @return The number of <T> found in the JSON
      */
     public int extractItems(JSONObject json,
-                            String paramName,
-                            List<User> items) throws JSONException {
+            String paramName,
+            List<User> items) throws JSONException {
 
         return this.extractItems(json, paramName, items, 0);
     }

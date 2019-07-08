@@ -125,7 +125,7 @@ public abstract class ActivityWebServiceClientAdapterBase
     }
 
     /**
-     * Retrieve all the Activitys in the given list. Uses the route : /activies.
+     * Retrieve all the Activitys in the given list. Uses the route : Activity.
      * @param activitys : The list in which the Activitys will be returned
      * @return The number of Activitys returned
      */

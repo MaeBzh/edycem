@@ -2,6 +2,6 @@
 <resources>
     <color name="list_background_color">#ffffffff</color>
     <color name="primary_color">#065684</color>
-    <color name="primary_color_dark">#032b53</color>
-    <color name="accent_color">#1b7064</color>
+    <color name="primary_color_dark">#003d56</color>
+    <color name="accent_color">#94b41f</color>
 </resources>

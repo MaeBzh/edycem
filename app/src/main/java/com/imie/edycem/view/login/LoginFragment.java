@@ -1,7 +1,9 @@
 package com.imie.edycem.view.login;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,7 +28,6 @@ import com.imie.edycem.entity.Job;
 import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.Task;
 import com.imie.edycem.entity.User;
-import com.imie.edycem.provider.UserProviderAdapter;
 import com.imie.edycem.provider.contract.ActivityContract;
 import com.imie.edycem.provider.contract.JobContract;
 import com.imie.edycem.provider.contract.ProjectContract;
@@ -45,6 +46,7 @@ import java.util.List;
 public class LoginFragment extends Fragment {
 
     private EditText editEmail;
+    private String email;
     private Button submitButton;
     private ProgressBar progressBar;
 
@@ -63,8 +65,9 @@ public class LoginFragment extends Fragment {
         this.submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                User user = new User();
-                user.setEmail(LoginFragment.this.editEmail.toString());
+                final User user = new User();
+                LoginFragment.this.email = LoginFragment.this.editEmail.getText().toString();
+                user.setEmail(String.valueOf(LoginFragment.this.editEmail.getText()));
                 LoginFragment.this.progressBar.setVisibility(View.VISIBLE);
                 new LoginTask(LoginFragment.this.getContext()).execute(user);
             }
@@ -105,17 +108,17 @@ public class LoginFragment extends Fragment {
         /**
          * Call webservices for updating the database.
          */
-        private void getDatas() {
+        private void getDatas(User connectedUser) {
 
-            List<Activity> activities = new ArrayList<>();
-            List<Task> tasks = new ArrayList<>();
-            List<Job> jobs = new ArrayList<>();
-            List<Project> projects = new ArrayList<>();
-            List<User> users = new ArrayList<>();
+            ArrayList<Activity> activities = new ArrayList<>();
+            ArrayList<Task> tasks = new ArrayList<>();
+            ArrayList<Job> jobs = new ArrayList<>();
+            ArrayList<Project> projects = new ArrayList<>();
+            ArrayList<User> users = new ArrayList<>();
 
             ActivityWebServiceClientAdapter activityWS = new ActivityWebServiceClientAdapter(this.currentContext);
             ActivityProviderUtils activityProviderUtils = new ActivityProviderUtils(this.currentContext);
-            activityWS.getAll(activities);
+            activities = activityWS.getAllActivities(connectedUser);
 
             for (Activity activity : activities) {
                 CriteriaExpression criteriaActivity = new CriteriaExpression(CriteriaExpression.GroupType.AND);
@@ -129,7 +132,7 @@ public class LoginFragment extends Fragment {
 
             TaskWebServiceClientAdapter taskWS = new TaskWebServiceClientAdapter(this.currentContext);
             TaskProviderUtils taskProviderUtils = new TaskProviderUtils(this.currentContext);
-            taskWS.getAll(tasks);
+            tasks = taskWS.getAllTasks(connectedUser);
 
             for (Task task : tasks) {
                 CriteriaExpression criteriaTask = new CriteriaExpression(CriteriaExpression.GroupType.AND);
@@ -140,10 +143,10 @@ public class LoginFragment extends Fragment {
                     taskProviderUtils.insert(task);
                 }
             }
-
+//
             JobWebServiceClientAdapter jobWS = new JobWebServiceClientAdapter(this.currentContext);
             JobProviderUtils jobProviderUtils = new JobProviderUtils(this.currentContext);
-            jobWS.getAll(jobs);
+            jobs = jobWS.getAllJobs(connectedUser);
 
             for (Job job : jobs) {
                 CriteriaExpression criteriaJob = new CriteriaExpression(CriteriaExpression.GroupType.AND);
@@ -157,7 +160,7 @@ public class LoginFragment extends Fragment {
 
             UserWebServiceClientAdapter userWS = new UserWebServiceClientAdapter(this.currentContext);
             UserProviderUtils userProviderUtils = new UserProviderUtils(this.currentContext);
-            userWS.getAll(users);
+            users = userWS.getAllUsers(connectedUser);
 
             for (User user : users) {
                 CriteriaExpression criteriaUser = new CriteriaExpression(CriteriaExpression.GroupType.AND);
@@ -171,7 +174,7 @@ public class LoginFragment extends Fragment {
 
             ProjectWebServiceClientAdapter projectWS = new ProjectWebServiceClientAdapter(this.currentContext);
             ProjectProviderUtils projectProviderUtils = new ProjectProviderUtils(this.currentContext);
-            projectWS.getAll(projects);
+            projects = projectWS.getAllProjects(connectedUser);
 
             for (Project project : projects) {
                 CriteriaExpression criteriaProject = new CriteriaExpression(CriteriaExpression.GroupType.AND);
@@ -186,16 +189,14 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected User doInBackground(User... users) {
-
             User user = users[0];
             User result = new User();
             UserWebServiceClientAdapter userWS =
                     new UserWebServiceClientAdapter(this.currentContext);
-            if(userWS.get(user) == 0 ){
-                this.getDatas();
+            result = userWS.getMatchingUser(user);
+            if (result != null) {
+                LoginTask.this.getDatas(result);
             }
-            UserProviderUtils userProviderUtils = new UserProviderUtils(this.currentContext);
-//            result = userProviderUtils.getWithEmail(LoginFragment.this.editEmail.toString());
 
             return result;
         }
@@ -206,17 +207,41 @@ public class LoginFragment extends Fragment {
          * @param result the result
          */
         @Override
-        protected void onPostExecute(User result) {
+        protected void onPostExecute(final User result) {
             super.onPostExecute(result);
 
             if (result != null) {
+                UserProviderUtils userProviderUtils = new UserProviderUtils(currentContext);
+                if (userProviderUtils.queryWithEmail(result.getEmail()) == null) {
+                    userProviderUtils.insert(result);
+                } else {
+                    userProviderUtils.update(result);
+                }
 
-                Toast.makeText(LoginFragment.this.getContext(),
-                        LoginFragment.this.getContext().getString(R.string.authentication_ok),
-                        Toast.LENGTH_SHORT)
+                LayoutInflater inflater = LoginFragment.this.getActivity().getLayoutInflater();
+                View dialogView = inflater.inflate(R.layout.fragment_rgpd, null);
+
+                new AlertDialog.Builder(LoginFragment.this.getContext())
+                        .setView(dialogView)
+                        .setTitle("RGPD")
+                        .setPositiveButton(getString(R.string.accept), new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(LoginFragment.this.getContext(),
+                                        LoginFragment.this.getContext().getString(R.string.authentication_ok),
+                                        Toast.LENGTH_SHORT)
+                                        .show();
+                                LoginFragment.this.startMainActivity(result);
+                            }
+                        })
+
+                        .setNegativeButton(getString(R.string.deny), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                LoginFragment.this.editEmail.setText("");
+                                LoginFragment.this.progressBar.setVisibility(View.INVISIBLE);
+                            }
+                        })
                         .show();
-                LoginFragment.this.startMainActivity(result);
-
             } else {
 
                 Toast.makeText(LoginFragment.this.getContext(),

@@ -5,6 +5,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RadioButton;
 
 import com.imie.edycem.R;
 
@@ -46,12 +48,11 @@ public class PageFragment extends Fragment {
                 result = inflater.inflate(R.layout.fragment_task, container, false);
                 break;
             case 3:
-                result = inflater.inflate(R.layout.fragment_working_time, container,false);
+                result = inflater.inflate(R.layout.fragment_working_time, container, false);
             default:
                 break;
         }
 
         return result;
     }
-
 }

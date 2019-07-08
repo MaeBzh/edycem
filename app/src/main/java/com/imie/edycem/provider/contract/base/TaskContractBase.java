@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 5, 2019
+ * Last update : Jul 8, 2019
  *
  */
 package com.imie.edycem.provider.contract.base;
@@ -51,6 +51,13 @@ public abstract class TaskContractBase {
     public static final String ALIASED_COL_NAME =
             TaskContract.TABLE_NAME + "." + COL_NAME;
 
+    /** defaultTime. */
+    public static final String COL_DEFAULTTIME =
+            "defaultTime";
+    /** Alias. */
+    public static final String ALIASED_COL_DEFAULTTIME =
+            TaskContract.TABLE_NAME + "." + COL_DEFAULTTIME;
+
     /** activity_id. */
     public static final String COL_ACTIVITY_ID =
             "activity_id";
@@ -75,6 +82,8 @@ public abstract class TaskContractBase {
         
         TaskContract.COL_NAME,
         
+        TaskContract.COL_DEFAULTTIME,
+        
         TaskContract.COL_ACTIVITY_ID,
     };
 
@@ -86,6 +95,8 @@ public abstract class TaskContractBase {
         TaskContract.ALIASED_COL_IDSERVER,
         
         TaskContract.ALIASED_COL_NAME,
+        
+        TaskContract.ALIASED_COL_DEFAULTTIME,
         
         TaskContract.ALIASED_COL_ACTIVITY_ID,
         
@@ -112,6 +123,9 @@ public abstract class TaskContractBase {
                 result.put(TaskContract.COL_NAME,
                     item.getName());
             }
+
+             result.put(TaskContract.COL_DEFAULTTIME,
+                String.valueOf(item.getDefaultTime()));
 
              if (item.getActivity() != null) {
                 result.put(TaskContract.COL_ACTIVITY_ID,
@@ -160,6 +174,11 @@ public abstract class TaskContractBase {
 
             if (index > -1) {
                 result.setName(cursor.getString(index));
+            }
+            index = cursor.getColumnIndex(TaskContract.COL_DEFAULTTIME);
+
+            if (index > -1) {
+                result.setDefaultTime(cursor.getInt(index));
             }
             if (result.getActivity() == null) {
                 final Activity activity = new Activity();

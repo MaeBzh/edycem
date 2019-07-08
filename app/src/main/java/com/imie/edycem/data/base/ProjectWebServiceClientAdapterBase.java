@@ -2,9 +2,9 @@
  * ProjectWebServiceClientAdapterBase.java, Edycem Android
  *
  * Copyright 2019
- * Description :
+ * Description : 
  * Author(s)   : Harmony
- * Licence     :
+ * Licence     : 
  * Last update : Jul 8, 2019
  *
  */
@@ -15,9 +15,7 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.joda.time.format.DateTimeFormatter;
-
 import com.imie.edycem.harmony.util.DateUtils;
-
 import org.joda.time.DateTime;
 import org.joda.time.format.ISODateTimeFormat;
 import org.joda.time.format.DateTimeFormat;
@@ -42,97 +40,57 @@ import com.imie.edycem.entity.User;
 
 
 /**
+ *
  * <b><i>This class will be overwrited whenever you regenerate the project with Harmony.
  * You should edit ProjectWebServiceClientAdapter class instead of this one or you will lose all your modifications.</i></b>
+ *
  */
 public abstract class ProjectWebServiceClientAdapterBase
         extends WebServiceClientAdapter<Project> {
-    /**
-     * ProjectWebServiceClientAdapterBase TAG.
-     */
+    /** ProjectWebServiceClientAdapterBase TAG. */
     protected static final String TAG = "ProjectWSClientAdapter";
 
-    /**
-     * JSON Object Project pattern.
-     */
+    /** JSON Object Project pattern. */
     protected static String JSON_OBJECT_PROJECT = "Project";
-    /**
-     * JSON_ID attributes.
-     */
+    /** JSON_ID attributes. */
     protected static String JSON_ID = "id";
-    /**
-     * JSON_IDSERVER attributes.
-     */
+    /** JSON_IDSERVER attributes. */
     protected static String JSON_IDSERVER = "id";
-    /**
-     * JSON_NAME attributes.
-     */
+    /** JSON_NAME attributes. */
     protected static String JSON_NAME = "name";
-    /**
-     * JSON_DESCRIPTION attributes.
-     */
+    /** JSON_DESCRIPTION attributes. */
     protected static String JSON_DESCRIPTION = "description";
-    /**
-     * JSON_CREATEDAT attributes.
-     */
+    /** JSON_CREATEDAT attributes. */
     protected static String JSON_CREATEDAT = "createdAt";
-    /**
-     * JSON_COMPANY attributes.
-     */
+    /** JSON_COMPANY attributes. */
     protected static String JSON_COMPANY = "company";
-    /**
-     * JSON_CLAIMANTNAME attributes.
-     */
+    /** JSON_CLAIMANTNAME attributes. */
     protected static String JSON_CLAIMANTNAME = "claimantName";
-    /**
-     * JSON_RELEVANTSITE attributes.
-     */
+    /** JSON_RELEVANTSITE attributes. */
     protected static String JSON_RELEVANTSITE = "relevantSite";
-    /**
-     * JSON_ELIGIBLECIR attributes.
-     */
+    /** JSON_ELIGIBLECIR attributes. */
     protected static String JSON_ELIGIBLECIR = "eligibleCir";
-    /**
-     * JSON_ASPARTOFPULPIT attributes.
-     */
+    /** JSON_ASPARTOFPULPIT attributes. */
     protected static String JSON_ASPARTOFPULPIT = "asPartOfPulpit";
-    /**
-     * JSON_DEADLINE attributes.
-     */
+    /** JSON_DEADLINE attributes. */
     protected static String JSON_DEADLINE = "deadline";
-    /**
-     * JSON_DOCUMENTS attributes.
-     */
+    /** JSON_DOCUMENTS attributes. */
     protected static String JSON_DOCUMENTS = "documents";
-    /**
-     * JSON_ACTIVITYTYPE attributes.
-     */
+    /** JSON_ACTIVITYTYPE attributes. */
     protected static String JSON_ACTIVITYTYPE = "activityType";
-    /**
-     * JSON_ISVALIDATE attributes.
-     */
+    /** JSON_ISVALIDATE attributes. */
     protected static String JSON_ISVALIDATE = "isValidate";
-    /**
-     * JSON_PROJECTWORKINGTIMES attributes.
-     */
+    /** JSON_PROJECTWORKINGTIMES attributes. */
     protected static String JSON_PROJECTWORKINGTIMES = "projectWorkingTimes";
-    /**
-     * JSON_JOB attributes.
-     */
+    /** JSON_JOB attributes. */
     protected static String JSON_JOB = "job";
-    /**
-     * JSON_CREATOR attributes.
-     */
+    /** JSON_CREATOR attributes. */
     protected static String JSON_CREATOR = "creator";
 
-    /**
-     * Rest Date Format pattern.
-     */
+    /** Rest Date Format pattern. */
     public static final String REST_UPDATE_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
-    /**
-     * Time pattern.
-     */
+    /** Time pattern.*/
     public static final String TIME_FORMAT = "HH:mm:ss";
 
     /**
@@ -148,10 +106,10 @@ public abstract class ProjectWebServiceClientAdapterBase
      * Constructor with overriden port.
      *
      * @param context The context
-     * @param port    The overriden port
+     * @param port The overriden port
      */
     public ProjectWebServiceClientAdapterBase(Context context,
-                                              Integer port) {
+        Integer port) {
         this(context, null, port);
     }
 
@@ -159,11 +117,11 @@ public abstract class ProjectWebServiceClientAdapterBase
      * Constructor with overriden port and host.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
+     * @param host The overriden host
+     * @param port The overriden port
      */
     public ProjectWebServiceClientAdapterBase(Context context,
-                                              String host, Integer port) {
+            String host, Integer port) {
         this(context, host, port, null);
     }
 
@@ -171,12 +129,12 @@ public abstract class ProjectWebServiceClientAdapterBase
      * Constructor with overriden port, host and scheme.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
-     * @param scheme  The overriden scheme
+     * @param host The overriden host
+     * @param port The overriden port
+     * @param scheme The overriden scheme
      */
     public ProjectWebServiceClientAdapterBase(Context context,
-                                              String host, Integer port, String scheme) {
+            String host, Integer port, String scheme) {
         this(context, host, port, scheme, null);
     }
 
@@ -184,30 +142,31 @@ public abstract class ProjectWebServiceClientAdapterBase
      * Constructor with overriden port, host, scheme and prefix.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
-     * @param scheme  The overriden scheme
-     * @param prefix  The overriden prefix
+     * @param host The overriden host
+     * @param port The overriden port
+     * @param scheme The overriden scheme
+     * @param prefix The overriden prefix
      */
     public ProjectWebServiceClientAdapterBase(Context context,
-                                              String host, Integer port, String scheme, String prefix) {
+            String host, Integer port, String scheme, String prefix) {
         super(context, host, port, scheme, prefix);
 
-
+        
     }
 
     /**
-     * Retrieve all the Projects in the given list. Uses the route : /projects.
-     *
+     * Retrieve all the Projects in the given list. Uses the route : Project.
      * @param projects : The list in which the Projects will be returned
      * @return The number of Projects returned
      */
     public int getAll(List<Project> projects) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.GET,
-                "projects",
-                null);
+                    Verb.GET,
+                    String.format(
+                        this.getUri() + "%s",
+                        REST_FORMAT),
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -230,19 +189,18 @@ public abstract class ProjectWebServiceClientAdapterBase
 
     /**
      * Retrieve one Project. Uses the route : Project/%id%.
-     *
      * @param project : The Project to retrieve (set the ID)
      * @return -1 if an error has occurred. 0 if not.
      */
     public int get(Project project) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.GET,
-                String.format(
+                    Verb.GET,
+                    String.format(
                         this.getUri() + "/%s%s",
                         project.getId(),
                         REST_FORMAT),
-                null);
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -260,19 +218,18 @@ public abstract class ProjectWebServiceClientAdapterBase
 
     /**
      * Update a Project. Uses the route : Project/%id%.
-     *
      * @param project : The Project to update
      * @return -1 if an error has occurred. 0 if not.
      */
     public int update(Project project) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.PUT,
-                String.format(
+                    Verb.PUT,
+                    String.format(
                         this.getUri() + "/%s%s",
                         project.getId(),
                         REST_FORMAT),
-                itemToJson(project));
+                    itemToJson(project));
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -289,19 +246,18 @@ public abstract class ProjectWebServiceClientAdapterBase
 
     /**
      * Delete a Project. Uses the route : Project/%id%.
-     *
      * @param project : The Project to delete (only the id is necessary)
      * @return -1 if an error has occurred. 0 if not.
      */
     public int delete(Project project) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.DELETE,
-                String.format(
+                    Verb.DELETE,
+                    String.format(
                         this.getUri() + "/%s%s",
                         project.getId(),
                         REST_FORMAT),
-                null);
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             result = 0;
@@ -313,20 +269,19 @@ public abstract class ProjectWebServiceClientAdapterBase
 
     /**
      * Get the Projects associated with a Job. Uses the route : job/%Job_id%/project.
-     *
      * @param projects : The list in which the Projects will be returned
-     * @param job      : The associated job
+     * @param job : The associated job
      * @return The number of Projects returned
      */
     public int getByJob(List<Project> projects, Job job) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.GET,
-                String.format(
+                    Verb.GET,
+                    String.format(
                         this.getUri() + "/%s%s",
                         job.getId(),
                         REST_FORMAT),
-                null);
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -342,20 +297,19 @@ public abstract class ProjectWebServiceClientAdapterBase
 
     /**
      * Get the Projects associated with a User. Uses the route : user/%User_id%/project.
-     *
      * @param projects : The list in which the Projects will be returned
-     * @param user     : The associated user
+     * @param user : The associated user
      * @return The number of Projects returned
      */
     public int getByCreator(List<Project> projects, User user) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.GET,
-                String.format(
+                    Verb.GET,
+                    String.format(
                         this.getUri() + "/%s%s",
                         user.getId(),
                         REST_FORMAT),
-                null);
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -374,6 +328,7 @@ public abstract class ProjectWebServiceClientAdapterBase
      * Tests if the json is a valid Project Object.
      *
      * @param json The json
+     *
      * @return True if valid
      */
     public boolean isValidJSON(JSONObject json) {
@@ -385,8 +340,7 @@ public abstract class ProjectWebServiceClientAdapterBase
 
     /**
      * Extract a Project from a JSONObject describing a Project.
-     *
-     * @param json    The JSONObject describing the Project
+     * @param json The JSONObject describing the Project
      * @param project The returned Project
      * @return true if a Project was found. false if not
      */
@@ -427,7 +381,7 @@ public abstract class ProjectWebServiceClientAdapterBase
                         project.setCreatedAt(
                                 createdAtFormatter.withOffsetParsed().parseDateTime(
                                         json.getString(
-                                                ProjectWebServiceClientAdapter.JSON_CREATEDAT)));
+                                        ProjectWebServiceClientAdapter.JSON_CREATEDAT)));
                     } catch (IllegalArgumentException e) {
                         Log.e(TAG, e.getMessage());
                     }
@@ -471,7 +425,7 @@ public abstract class ProjectWebServiceClientAdapterBase
                         project.setDeadline(
                                 deadlineFormatter.withOffsetParsed().parseDateTime(
                                         json.getString(
-                                                ProjectWebServiceClientAdapter.JSON_DEADLINE)));
+                                        ProjectWebServiceClientAdapter.JSON_DEADLINE)));
                     } catch (IllegalArgumentException e) {
                         Log.e(TAG, e.getMessage());
                     }
@@ -525,7 +479,7 @@ public abstract class ProjectWebServiceClientAdapterBase
                         if (jobAdapter.extract(
                                 json.optJSONObject(
                                         ProjectWebServiceClientAdapter.JSON_JOB),
-                                job)) {
+                                        job)) {
                             project.setJob(job);
                         }
                     } catch (Exception e) {
@@ -545,7 +499,7 @@ public abstract class ProjectWebServiceClientAdapterBase
                         if (creatorAdapter.extract(
                                 json.optJSONObject(
                                         ProjectWebServiceClientAdapter.JSON_CREATOR),
-                                creator)) {
+                                        creator)) {
                             project.setCreator(creator);
                         }
                     } catch (Exception e) {
@@ -562,7 +516,6 @@ public abstract class ProjectWebServiceClientAdapterBase
 
     /**
      * Convert a Project to a JSONObject.
-     *
      * @param project The Project to convert
      * @return The converted Project
      */
@@ -637,7 +590,6 @@ public abstract class ProjectWebServiceClientAdapterBase
 
     /**
      * Convert a <T> to a JSONObject.
-     *
      * @param item The <T> to convert
      * @return The converted <T>
      */
@@ -655,7 +607,6 @@ public abstract class ProjectWebServiceClientAdapterBase
 
     /**
      * Converts a content value reprensenting a Project to a JSONObject.
-     *
      * @param values The content values
      * @return The JSONObject
      */
@@ -712,17 +663,16 @@ public abstract class ProjectWebServiceClientAdapterBase
 
     /**
      * Extract a list of <T> from a JSONObject describing an array of <T> given the array name.
-     *
-     * @param json      The JSONObject describing the array of <T>
-     * @param items     The returned list of <T>
+     * @param json The JSONObject describing the array of <T>
+     * @param items The returned list of <T>
      * @param paramName The name of the array
-     * @param limit     Limit the number of items to parse
+     * @param limit Limit the number of items to parse
      * @return The number of <T> found in the JSON
      */
     public int extractItems(JSONObject json,
-                            String paramName,
-                            List<Project> items,
-                            int limit) throws JSONException {
+            String paramName,
+            List<Project> items,
+            int limit) throws JSONException {
 
         JSONArray itemArray = json.optJSONArray(paramName);
 
@@ -745,7 +695,7 @@ public abstract class ProjectWebServiceClientAdapterBase
 
         if (!json.isNull("Meta")) {
             JSONObject meta = json.optJSONObject("Meta");
-            result = meta.optInt("nbt", 0);
+            result = meta.optInt("nbt",0);
         }
 
         return result;
@@ -753,15 +703,14 @@ public abstract class ProjectWebServiceClientAdapterBase
 
     /**
      * Extract a list of <T> from a JSONObject describing an array of <T> given the array name.
-     *
-     * @param json      The JSONObject describing the array of <T>
-     * @param items     The returned list of <T>
+     * @param json The JSONObject describing the array of <T>
+     * @param items The returned list of <T>
      * @param paramName The name of the array
      * @return The number of <T> found in the JSON
      */
     public int extractItems(JSONObject json,
-                            String paramName,
-                            List<Project> items) throws JSONException {
+            String paramName,
+            List<Project> items) throws JSONException {
 
         return this.extractItems(json, paramName, items, 0);
     }

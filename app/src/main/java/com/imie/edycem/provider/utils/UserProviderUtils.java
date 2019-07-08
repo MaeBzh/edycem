@@ -49,7 +49,7 @@ public class UserProviderUtils
         ContentResolver prov = this.getContext().getContentResolver();
 
         CriteriaExpression crits = new CriteriaExpression(CriteriaExpression.GroupType.AND);
-        crits.add(UserContract.ALIASED_COL_ID,
+        crits.add(UserContract.ALIASED_COL_EMAIL,
                 email);
 
         android.database.Cursor cursor = prov.query(

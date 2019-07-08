@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+    <string name="accept">Accepter</string>
     <string name="activity_idserver_label">IdServer</string>
     <string name="activity_name_invalid_field_error">Field Name is invalid.</string>
     <string name="activity_name_label">Name</string>
@@ -8,6 +9,8 @@
     <string name="analysis">Analyse</string>
     <string name="app_provider_description">Provider of Edycem to access data</string>
     <string name="app_provider_name">Provider of Edycem</string>
+    <string name="authentication_fail">L\'authentification a échoué</string>
+    <string name="authentication_ok">Vous êtes bien connecté</string>
     <string name="btn_previous">Précédent</string>
     <string name="central_test">Essai centrale</string>
     <string name="choose_project">Choisissez un projet</string>
@@ -16,6 +19,7 @@
     <string name="connection">Connexion</string>
     <string name="contributors">Collaborateurs</string>
     <string name="date">Date</string>
+    <string name="deny">Refuser</string>
     <string name="enter_working_time">Entrez votre temps</string>
     <string name="experimental_site">Suivi chantier expérimental</string>
     <string name="hours">heures</string>
@@ -32,14 +36,29 @@
     <string name="label_id">Identifiant</string>
     <string name="minutes">minutes</string>
     <string name="next">Suivant</string>
-    <string name="no_network_error">No internet connection available</string>
     <string name="password">Mot de passe</string>
     <string name="project_activitytype_invalid_field_error">Field ActivityType is invalid.</string>
+    <string name="project_company_invalid_field_error">Field Company is invalid.</string>
+    <string name="project_deadline_invalid_field_error">Field Deadline is invalid.</string>
+    <string name="specifications">Définition du cahier des charges</string>
+    <string-array name="spinner_jobs">
+        <item>Prefa</item>
+        <item>BPE</item>
+    </string-array>
+    <string-array name="spinner_users">
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+    </string-array>
+    <string name="uri_not_supported">URI not supported</string>
+    <string name="no_network_error">No internet connection available</string>
     <string name="project_activitytype_label">ActivityType</string>
     <string name="project_aspartofpulpit_label">AsPartOfPulpit</string>
     <string name="project_claimantname_invalid_field_error">Field ClaimantName is invalid.</string>
     <string name="project_claimantname_label">ClaimantName</string>
-    <string name="project_company_invalid_field_error">Field Company is invalid.</string>
     <string name="project_company_label">Company</string>
     <string name="project_createdat_date_title">Select createdAt date</string>
     <string name="project_createdat_invalid_field_error">Field CreatedAt is invalid.</string>
@@ -48,7 +67,6 @@
     <string name="project_creator_invalid_field_error">Field Creator is invalid.</string>
     <string name="project_creator_label">Creator</string>
     <string name="project_deadline_date_title">Select deadline date</string>
-    <string name="project_deadline_invalid_field_error">Field Deadline is invalid.</string>
     <string name="project_deadline_label">Deadline</string>
     <string name="project_deadline_time_title">Select deadline time</string>
     <string name="project_description_invalid_field_error">Field Description is invalid.</string>
@@ -71,11 +89,11 @@
     <string name="project_workingtimes_invalid_field_error">Field WorkingTimes is invalid.</string>
     <string name="project_workingtimes_label">WorkingTimes</string>
     <string name="prototyping">Prototypage</string>
+    <string name="rgpd">\"At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.\"</string>
     <string name="see_more">Voir plus de projets</string>
     <string name="settings_idserver_label">IdServer</string>
     <string name="settings_rgpd_invalid_field_error">Field Rgpd is invalid.</string>
     <string name="settings_rgpd_label">Rgpd</string>
-    <string name="specifications">Définition du cahier des charges</string>
     <string-array name="spinner_hours">
         <item>1</item>
         <item>2</item>
@@ -90,27 +108,17 @@
         <item>11</item>
         <item>12</item>
     </string-array>
-    <string-array name="spinner_jobs">
-        <item>Prefa</item>
-        <item>BPE</item>
-    </string-array>
     <string-array name="spinner_min">
         <item>0</item>
         <item>15</item>
         <item>30</item>
         <item>45</item>
     </string-array>
-    <string-array name="spinner_users">
-        <item>Firstname Lastname</item>
-        <item>Firstname Lastname</item>
-        <item>Firstname Lastname</item>
-        <item>Firstname Lastname</item>
-        <item>Firstname Lastname</item>
-        <item>Firstname Lastname</item>
-    </string-array>
     <string name="submit">Valider</string>
     <string name="task_activity_invalid_field_error">Field Activity is invalid.</string>
     <string name="task_activity_label">Activity</string>
+    <string name="task_defaulttime_invalid_field_error">Field DefaultTime is invalid.</string>
+    <string name="task_defaulttime_label">DefaultTime</string>
     <string name="task_idserver_label">IdServer</string>
     <string name="task_name_invalid_field_error">Field Name is invalid.</string>
     <string name="task_name_label">Name</string>
@@ -129,6 +137,7 @@
     <string name="user_createdprojects_invalid_field_error">Field CreatedProjects is invalid.</string>
     <string name="user_createdprojects_label">CreatedProjects</string>
     <string name="user_datergpd_date_title">Select dateRgpd date</string>
+    <string name="user_datergpd_invalid_field_error">Field DateRgpd is invalid.</string>
     <string name="user_datergpd_label">DateRgpd</string>
     <string name="user_datergpd_time_title">Select dateRgpd time</string>
     <string name="user_email_invalid_field_error">Field Email is invalid.</string>
@@ -143,11 +152,19 @@
     <string name="user_job_label">Job</string>
     <string name="user_lastname_invalid_field_error">Field Lastname is invalid.</string>
     <string name="user_lastname_label">Lastname</string>
+    <string name="user_password_invalid_field_error">Field Password is invalid.</string>
+    <string name="user_password_label">Password</string>
+    <string name="user_token_label">Token</string>
     <string name="user_userworkingtimes_invalid_field_error">Field UserWorkingTimes is invalid.</string>
     <string name="user_userworkingtimes_label">UserWorkingTimes</string>
+    <string name="user_workingtimes_invalid_field_error">Field WorkingTimes is invalid.</string>
+    <string name="user_workingtimes_label">WorkingTimes</string>
+    <string name="welcome_text">Bienvenue sur votre gestionnaire de projet et de temps de travail</string>
+    <string name="workingtime_date_date_title">Select date date</string>
     <string name="workingtime_date_invalid_field_error">Field Date is invalid.</string>
     <string name="workingtime_date_label">Date</string>
     <string name="workingtime_description_invalid_field_error">Field Description is invalid.</string>
+    <string name="workingtime_description_label">Description</string>
     <string name="workingtime_project_invalid_field_error">Field Project is invalid.</string>
     <string name="workingtime_project_label">Project</string>
     <string name="workingtime_spenttime_invalid_field_error">Field SpentTime is invalid.</string>
@@ -156,15 +173,4 @@
     <string name="workingtime_task_label">Task</string>
     <string name="workingtime_user_invalid_field_error">Field User is invalid.</string>
     <string name="workingtime_user_label">User</string>
-    <string name="uri_not_supported">URI not supported</string>
-    <string name="user_datergpd_invalid_field_error">Field DateRgpd is invalid.</string>
-    <string name="user_password_invalid_field_error">Field Password is invalid.</string>
-    <string name="user_password_label">Password</string>
-    <string name="user_workingtimes_invalid_field_error">Field WorkingTimes is invalid.</string>
-    <string name="user_workingtimes_label">WorkingTimes</string>
-    <string name="welcome_text">Bienvenue sur votre gestionnaire de projet et de temps de travail</string>
-    <string name="workingtime_date_date_title">Select date date</string>
-    <string name="workingtime_description_label">Description</string>
-    <string name="authentication_ok" >Vous êtes bien connecté</string >
-    <string name="authentication_fail" >L\'authentification a échoué</string >
 </resources>

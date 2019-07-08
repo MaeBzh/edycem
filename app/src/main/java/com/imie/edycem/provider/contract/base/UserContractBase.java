@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 5, 2019
+ * Last update : Jul 8, 2019
  *
  */
 package com.imie.edycem.provider.contract.base;
@@ -90,6 +90,13 @@ public abstract class UserContractBase {
     public static final String ALIASED_COL_DATERGPD =
             UserContract.TABLE_NAME + "." + COL_DATERGPD;
 
+    /** token. */
+    public static final String COL_TOKEN =
+            "token";
+    /** Alias. */
+    public static final String ALIASED_COL_TOKEN =
+            UserContract.TABLE_NAME + "." + COL_TOKEN;
+
     /** job_id. */
     public static final String COL_JOB_ID =
             "job_id";
@@ -124,6 +131,8 @@ public abstract class UserContractBase {
         
         UserContract.COL_DATERGPD,
         
+        UserContract.COL_TOKEN,
+        
         UserContract.COL_JOB_ID,
     };
 
@@ -145,6 +154,8 @@ public abstract class UserContractBase {
         UserContract.ALIASED_COL_IDSMARTPHONE,
         
         UserContract.ALIASED_COL_DATERGPD,
+        
+        UserContract.ALIASED_COL_TOKEN,
         
         UserContract.ALIASED_COL_JOB_ID,
         
@@ -196,6 +207,13 @@ public abstract class UserContractBase {
                     item.getDateRgpd().toString(ISODateTimeFormat.dateTime()));
             } else {
                 result.put(UserContract.COL_DATERGPD, (String) null);
+            }
+
+             if (item.getToken() != null) {
+                result.put(UserContract.COL_TOKEN,
+                    item.getToken());
+            } else {
+                result.put(UserContract.COL_TOKEN, (String) null);
             }
 
              if (item.getJob() != null) {
@@ -277,6 +295,13 @@ public abstract class UserContractBase {
                     } else {
                         result.setDateRgpd(new DateTime());
                     }
+            }
+            }
+            index = cursor.getColumnIndex(UserContract.COL_TOKEN);
+
+            if (index > -1) {
+            if (!cursor.isNull(index)) {
+                    result.setToken(cursor.getString(index));
             }
             }
             if (result.getJob() == null) {

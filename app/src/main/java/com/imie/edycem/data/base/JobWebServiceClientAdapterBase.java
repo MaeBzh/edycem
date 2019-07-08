@@ -2,9 +2,9 @@
  * JobWebServiceClientAdapterBase.java, Edycem Android
  *
  * Copyright 2019
- * Description :
+ * Description : 
  * Author(s)   : Harmony
- * Licence     :
+ * Licence     : 
  * Last update : Jul 8, 2019
  *
  */
@@ -37,49 +37,33 @@ import com.imie.edycem.entity.Project;
 
 
 /**
+ *
  * <b><i>This class will be overwrited whenever you regenerate the project with Harmony.
  * You should edit JobWebServiceClientAdapter class instead of this one or you will lose all your modifications.</i></b>
+ *
  */
 public abstract class JobWebServiceClientAdapterBase
         extends WebServiceClientAdapter<Job> {
-    /**
-     * JobWebServiceClientAdapterBase TAG.
-     */
+    /** JobWebServiceClientAdapterBase TAG. */
     protected static final String TAG = "JobWSClientAdapter";
 
-    /**
-     * JSON Object Job pattern.
-     */
+    /** JSON Object Job pattern. */
     protected static String JSON_OBJECT_JOB = "Job";
-    /**
-     * JSON_ID attributes.
-     */
+    /** JSON_ID attributes. */
     protected static String JSON_ID = "id";
-    /**
-     * JSON_IDSERVER attributes.
-     */
+    /** JSON_IDSERVER attributes. */
     protected static String JSON_IDSERVER = "id";
-    /**
-     * JSON_NAME attributes.
-     */
+    /** JSON_NAME attributes. */
     protected static String JSON_NAME = "name";
-    /**
-     * JSON_USERS attributes.
-     */
+    /** JSON_USERS attributes. */
     protected static String JSON_USERS = "users";
-    /**
-     * JSON_PROJECTS attributes.
-     */
+    /** JSON_PROJECTS attributes. */
     protected static String JSON_PROJECTS = "projects";
 
-    /**
-     * Rest Date Format pattern.
-     */
+    /** Rest Date Format pattern. */
     public static final String REST_UPDATE_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
-    /**
-     * Time pattern.
-     */
+    /** Time pattern.*/
     public static final String TIME_FORMAT = "HH:mm:ss";
 
     /**
@@ -95,10 +79,10 @@ public abstract class JobWebServiceClientAdapterBase
      * Constructor with overriden port.
      *
      * @param context The context
-     * @param port    The overriden port
+     * @param port The overriden port
      */
     public JobWebServiceClientAdapterBase(Context context,
-                                          Integer port) {
+        Integer port) {
         this(context, null, port);
     }
 
@@ -106,11 +90,11 @@ public abstract class JobWebServiceClientAdapterBase
      * Constructor with overriden port and host.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
+     * @param host The overriden host
+     * @param port The overriden port
      */
     public JobWebServiceClientAdapterBase(Context context,
-                                          String host, Integer port) {
+            String host, Integer port) {
         this(context, host, port, null);
     }
 
@@ -118,12 +102,12 @@ public abstract class JobWebServiceClientAdapterBase
      * Constructor with overriden port, host and scheme.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
-     * @param scheme  The overriden scheme
+     * @param host The overriden host
+     * @param port The overriden port
+     * @param scheme The overriden scheme
      */
     public JobWebServiceClientAdapterBase(Context context,
-                                          String host, Integer port, String scheme) {
+            String host, Integer port, String scheme) {
         this(context, host, port, scheme, null);
     }
 
@@ -131,30 +115,31 @@ public abstract class JobWebServiceClientAdapterBase
      * Constructor with overriden port, host, scheme and prefix.
      *
      * @param context The context
-     * @param host    The overriden host
-     * @param port    The overriden port
-     * @param scheme  The overriden scheme
-     * @param prefix  The overriden prefix
+     * @param host The overriden host
+     * @param port The overriden port
+     * @param scheme The overriden scheme
+     * @param prefix The overriden prefix
      */
     public JobWebServiceClientAdapterBase(Context context,
-                                          String host, Integer port, String scheme, String prefix) {
+            String host, Integer port, String scheme, String prefix) {
         super(context, host, port, scheme, prefix);
 
-
+        
     }
 
     /**
-     * Retrieve all the Jobs in the given list. Uses the route : /jobs.
-     *
+     * Retrieve all the Jobs in the given list. Uses the route : Job.
      * @param jobs : The list in which the Jobs will be returned
      * @return The number of Jobs returned
      */
     public int getAll(List<Job> jobs) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.GET,
-                "jobs",
-                null);
+                    Verb.GET,
+                    String.format(
+                        this.getUri() + "%s",
+                        REST_FORMAT),
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -177,19 +162,18 @@ public abstract class JobWebServiceClientAdapterBase
 
     /**
      * Retrieve one Job. Uses the route : Job/%id%.
-     *
      * @param job : The Job to retrieve (set the ID)
      * @return -1 if an error has occurred. 0 if not.
      */
     public int get(Job job) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.GET,
-                String.format(
+                    Verb.GET,
+                    String.format(
                         this.getUri() + "/%s%s",
                         job.getId(),
                         REST_FORMAT),
-                null);
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -207,19 +191,18 @@ public abstract class JobWebServiceClientAdapterBase
 
     /**
      * Update a Job. Uses the route : Job/%id%.
-     *
      * @param job : The Job to update
      * @return -1 if an error has occurred. 0 if not.
      */
     public int update(Job job) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.PUT,
-                String.format(
+                    Verb.PUT,
+                    String.format(
                         this.getUri() + "/%s%s",
                         job.getId(),
                         REST_FORMAT),
-                itemToJson(job));
+                    itemToJson(job));
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
@@ -236,19 +219,18 @@ public abstract class JobWebServiceClientAdapterBase
 
     /**
      * Delete a Job. Uses the route : Job/%id%.
-     *
      * @param job : The Job to delete (only the id is necessary)
      * @return -1 if an error has occurred. 0 if not.
      */
     public int delete(Job job) {
         int result = -1;
         String response = this.invokeRequest(
-                Verb.DELETE,
-                String.format(
+                    Verb.DELETE,
+                    String.format(
                         this.getUri() + "/%s%s",
                         job.getId(),
                         REST_FORMAT),
-                null);
+                    null);
 
         if (this.isValidResponse(response) && this.isValidRequest()) {
             result = 0;
@@ -258,10 +240,13 @@ public abstract class JobWebServiceClientAdapterBase
     }
 
 
+
+
     /**
      * Tests if the json is a valid Job Object.
      *
      * @param json The json
+     *
      * @return True if valid
      */
     public boolean isValidJSON(JSONObject json) {
@@ -273,9 +258,8 @@ public abstract class JobWebServiceClientAdapterBase
 
     /**
      * Extract a Job from a JSONObject describing a Job.
-     *
      * @param json The JSONObject describing the Job
-     * @param job  The returned Job
+     * @param job The returned Job
      * @return true if a Job was found. false if not
      */
     public boolean extract(JSONObject json, Job job) {
@@ -346,7 +330,6 @@ public abstract class JobWebServiceClientAdapterBase
 
     /**
      * Convert a Job to a JSONObject.
-     *
      * @param job The Job to convert
      * @return The converted Job
      */
@@ -385,7 +368,6 @@ public abstract class JobWebServiceClientAdapterBase
 
     /**
      * Convert a <T> to a JSONObject.
-     *
      * @param item The <T> to convert
      * @return The converted <T>
      */
@@ -403,7 +385,6 @@ public abstract class JobWebServiceClientAdapterBase
 
     /**
      * Converts a content value reprensenting a Job to a JSONObject.
-     *
      * @param values The content values
      * @return The JSONObject
      */
@@ -426,17 +407,16 @@ public abstract class JobWebServiceClientAdapterBase
 
     /**
      * Extract a list of <T> from a JSONObject describing an array of <T> given the array name.
-     *
-     * @param json      The JSONObject describing the array of <T>
-     * @param items     The returned list of <T>
+     * @param json The JSONObject describing the array of <T>
+     * @param items The returned list of <T>
      * @param paramName The name of the array
-     * @param limit     Limit the number of items to parse
+     * @param limit Limit the number of items to parse
      * @return The number of <T> found in the JSON
      */
     public int extractItems(JSONObject json,
-                            String paramName,
-                            List<Job> items,
-                            int limit) throws JSONException {
+            String paramName,
+            List<Job> items,
+            int limit) throws JSONException {
 
         JSONArray itemArray = json.optJSONArray(paramName);
 
@@ -459,7 +439,7 @@ public abstract class JobWebServiceClientAdapterBase
 
         if (!json.isNull("Meta")) {
             JSONObject meta = json.optJSONObject("Meta");
-            result = meta.optInt("nbt", 0);
+            result = meta.optInt("nbt",0);
         }
 
         return result;
@@ -467,15 +447,14 @@ public abstract class JobWebServiceClientAdapterBase
 
     /**
      * Extract a list of <T> from a JSONObject describing an array of <T> given the array name.
-     *
-     * @param json      The JSONObject describing the array of <T>
-     * @param items     The returned list of <T>
+     * @param json The JSONObject describing the array of <T>
+     * @param items The returned list of <T>
      * @param paramName The name of the array
      * @return The number of <T> found in the JSON
      */
     public int extractItems(JSONObject json,
-                            String paramName,
-                            List<Job> items) throws JSONException {
+            String paramName,
+            List<Job> items) throws JSONException {
 
         return this.extractItems(json, paramName, items, 0);
     }

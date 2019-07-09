@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        tools:layout_editor_absoluteX="0dp" >
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white" >
+
+            <TextView
+                android:id="@+id/title_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="8dp"
+                android:text="@string/title_task"
+                android:textColor="@color/primary_color_dark"
+                android:textSize="25sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_task" >
+
+                <TextView
+                    android:id="@+id/title_sourcing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_sourcing"
+                    android:textColor="@color/primary_color_dark" />
+
+                <RadioButton
+                    android:id="@+id/technological_watch"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_selector_green"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:text="@string/technological_watch"
+                    android:textColor="@android:color/white" />
+
+                <RadioButton
+                    android:id="@+id/analysis"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_selector_green"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:text="@string/analysis"
+                    android:textColor="@android:color/white" />
+
+
+                <TextView
+                    android:id="@+id/title_innovation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_innovation"
+                    android:textColor="@color/primary_color_dark" />
+
+                <RadioButton
+                    android:id="@+id/specifications"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_selector_green"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:text="@string/specifications"
+                    android:textColor="@android:color/white" />
+
+                <RadioButton
+                    android:id="@+id/prototyping"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_selector_green"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:text="@string/prototyping"
+                    android:textColor="@android:color/white" />
+
+
+                <TextView
+                    android:id="@+id/title_labo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_labo"
+                    android:textColor="@color/primary_color_dark" />
+
+                <RadioButton
+                    android:id="@+id/lab_test"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_selector_green"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:text="@string/lab_test"
+                    android:textColor="@android:color/white" />
+
+                <RadioButton
+                    android:id="@+id/central_test"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_selector_green"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:text="@string/central_test"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/title_dev"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_dev"
+                    android:textColor="@color/primary_color_dark" />
+
+                <RadioButton
+                    android:id="@+id/experimental_site"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_selector_green"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:text="@string/experimental_site"
+                    android:textColor="@android:color/white" />
+
+                <RadioButton
+                    android:id="@+id/technic_point"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_selector_green"
+                    android:button="@null"
+                    android:padding="10dp"
+                    android:text="@string/technic_point"
+                    android:textColor="@android:color/white" />
+
+            </RadioGroup >
+
+
+            <Button
+                android:id="@+id/btn_previous"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="70dp"
+                android:background="@drawable/button_selector_blue"
+                android:onClick="previousPage"
+                android:text="@string/btn_previous"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/btn_next"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+            <Button
+                android:id="@+id/btn_next"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="70dp"
+                android:background="@drawable/button_selector_blue"
+                android:onClick="nextPage"
+                android:text="@string/next"
+                android:textColor="@android:color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/btn_previous"
+                app:layout_constraintTop_toTopOf="@+id/btn_previous" />
+
+        </android.support.constraint.ConstraintLayout >
+
+    </ScrollView >
+
+</android.support.constraint.ConstraintLayout >

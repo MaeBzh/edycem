@@ -77,5 +77,44 @@ public class UserProviderUtils
         return result;
     }
 
+    /**
+     * Query the DB.
+     * @param firstname a string
+     * @param lastname a string
+     * @return a user
+     */
+    public User queryWithName(final String firstname, final String lastname) {
+        User result = null;
+        ContentResolver prov = this.getContext().getContentResolver();
+
+        CriteriaExpression crits = new CriteriaExpression(CriteriaExpression.GroupType.AND);
+        crits.add(UserContract.ALIASED_COL_FIRSTNAME, firstname);
+        crits.add(UserContract.ALIASED_COL_LASTNAME, lastname);
+
+        android.database.Cursor cursor = prov.query(
+                UserProviderAdapter.USER_URI,
+                UserContract.ALIASED_COLS,
+                crits.toSQLiteSelection(),
+                crits.toSQLiteSelectionArgs(),
+                null);
+
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            result = UserContract.cursorToItem(cursor);
+
+            if (result.getJob() != null) {
+                result.setJob(
+                        this.getAssociateJob(result));
+            }
+            result.setUserWorkingTimes(
+                    this.getAssociateUserWorkingTimes(result));
+            result.setCreatedProjects(
+                    this.getAssociateCreatedProjects(result));
+        }
+        cursor.close();
+
+        return result;
+    }
+
 
 }

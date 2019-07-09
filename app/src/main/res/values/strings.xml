@@ -11,6 +11,7 @@
     <string name="app_provider_name">Provider of Edycem</string>
     <string name="authentication_fail">L\'authentification a échoué</string>
     <string name="authentication_ok">Vous êtes bien connecté</string>
+    <string name="btn_edit">Modifier</string>
     <string name="btn_previous">Précédent</string>
     <string name="central_test">Essai centrale</string>
     <string name="choose_project">Choisissez un projet</string>
@@ -24,6 +25,16 @@
     <string name="experimental_site">Suivi chantier expérimental</string>
     <string name="hours">heures</string>
     <string name="image_error_null">Image is null</string>
+    <string name="job">Métier :</string>
+    <string name="label_comment">Commentaire :</string>
+    <string name="label_email">Adresse e-mail</string>
+    <string name="label_id">Identifiant</string>
+    <string name="label_project">Projet :</string>
+    <string name="label_time">Temps passé :</string>
+    <string name="minutes">minutes</string>
+    <string name="next">Suivant</string>
+    <string name="uri_not_supported">URI not supported</string>
+    <string name="no_network_error">No internet connection available</string>
     <string name="job_idserver_label">IdServer</string>
     <string name="job_name_invalid_field_error">Field Name is invalid.</string>
     <string name="job_name_label">Name</string>
@@ -32,33 +43,15 @@
     <string name="job_users_invalid_field_error">Field Users is invalid.</string>
     <string name="job_users_label">Users</string>
     <string name="lab_test">Essai labo</string>
-    <string name="label_email">Adresse e-mail</string>
-    <string name="label_id">Identifiant</string>
-    <string name="minutes">minutes</string>
-    <string name="next">Suivant</string>
+    <string name="label_date">Date :</string>
+    <string name="label_task">Tâche :</string>
     <string name="password">Mot de passe</string>
     <string name="project_activitytype_invalid_field_error">Field ActivityType is invalid.</string>
-    <string name="project_company_invalid_field_error">Field Company is invalid.</string>
-    <string name="project_deadline_invalid_field_error">Field Deadline is invalid.</string>
-    <string name="specifications">Définition du cahier des charges</string>
-    <string-array name="spinner_jobs">
-        <item>Prefa</item>
-        <item>BPE</item>
-    </string-array>
-    <string-array name="spinner_users">
-        <item>Firstname Lastname</item>
-        <item>Firstname Lastname</item>
-        <item>Firstname Lastname</item>
-        <item>Firstname Lastname</item>
-        <item>Firstname Lastname</item>
-        <item>Firstname Lastname</item>
-    </string-array>
-    <string name="uri_not_supported">URI not supported</string>
-    <string name="no_network_error">No internet connection available</string>
     <string name="project_activitytype_label">ActivityType</string>
     <string name="project_aspartofpulpit_label">AsPartOfPulpit</string>
     <string name="project_claimantname_invalid_field_error">Field ClaimantName is invalid.</string>
     <string name="project_claimantname_label">ClaimantName</string>
+    <string name="project_company_invalid_field_error">Field Company is invalid.</string>
     <string name="project_company_label">Company</string>
     <string name="project_createdat_date_title">Select createdAt date</string>
     <string name="project_createdat_invalid_field_error">Field CreatedAt is invalid.</string>
@@ -67,6 +60,7 @@
     <string name="project_creator_invalid_field_error">Field Creator is invalid.</string>
     <string name="project_creator_label">Creator</string>
     <string name="project_deadline_date_title">Select deadline date</string>
+    <string name="project_deadline_invalid_field_error">Field Deadline is invalid.</string>
     <string name="project_deadline_label">Deadline</string>
     <string name="project_deadline_time_title">Select deadline time</string>
     <string name="project_description_invalid_field_error">Field Description is invalid.</string>
@@ -94,6 +88,7 @@
     <string name="settings_idserver_label">IdServer</string>
     <string name="settings_rgpd_invalid_field_error">Field Rgpd is invalid.</string>
     <string name="settings_rgpd_label">Rgpd</string>
+    <string name="specifications">Définition du cahier des charges</string>
     <string-array name="spinner_hours">
         <item>1</item>
         <item>2</item>
@@ -108,13 +103,26 @@
         <item>11</item>
         <item>12</item>
     </string-array>
+    <string-array name="spinner_jobs">
+        <item>Prefa</item>
+        <item>BPE</item>
+    </string-array>
     <string-array name="spinner_min">
         <item>0</item>
         <item>15</item>
         <item>30</item>
         <item>45</item>
     </string-array>
+    <string-array name="spinner_users">
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+        <item>Firstname Lastname</item>
+    </string-array>
     <string name="submit">Valider</string>
+    <string name="summary">Récapitulatif</string>
     <string name="task_activity_invalid_field_error">Field Activity is invalid.</string>
     <string name="task_activity_label">Activity</string>
     <string name="task_defaulttime_invalid_field_error">Field DefaultTime is invalid.</string>
@@ -134,6 +142,7 @@
     <string name="title_labo">Gestion laboratoire</string>
     <string name="title_sourcing">Sourcing produit</string>
     <string name="title_task">Choisissez une tâche</string>
+    <string name="user">Utilisateur :</string>
     <string name="user_createdprojects_invalid_field_error">Field CreatedProjects is invalid.</string>
     <string name="user_createdprojects_label">CreatedProjects</string>
     <string name="user_datergpd_date_title">Select dateRgpd date</string>
@@ -173,4 +182,10 @@
     <string name="workingtime_task_label">Task</string>
     <string name="workingtime_user_invalid_field_error">Field User is invalid.</string>
     <string name="workingtime_user_label">User</string>
+    <string name="last_used" >Dernier projet utilisé</string >
+    <string name="new_project" >Dernier projet ajouté</string >
+    <string name="most_used" >Projets les plus utilisés</string >
+    <string name="see_less" >Voir moins de projets</string >
+    <string name="logout" >Déconnexion</string >
+    <string name="add_comment" >Ajoutez un commentaire...</string >
 </resources>

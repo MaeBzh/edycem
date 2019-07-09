@@ -2,10 +2,10 @@
  * WebServiceClientAdapterBase.java, Edycem Android
  *
  * Copyright 2019
- * Description :
+ * Description : 
  * Author(s)   : Harmony
- * Licence     :
- * Last update : Jul 8, 2019
+ * Licence     : 
+ * Last update : Jul 9, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -207,10 +207,10 @@ public abstract class WebServiceClientAdapterBase<T> {
                        verb, this.prefix + request, params, this.headers);
                     this.statusCode = this.restClient.getStatusCode();
 
-                    if (isValidResponse(response)) {
-                        this.errorCode = this.appendError(response,error);
-                        this.error = error.toString();
-                    }
+//                    if (isValidResponse(response)) {
+//                        this.errorCode = this.appendError(response,error);
+//                        this.error = error.toString();
+//                    }
                 }
 
             } catch (Exception e) {
@@ -344,8 +344,7 @@ public abstract class WebServiceClientAdapterBase<T> {
         return (
                 response != null &&
                 !response.trim().equals("") &&
-                response.startsWith("{") ||
-                        response.startsWith("["));
+                response.startsWith("{") || response.startsWith("["));
     }
 
     /**

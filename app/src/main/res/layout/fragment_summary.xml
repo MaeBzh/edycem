@@ -2,18 +2,19 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_summary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white" >
 
-    <include
-        android:id="@+id/toolbar"
-        layout="@layout/toolbar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--<include-->
+        <!--android:id="@+id/toolbar"-->
+        <!--layout="@layout/toolbar"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toTopOf="parent" />-->
 
     <ScrollView
         android:layout_width="match_parent"
@@ -27,170 +28,174 @@
             android:background="@android:color/white" >
 
             <TextView
-                android:id="@+id/title_task"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="8dp"
-                android:text="@string/title_task"
-                android:textColor="@color/primary_color_dark"
-                android:textSize="25sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <RadioGroup
-                android:id="@+id/radioGroup"
+                android:id="@+id/title_summary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
+                android:text="@string/summary"
+                android:textColor="@color/primary_color_dark"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_task" >
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/title_sourcing"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title_sourcing"
-                    android:textColor="@color/primary_color_dark" />
+            <TextView
+                android:id="@+id/label_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/user"
+                android:textColor="@color/primary_color_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/title_summary" />
 
-                <RadioButton
-                    android:id="@+id/technological_watch"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_selector_green"
-                    android:button="@null"
-                    android:padding="10dp"
-                    android:text="@string/technological_watch"
-                    android:textColor="@android:color/white" />
-
-                <RadioButton
-                    android:id="@+id/analysis"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_selector_green"
-                    android:button="@null"
-                    android:padding="10dp"
-                    android:text="@string/analysis"
-                    android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/input_user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="@+id/label_job"
+                app:layout_constraintStart_toEndOf="@+id/label_job"
+                app:layout_constraintTop_toTopOf="@+id/label_job" />
 
 
-                <TextView
-                    android:id="@+id/title_innovation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title_innovation"
-                    android:textColor="@color/primary_color_dark" />
+            <TextView
+                android:id="@+id/label_job"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/job"
+                android:textColor="@color/primary_color_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/label_user" />
 
-                <RadioButton
-                    android:id="@+id/specifications"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_selector_green"
-                    android:button="@null"
-                    android:padding="10dp"
-                    android:text="@string/specifications"
-                    android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/input_job"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="@+id/label_user"
+                app:layout_constraintStart_toEndOf="@+id/label_user"
+                app:layout_constraintTop_toTopOf="@+id/label_user" />
 
-                <RadioButton
-                    android:id="@+id/prototyping"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_selector_green"
-                    android:button="@null"
-                    android:padding="10dp"
-                    android:text="@string/prototyping"
-                    android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/label_project"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/label_project"
+                android:textColor="@color/primary_color_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/label_job" />
 
+            <TextView
+                android:id="@+id/label_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/label_task"
+                android:textColor="@color/primary_color_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/label_project" />
 
-                <TextView
-                    android:id="@+id/title_labo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title_labo"
-                    android:textColor="@color/primary_color_dark" />
+            <TextView
+                android:id="@+id/input_task"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="text"
+                app:layout_constraintBottom_toBottomOf="@+id/label_project"
+                app:layout_constraintStart_toEndOf="@+id/label_project"
+                app:layout_constraintTop_toTopOf="@+id/label_project" />
 
-                <RadioButton
-                    android:id="@+id/lab_test"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_selector_green"
-                    android:button="@null"
-                    android:padding="10dp"
-                    android:text="@string/lab_test"
-                    android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/label_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/label_date"
+                android:textColor="@color/primary_color_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/label_task" />
 
-                <RadioButton
-                    android:id="@+id/central_test"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_selector_green"
-                    android:button="@null"
-                    android:padding="10dp"
-                    android:text="@string/central_test"
-                    android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/input_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="text"
+                app:layout_constraintBottom_toBottomOf="@+id/label_task"
+                app:layout_constraintStart_toEndOf="@+id/label_task"
+                app:layout_constraintTop_toTopOf="@+id/label_task" />
 
-                <TextView
-                    android:id="@+id/title_dev"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/title_dev"
-                    android:textColor="@color/primary_color_dark" />
+            <TextView
+                android:id="@+id/label_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/label_time"
+                android:textColor="@color/primary_color_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/label_date" />
 
-                <RadioButton
-                    android:id="@+id/experimental_site"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_selector_green"
-                    android:button="@null"
-                    android:padding="10dp"
-                    android:text="@string/experimental_site"
-                    android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/input_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="text"
+                app:layout_constraintBottom_toBottomOf="@+id/label_date"
+                app:layout_constraintStart_toEndOf="@+id/label_date"
+                app:layout_constraintTop_toTopOf="@+id/label_date" />
 
-                <RadioButton
-                    android:id="@+id/technic_point"
-                    android:layout_width="250dp"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_selector_green"
-                    android:button="@null"
-                    android:padding="10dp"
-                    android:text="@string/technic_point"
-                    android:textColor="@android:color/white" />
+            <TextView
+                android:id="@+id/label_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/label_comment"
+                android:textColor="@color/primary_color_dark"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/label_time" />
 
-            </RadioGroup >
-
+            <TextView
+                android:id="@+id/input_comment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="text"
+                app:layout_constraintBottom_toBottomOf="@+id/label_comment"
+                app:layout_constraintStart_toEndOf="@+id/label_comment"
+                app:layout_constraintTop_toTopOf="@+id/label_comment" />
 
             <Button
-                android:id="@+id/btn_previous"
+                android:id="@+id/btn_edit"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="50dp"
-                android:layout_marginBottom="70dp"
                 android:background="@drawable/button_selector_blue"
                 android:onClick="previousPage"
-                android:text="@string/btn_previous"
+                android:text="@string/btn_edit"
                 android:textColor="@android:color/white"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btn_next"
+                app:layout_constraintEnd_toStartOf="@+id/btn_submit"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+                app:layout_constraintTop_toBottomOf="@+id/label_comment" />
 
             <Button
-                android:id="@+id/btn_next"
+                android:id="@+id/btn_submit"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -198,13 +203,15 @@
                 android:layout_marginBottom="70dp"
                 android:background="@drawable/button_selector_blue"
                 android:onClick="nextPage"
-                android:text="@string/next"
+                android:text="@string/submit"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/btn_previous"
-                app:layout_constraintTop_toTopOf="@+id/btn_previous" />
+                app:layout_constraintStart_toEndOf="@+id/btn_edit"
+                app:layout_constraintTop_toTopOf="@+id/btn_edit"
+                app:layout_constraintVertical_bias="0.0" />
+
 
         </android.support.constraint.ConstraintLayout >
 

@@ -4,11 +4,13 @@ import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.imie.edycem.R;
 
@@ -26,7 +28,7 @@ public class WorkingTimeFragment extends Fragment implements DatePickerDialog.On
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_working_time, container, false);
+        View view = inflater.inflate(R.layout.fragment_working_time, container, false);//
 
         this.initComponents(view);
         return view;

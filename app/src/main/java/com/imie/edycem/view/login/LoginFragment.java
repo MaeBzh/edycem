@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -21,6 +22,7 @@ import com.imie.edycem.criterias.base.CriteriaExpression;
 import com.imie.edycem.data.ActivityWebServiceClientAdapter;
 import com.imie.edycem.data.JobWebServiceClientAdapter;
 import com.imie.edycem.data.ProjectWebServiceClientAdapter;
+import com.imie.edycem.data.SettingsWebServiceClientAdapter;
 import com.imie.edycem.data.TaskWebServiceClientAdapter;
 import com.imie.edycem.data.UserWebServiceClientAdapter;
 import com.imie.edycem.entity.Activity;
@@ -39,6 +41,10 @@ import com.imie.edycem.provider.utils.ProjectProviderUtils;
 import com.imie.edycem.provider.utils.TaskProviderUtils;
 import com.imie.edycem.provider.utils.UserProviderUtils;
 import com.imie.edycem.view.workingtime.WorkingTimeActivity;
+
+import org.joda.time.DateTime;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +85,7 @@ public class LoginFragment extends Fragment {
      */
     public void startMainActivity(User connectedUser) {
         Intent intent = new Intent(this.getContext(), WorkingTimeActivity.class);
-        intent.putExtra(UserContract.PARCEL, (Parcelable) connectedUser);
+        intent.putExtra(UserContract.TABLE_NAME, (Parcelable) connectedUser);
         this.getActivity().finish();
         startActivity(intent);
     }
@@ -143,7 +149,7 @@ public class LoginFragment extends Fragment {
                     taskProviderUtils.insert(task);
                 }
             }
-//
+
             JobWebServiceClientAdapter jobWS = new JobWebServiceClientAdapter(this.currentContext);
             JobProviderUtils jobProviderUtils = new JobProviderUtils(this.currentContext);
             jobs = jobWS.getAllJobs(connectedUser);
@@ -190,7 +196,7 @@ public class LoginFragment extends Fragment {
         @Override
         protected User doInBackground(User... users) {
             User user = users[0];
-            User result = new User();
+            User result;
             UserWebServiceClientAdapter userWS =
                     new UserWebServiceClientAdapter(this.currentContext);
             result = userWS.getMatchingUser(user);
@@ -211,7 +217,7 @@ public class LoginFragment extends Fragment {
             super.onPostExecute(result);
 
             if (result != null) {
-                UserProviderUtils userProviderUtils = new UserProviderUtils(currentContext);
+                final UserProviderUtils userProviderUtils = new UserProviderUtils(currentContext);
                 if (userProviderUtils.queryWithEmail(result.getEmail()) == null) {
                     userProviderUtils.insert(result);
                 } else {
@@ -230,6 +236,10 @@ public class LoginFragment extends Fragment {
                                         LoginFragment.this.getContext().getString(R.string.authentication_ok),
                                         Toast.LENGTH_SHORT)
                                         .show();
+                                result.setDateRgpd(DateTime.now());
+                                userProviderUtils.update(result);
+                                new RgdpTask(LoginFragment.this.getContext(), result);
+                                //todo: run on ui thread after post rgpd
                                 LoginFragment.this.startMainActivity(result);
                             }
                         })
@@ -251,6 +261,31 @@ public class LoginFragment extends Fragment {
                 LoginFragment.this.progressBar.setVisibility(View.GONE);
                 LoginFragment.this.editEmail.requestFocus();
             }
+        }
+    }
+
+    private class RgdpTask implements Runnable {
+
+        private Context context;
+        private  User connectedUser;
+
+        RgdpTask(Context context, User connectedUser) {
+            this.context = context;
+            this.connectedUser = connectedUser;
+        }
+
+        @Override
+        public void run() {
+            UserWebServiceClientAdapter userWS = new UserWebServiceClientAdapter(this.context);
+            JSONObject rgdp = new JSONObject();
+            try {
+                rgdp.put("id", this.connectedUser.getIdServer());
+                rgdp.put("date_rgdp", this.connectedUser.getDateRgpd());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            userWS.updateRgpd(this.connectedUser, rgdp);
         }
     }
 }

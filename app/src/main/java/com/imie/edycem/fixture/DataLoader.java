@@ -69,15 +69,15 @@ public class DataLoader {
         this.dataLoaders.add(
                 SettingsDataLoader.getInstance(this.ctx));
         this.dataLoaders.add(
-                ActivityDataLoader.getInstance(this.ctx));
-        this.dataLoaders.add(
                 JobDataLoader.getInstance(this.ctx));
         this.dataLoaders.add(
-                ProjectDataLoader.getInstance(this.ctx));
+                ActivityDataLoader.getInstance(this.ctx));
         this.dataLoaders.add(
                 TaskDataLoader.getInstance(this.ctx));
         this.dataLoaders.add(
                 UserDataLoader.getInstance(this.ctx));
+        this.dataLoaders.add(
+                ProjectDataLoader.getInstance(this.ctx));
         this.dataLoaders.add(
                 WorkingTimeDataLoader.getInstance(this.ctx));
     }

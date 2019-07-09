@@ -44,6 +44,7 @@ public class User implements Serializable, Parcelable {
     @RestField(name = "smartphone_id")
     @Column(type = Column.Type.TEXT)
     private String idSmartphone;
+    @RestField(name = "date_rgpd")
     @Column(type = Column.Type.DATETIME, nullable = true)
     private DateTime dateRgpd;
     @RestField(name = "api_token")

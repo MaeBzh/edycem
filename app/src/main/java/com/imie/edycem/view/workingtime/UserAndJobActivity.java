@@ -18,6 +18,8 @@ import com.imie.edycem.data.UserWebServiceClientAdapter;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.entity.WorkingTime;
 import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.utils.SettingsProviderUtils;
+import com.imie.edycem.provider.utils.UserProviderUtils;
 import com.imie.edycem.view.login.LoginActivity;
 
 import org.json.JSONException;
@@ -105,7 +107,12 @@ public class UserAndJobActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            userWS.updateRgpd(this.connectedUser, rgdp);
+
+            if (userWS.updateRgpd(this.connectedUser, rgdp) == 0) {
+                UserProviderUtils userProviderUtils = new UserProviderUtils(this.currentContext);
+                userProviderUtils.update(this.connectedUser);
+            }
+
 
             ProjectWebServiceClientAdapter projectWS = new ProjectWebServiceClientAdapter(this.currentContext);
 

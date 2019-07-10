@@ -30,6 +30,7 @@ public class UserAndJobFragment extends Fragment implements View.OnClickListener
 
     private UserProviderUtils userProviderUtils;
     private Spinner spinnerName;
+    private Spinner spinnerJob;
     private ArrayList<User> users = new ArrayList<>();
     private WorkingTime workingTime;
     private User connectedUser;
@@ -89,9 +90,9 @@ public class UserAndJobFragment extends Fragment implements View.OnClickListener
             }
         });
 
-        Spinner spinnerJob = (Spinner) view.findViewById(R.id.spinner_job);
+        this.spinnerJob = (Spinner) view.findViewById(R.id.spinner_job);
 
-        JobProviderUtils jobProviderUtils = new JobProviderUtils(this.getContext());
+        final JobProviderUtils jobProviderUtils = new JobProviderUtils(this.getContext());
         ArrayList<Job> jobs = jobProviderUtils.queryAll();
         List<String> spinnerJobArray = new ArrayList<String>();
         for (Job job : jobs) {
@@ -101,8 +102,21 @@ public class UserAndJobFragment extends Fragment implements View.OnClickListener
                 this.getContext(), android.R.layout.simple_spinner_item, spinnerJobArray);
 
         jobAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerJob.setAdapter(jobAdapter);
+        this.spinnerJob.setAdapter(jobAdapter);
+        this.spinnerJob.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (UserAndJobFragment.this.workingTime.getUser().getJob().getName() != spinnerJob.getSelectedItem().toString()) {
+                    Job job = jobProviderUtils.queryWithName(spinnerJob.getSelectedItem().toString());
+                    UserAndJobFragment.this.workingTime.getUser().setJob(job);
+                }
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                UserAndJobFragment.this.workingTime.getUser().setJob(UserAndJobFragment.this.connectedUser.getJob());
+            }
+        });
     }
 
     @Override

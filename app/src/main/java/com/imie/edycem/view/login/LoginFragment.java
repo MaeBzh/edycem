@@ -5,7 +5,8 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -22,7 +23,6 @@ import com.imie.edycem.criterias.base.CriteriaExpression;
 import com.imie.edycem.data.ActivityWebServiceClientAdapter;
 import com.imie.edycem.data.JobWebServiceClientAdapter;
 import com.imie.edycem.data.ProjectWebServiceClientAdapter;
-import com.imie.edycem.data.SettingsWebServiceClientAdapter;
 import com.imie.edycem.data.TaskWebServiceClientAdapter;
 import com.imie.edycem.data.UserWebServiceClientAdapter;
 import com.imie.edycem.entity.Activity;
@@ -41,11 +41,8 @@ import com.imie.edycem.provider.utils.ProjectProviderUtils;
 import com.imie.edycem.provider.utils.TaskProviderUtils;
 import com.imie.edycem.provider.utils.UserProviderUtils;
 import com.imie.edycem.view.workingtime.UserAndJobActivity;
-import com.imie.edycem.view.workingtime.WorkingTimeActivity;
 
 import org.joda.time.DateTime;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +53,8 @@ public class LoginFragment extends Fragment {
     private String email;
     private Button submitButton;
     private ProgressBar progressBar;
+    private UserProviderUtils userProviderUtils;
+    private User user;
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -66,18 +65,32 @@ public class LoginFragment extends Fragment {
     }
 
     public void initComponents(View view) {
+        LoginFragment.this.userProviderUtils = new UserProviderUtils(this.getContext());
         this.editEmail = (EditText) view.findViewById(R.id.edit_email);
         this.progressBar = (ProgressBar) view.findViewById(R.id.progress);
         this.submitButton = (Button) view.findViewById(R.id.button_submit);
         this.submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final User user = new User();
+                LoginFragment.this.user = new User();
                 LoginFragment.this.email = LoginFragment.this.editEmail.getText().toString();
                 user.setEmail(String.valueOf(LoginFragment.this.editEmail.getText()));
                 LoginFragment.this.progressBar.setVisibility(View.VISIBLE);
-//                new LoginTask(LoginFragment.this.getContext()).execute(user);
-                startMainActivity(user);
+                ConnectivityManager cm = (ConnectivityManager) LoginFragment.this.getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
+                    new LoginTask(LoginFragment.this.getContext()).execute(user);
+                    startMainActivity(LoginFragment.this.user);
+                } else {
+                    LoginFragment.this.user = LoginFragment.this.userProviderUtils.queryWithEmail(user.getEmail());
+                    if (LoginFragment.this.user != null) {
+                        startMainActivity(LoginFragment.this.user);
+                    } else {
+                        LoginFragment.this.progressBar.setVisibility(View.GONE);
+                        Toast.makeText(getContext(), getString(R.string.authentication_fail), Toast.LENGTH_LONG).show();
+                    }
+                }
+
             }
         });
     }
@@ -166,16 +179,15 @@ public class LoginFragment extends Fragment {
             }
 
             UserWebServiceClientAdapter userWS = new UserWebServiceClientAdapter(this.currentContext);
-            UserProviderUtils userProviderUtils = new UserProviderUtils(this.currentContext);
             users = userWS.getAllUsers(connectedUser);
 
             for (User user : users) {
                 CriteriaExpression criteriaUser = new CriteriaExpression(CriteriaExpression.GroupType.AND);
                 criteriaUser.add(UserContract.COL_IDSERVER, String.valueOf(user.getIdServer()));
-                List<User> queryUsers = userProviderUtils.query(criteriaUser);
+                List<User> queryUsers = LoginFragment.this.userProviderUtils.query(criteriaUser);
 
                 if (queryUsers.isEmpty()) {
-                    userProviderUtils.insert(user);
+                    LoginFragment.this.userProviderUtils.insert(user);
                 }
             }
 
@@ -218,39 +230,41 @@ public class LoginFragment extends Fragment {
             super.onPostExecute(result);
 
             if (result != null) {
-                final UserProviderUtils userProviderUtils = new UserProviderUtils(currentContext);
-                if (userProviderUtils.queryWithEmail(result.getEmail()) == null) {
-                    userProviderUtils.insert(result);
+                LoginFragment.this.userProviderUtils = new UserProviderUtils(currentContext);
+                if (LoginFragment.this.userProviderUtils.queryWithEmail(result.getEmail()) == null) {
+                    LoginFragment.this.userProviderUtils.insert(result);
                 } else {
-                    userProviderUtils.update(result);
+                    LoginFragment.this.userProviderUtils.update(result);
                 }
 
                 LayoutInflater inflater = LoginFragment.this.getActivity().getLayoutInflater();
                 View dialogView = inflater.inflate(R.layout.fragment_rgpd, null);
 
-                new AlertDialog.Builder(LoginFragment.this.getContext())
-                        .setView(dialogView)
-                        .setTitle("RGPD")
-                        .setPositiveButton(getString(R.string.accept), new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                Toast.makeText(LoginFragment.this.getContext(),
-                                        LoginFragment.this.getContext().getString(R.string.authentication_ok),
-                                        Toast.LENGTH_SHORT)
-                                        .show();
-                                result.setDateRgpd(DateTime.now());
-                                userProviderUtils.update(result);
-                                LoginFragment.this.startMainActivity(result);
-                            }
-                        })
+                if (result.getDateRgpd().getYear() != DateTime.now().getYear()) {
+                    new AlertDialog.Builder(LoginFragment.this.getContext())
+                            .setView(dialogView)
+                            .setTitle("RGPD")
+                            .setPositiveButton(getString(R.string.accept), new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    Toast.makeText(LoginFragment.this.getContext(),
+                                            LoginFragment.this.getContext().getString(R.string.authentication_ok),
+                                            Toast.LENGTH_SHORT)
+                                            .show();
+                                    result.setDateRgpd(DateTime.now());
+                                    userProviderUtils.update(result);
+                                    LoginFragment.this.startMainActivity(result);
+                                }
+                            })
 
-                        .setNegativeButton(getString(R.string.deny), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                LoginFragment.this.editEmail.setText("");
-                                LoginFragment.this.progressBar.setVisibility(View.INVISIBLE);
-                            }
-                        })
-                        .show();
+                            .setNegativeButton(getString(R.string.deny), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    LoginFragment.this.editEmail.setText("");
+                                    LoginFragment.this.progressBar.setVisibility(View.INVISIBLE);
+                                }
+                            })
+                            .show();
+                }
             } else {
 
                 Toast.makeText(LoginFragment.this.getContext(),

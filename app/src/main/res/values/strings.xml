@@ -194,4 +194,7 @@
     <string name="date_pattern" >dd/MM/YYYY</string >
     <string name="spent_time" >Temps passé</string >
     <string name="cancel" >Annuler</string >
+    <string name="wrong_email" >Email incorrect</string >
+    <string name="need_project" >Vous devez choisir un projet</string >
+    <string name="need_task" >Vous devez choisir une tâche</string >
 </resources>

@@ -163,7 +163,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:text="text"
                 app:layout_constraintBottom_toBottomOf="@+id/label_comment"
                 app:layout_constraintStart_toEndOf="@+id/label_comment"
                 app:layout_constraintTop_toTopOf="@+id/label_comment" />
@@ -173,7 +172,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:text="text"
                 app:layout_constraintBottom_toBottomOf="@+id/label_time"
                 app:layout_constraintStart_toEndOf="@+id/label_time"
                 app:layout_constraintTop_toTopOf="@+id/label_time" />

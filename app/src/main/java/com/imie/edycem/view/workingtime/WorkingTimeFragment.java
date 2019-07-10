@@ -34,8 +34,10 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class WorkingTimeFragment extends Fragment implements View.OnClickListener {
 
@@ -54,8 +56,7 @@ public class WorkingTimeFragment extends Fragment implements View.OnClickListene
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_working_time, container, false);//
-
+        View view = inflater.inflate(R.layout.fragment_working_time, container, false);
         this.initComponents(view);
         return view;
     }
@@ -79,6 +80,9 @@ public class WorkingTimeFragment extends Fragment implements View.OnClickListene
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 WorkingTimeFragment.this.date.setText(String.format("%s/%s/%s", day, month + 1, year));
+                DateTimeFormatter fmt= DateTimeFormat.forPattern(getString(R.string.date_pattern));
+                DateTime dateTime = fmt.parseDateTime(WorkingTimeFragment.this.date.getText().toString());
+                WorkingTimeFragment.this.workingTime.setDate(dateTime);
             }
         };
 

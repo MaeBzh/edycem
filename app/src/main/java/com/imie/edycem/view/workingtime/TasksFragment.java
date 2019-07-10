@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.imie.edycem.R;
 import com.imie.edycem.entity.Activity;
@@ -58,7 +59,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 RadioButton selectedButton = (RadioButton) view.findViewById(i);
-                selectedButton.setBackground(ContextCompat.getDrawable(TasksFragment.this.getContext(), R.drawable.button_selector_blue));
+//                selectedButton.setBackground(ContextCompat.getDrawable(TasksFragment.this.getContext(), R.drawable.button_selector_blue));
                 Task selectedTask = taskProviderUtils.queryWithName(selectedButton.getText().toString());
                 TasksFragment.this.workingTime.setTask(selectedTask);
             }
@@ -68,10 +69,14 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_next) {
-            Intent intent = new Intent(this.getContext(), WorkingTimeActivity.class);
-            intent.putExtra(UserContract.TABLE_NAME, (Parcelable) this.connectedUser);
-            intent.putExtra(WorkingTimeContract.TABLE_NAME, (Parcelable) this.workingTime);
-            startActivity(intent);
+            if (this.workingTime.getTask() != null) {
+                Intent intent = new Intent(this.getContext(), WorkingTimeActivity.class);
+                intent.putExtra(UserContract.TABLE_NAME, (Parcelable) this.connectedUser);
+                intent.putExtra(WorkingTimeContract.TABLE_NAME, (Parcelable) this.workingTime);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this.getContext(), getString(R.string.need_task), Toast.LENGTH_LONG).show();
+            }
         } else if (view.getId() == R.id.btn_previous) {
             this.getActivity().onBackPressed();
         }

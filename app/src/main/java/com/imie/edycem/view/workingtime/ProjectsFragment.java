@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.imie.edycem.R;
 import com.imie.edycem.data.ProjectWebServiceClientAdapter;
@@ -24,6 +25,7 @@ import com.imie.edycem.entity.WorkingTime;
 import com.imie.edycem.provider.contract.UserContract;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.provider.utils.ProjectProviderUtils;
+import com.nostra13.universalimageloader.utils.L;
 
 import java.util.ArrayList;
 
@@ -75,7 +77,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 RadioButton selectedButton = (RadioButton) view.findViewById(i);
-                selectedButton.setBackground(ContextCompat.getDrawable(ProjectsFragment.this.getContext(), R.drawable.button_selector_blue));
+//                selectedButton.setBackground(ContextCompat.getDrawable(ProjectsFragment.this.getContext(), R.drawable.button_selector_blue));
                 ProjectsFragment.this.project.setName(selectedButton.getText().toString());
 //                Project project = ProjectsFragment.this.projectProviderUtils.query();
                 ProjectsFragment.this.workingTime.setProject(project);
@@ -84,12 +86,7 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener {
 
         this.addButton.setOnClickListener(this);
 
-        this.lessButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+        this.lessButton.setOnClickListener(this);
     }
 
     @Override
@@ -110,10 +107,14 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener {
                 }
                 break;
             case R.id.btn_next:
-                Intent intent = new Intent(this.getContext(), TaskActivity.class);
-                intent.putExtra(UserContract.TABLE_NAME, (Parcelable) this.connectedUser);
-                intent.putExtra(WorkingTimeContract.TABLE_NAME, (Parcelable) this.workingTime);
-                startActivity(intent);
+                if (this.workingTime.getProject() != null) {
+                    Intent intent = new Intent(this.getContext(), TaskActivity.class);
+                    intent.putExtra(UserContract.TABLE_NAME, (Parcelable) this.connectedUser);
+                    intent.putExtra(WorkingTimeContract.TABLE_NAME, (Parcelable) this.workingTime);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(this.getContext(), getString(R.string.need_project), Toast.LENGTH_LONG).show();
+                }
                 break;
             case R.id.btn_previous:
                 this.getActivity().onBackPressed();

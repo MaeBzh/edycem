@@ -20,9 +20,27 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
-        return (PageFragment.newInstance(position));
+        Fragment result = null;
+        switch (position) {
+            case 0:
+                result = new UserAndJobFragment();
+                break;
+            case 1:
+                result = new ProjectsFragment();
+                break;
+            case 2:
+                result = new TasksFragment();
+                break;
+            case 3:
+                result = new WorkingTimeFragment();
+                break;
+            case 4:
+                result = new SummaryFragment();
+                break;
+            default:
+                break;
+        }
+        return result;
     }
-
 
 }

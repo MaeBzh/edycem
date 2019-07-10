@@ -157,8 +157,8 @@ public class UserWebServiceClientAdapter
     /**
      * Extract object from JSON's response.
      *
-     * @param jsonArray  The response retrieve by the HTTRequest
-     * @param users List of missions extracted by this function
+     * @param jsonArray The response retrieve by the HTTRequest
+     * @param users     List of missions extracted by this function
      * @return Return 0 if the extraction was succesfull, -1 if it wasn't.
      */
     public ArrayList<User> extractFromJsonArray(JSONArray jsonArray, ArrayList<User> users) {
@@ -198,5 +198,35 @@ public class UserWebServiceClientAdapter
         user = new User();
         userWebserviceAdapter.extract(jsonObject, user);
         return user;
+    }
+
+    /**
+     * Update the user with date of rgpd acceptation. Uses the route : user?access_token={token}
+     *
+     * @param jsonObject : The json with rgpd date
+     * @param user       : the user to update
+     * @return -1 if an error has occured, 0 if not
+     */
+    public int updateRgpd(User user, JSONObject jsonObject) {
+
+        int result = -1;
+        String response = this.invokeRequest(
+                RestClient.Verb.POST,
+                String.format(
+                        this.getUri() + "?access_token=%s",
+                        user.getToken()),
+                jsonObject);
+
+        if (this.isValidResponse(response) && this.isValidRequest()) {
+            try {
+                JSONObject json = new JSONObject(response);
+                this.extract(json, user);
+                result = 0;
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
+            }
+        }
+
+        return result;
     }
 }

@@ -53,7 +53,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/title_summary" />
 
             <TextView
-                android:id="@+id/input_user"
+                android:id="@+id/input_job"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -75,7 +75,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/label_user" />
 
             <TextView
-                android:id="@+id/input_job"
+                android:id="@+id/input_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -107,7 +107,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/label_project" />
 
             <TextView
-                android:id="@+id/input_task"
+                android:id="@+id/input_project"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -128,7 +128,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/label_task" />
 
             <TextView
-                android:id="@+id/input_date"
+                android:id="@+id/input_task"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -149,7 +149,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/label_date" />
 
             <TextView
-                android:id="@+id/input_time"
+                android:id="@+id/input_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
@@ -173,11 +173,19 @@
                 android:id="@+id/input_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="text"
+                tools:layout_editor_absoluteX="134dp"
+                tools:layout_editor_absoluteY="290dp" />
+
+            <TextView
+                android:id="@+id/input_spent_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:text="text"
-                app:layout_constraintBottom_toBottomOf="@+id/label_comment"
+                app:layout_constraintBottom_toBottomOf="@+id/label_time"
                 app:layout_constraintStart_toEndOf="@+id/label_comment"
-                app:layout_constraintTop_toTopOf="@+id/label_comment" />
+                app:layout_constraintTop_toTopOf="@+id/label_time" />
 
             <Button
                 android:id="@+id/btn_edit"
@@ -186,7 +194,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="50dp"
                 android:background="@drawable/button_selector_blue"
-                android:onClick="previousPage"
+                android:onClick="firstPage"
                 android:text="@string/btn_edit"
                 android:textColor="@android:color/white"
                 app:layout_constraintEnd_toStartOf="@+id/btn_submit"
@@ -202,7 +210,6 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="70dp"
                 android:background="@drawable/button_selector_blue"
-                android:onClick="nextPage"
                 android:text="@string/submit"
                 android:textColor="@android:color/white"
                 app:layout_constraintBottom_toBottomOf="parent"

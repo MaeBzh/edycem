@@ -23,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -97,7 +98,7 @@ public class ProjectWebServiceClientAdapter
         String response = this.invokeRequest(
                 RestClient.Verb.GET,
                 String.format(
-                        this.getUri() + "?access_token=%s",
+                        "?access_token=%s",
                         user.getToken()),
                 null);
 
@@ -105,6 +106,29 @@ public class ProjectWebServiceClientAdapter
             try {
                 JSONArray json = new JSONArray(response);
                 projects = extractFromJsonArray(json, projects);
+            } catch (JSONException e) {
+                Log.e(TAG, e.getMessage());
+                projects = null;
+            }
+        }
+
+        return projects;
+    }
+
+    public ArrayList<Integer> getProjectList(User user) {
+
+        ArrayList<Integer> projects = new ArrayList<>();
+        String response = this.invokeRequest(
+                RestClient.Verb.GET,
+                String.format(
+                        this.getUri() + "?action=lastProjects&id=%s&access_token=%s",
+                        user.getId(),
+                        user.getToken()),
+                null);
+
+        if (this.isValidResponse(response) && this.isValidRequest()) {
+            try {
+                JSONArray json = new JSONArray(response);
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
                 projects = null;

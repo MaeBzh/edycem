@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 8, 2019
+ * Last update : Jul 9, 2019
  *
  */
 
@@ -67,7 +67,7 @@ public abstract class UserWebServiceClientAdapterBase
     /** JSON_IDSMARTPHONE attributes. */
     protected static String JSON_IDSMARTPHONE = "smartphone_id";
     /** JSON_DATERGPD attributes. */
-    protected static String JSON_DATERGPD = "dateRgpd";
+    protected static String JSON_DATERGPD = "date_rgpd";
     /** JSON_TOKEN attributes. */
     protected static String JSON_TOKEN = "api_token";
     /** JSON_JOB attributes. */

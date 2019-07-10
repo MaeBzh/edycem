@@ -2,56 +2,106 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_user_and_job"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:id="@+id/layout_user_and_job">
+    android:background="@android:color/white" >
 
-    <!--<include-->
-        <!--android:id="@+id/toolbar"-->
-        <!--layout="@layout/toolbar"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
-
-    <Spinner
-        android:id="@+id/spinner_name"
-        android:layout_width="0dp"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layout_user"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="20dp"
-        android:entries="@array/spinner_users"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/green_border_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <Spinner
-        android:id="@+id/spinner_job"
-        android:layout_width="0dp"
+        <TextView
+            android:id="@+id/label_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/label_user"
+            android:textColor="@color/primary_color_dark"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Spinner
+            android:id="@+id/spinner_name"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="8dp"
+            android:entries="@array/spinner_users"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_user" />
+
+    </android.support.constraint.ConstraintLayout >
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/layout_job"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginEnd="20dp"
-        android:entries="@array/spinner_jobs"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/green_border_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner_name" />
+        app:layout_constraintTop_toBottomOf="@id/layout_user" >
+
+        <Spinner
+            android:id="@+id/spinner_job"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="8dp"
+            android:entries="@array/spinner_jobs"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/label_job" />
+
+        <TextView
+            android:id="@+id/label_job"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/label_job"
+            android:textColor="@color/primary_color_dark"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </android.support.constraint.ConstraintLayout >
 
     <Button
         android:id="@+id/btn_next"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="30dp"
         android:background="@drawable/button_selector_blue"
-        android:text="@string/next"
         android:onClick="nextPage"
+        android:text="@string/next"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/spinner_job"
-        app:layout_constraintStart_toStartOf="@+id/spinner_job" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_job" />
+
 
 </android.support.constraint.ConstraintLayout >

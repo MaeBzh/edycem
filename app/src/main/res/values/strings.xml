@@ -42,7 +42,7 @@
     <string name="job_projects_label">Projects</string>
     <string name="job_users_invalid_field_error">Field Users is invalid.</string>
     <string name="job_users_label">Users</string>
-    <string name="lab_test">Essai labo</string>
+    <string name="lab_test">Essai Labo</string>
     <string name="label_date">Date :</string>
     <string name="label_task">Tâche :</string>
     <string name="password">Mot de passe</string>
@@ -88,7 +88,7 @@
     <string name="settings_idserver_label">IdServer</string>
     <string name="settings_rgpd_invalid_field_error">Field Rgpd is invalid.</string>
     <string name="settings_rgpd_label">Rgpd</string>
-    <string name="specifications">Définition du cahier des charges</string>
+    <string name="specifications">Définition du Cahier des Charges</string>
     <string-array name="spinner_hours">
         <item>1</item>
         <item>2</item>
@@ -134,13 +134,13 @@
     <string name="task_tasks_label">Tasks</string>
     <string name="task_taskworkingtimes_invalid_field_error">Field TaskWorkingTimes is invalid.</string>
     <string name="task_taskworkingtimes_label">TaskWorkingTimes</string>
-    <string name="technic_point">Point technique</string>
-    <string name="technological_watch">Veille technologique</string>
+    <string name="technic_point">Point TEchnique</string>
+    <string name="technological_watch">Veille Technologique</string>
     <string name="title_activity">Choisissez une activité</string>
-    <string name="title_dev">Développement produit</string>
+    <string name="title_dev">Développement Produit</string>
     <string name="title_innovation">Innovation</string>
-    <string name="title_labo">Gestion laboratoire</string>
-    <string name="title_sourcing">Sourcing produit</string>
+    <string name="title_labo">Gestion Laboratoire</string>
+    <string name="title_sourcing">Sourcing Produit</string>
     <string name="title_task">Choisissez une tâche</string>
     <string name="user">Utilisateur :</string>
     <string name="user_createdprojects_invalid_field_error">Field CreatedProjects is invalid.</string>
@@ -188,4 +188,10 @@
     <string name="see_less" >Voir moins de projets</string >
     <string name="logout" >Déconnexion</string >
     <string name="add_comment" >Ajoutez un commentaire...</string >
+    <string name="label_user" >Utilisateur</string >
+    <string name="label_job" >Métier</string >
+    <string name="add_user" >Ajouter un ou plusieurs collaborateurs</string >
+    <string name="date_pattern" >dd/MM/YYYY</string >
+    <string name="spent_time" >Temps passé</string >
+    <string name="cancel" >Annuler</string >
 </resources>

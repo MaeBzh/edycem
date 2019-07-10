@@ -2,21 +2,22 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_working_time"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/layout_working_time"
-    android:background="@android:color/white">
+    android:background="@android:color/white" >
 
     <!--<include-->
-        <!--android:id="@+id/toolbar"-->
-        <!--layout="@layout/toolbar"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:layout_constraintEnd_toEndOf="parent"-->
-        <!--app:layout_constraintStart_toStartOf="parent"-->
-        <!--app:layout_constraintTop_toTopOf="parent" />-->
+    <!--android:id="@+id/toolbar"-->
+    <!--layout="@layout/toolbar"-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--app:layout_constraintEnd_toEndOf="parent"-->
+    <!--app:layout_constraintStart_toStartOf="parent"-->
+    <!--app:layout_constraintTop_toTopOf="parent" />-->
 
     <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="8dp"
@@ -37,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="70dp"
+                android:layout_marginTop="20dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/enter_working_time"
                 android:textColor="@color/primary_color_dark"
@@ -46,101 +47,204 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/label_date"
-                android:layout_width="wrap_content"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_date"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="30dp"
-                android:text="@string/date"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/title_working_time" />
+                android:layout_marginTop="20dp"
+                android:background="@drawable/green_border_background"
+                app:layout_constraintTop_toBottomOf="@+id/title_working_time" >
 
+                <TextView
+                    android:id="@+id/label_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/date"
+                    android:textColor="@color/primary_color_dark"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/edit_date"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/edit_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:ems="10"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/label_date" />
+
+            </android.support.constraint.ConstraintLayout >
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_time"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:inputType="date"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/label_date" />
+                android:layout_marginTop="20dp"
+                android:background="@drawable/green_border_background"
+                app:layout_constraintTop_toBottomOf="@id/layout_date" >
 
+                <TextView
+                    android:id="@+id/label_hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/hours"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/title_time" />
 
-            <TextView
-                android:id="@+id/label_hour"
-                android:layout_width="wrap_content"
+                <Spinner
+                    android:id="@+id/spinner_hour"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:entries="@array/spinner_hours"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/spinner_min"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/label_hour" />
+
+                <TextView
+                    android:id="@+id/label_min"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/minutes"
+                    app:layout_constraintBottom_toTopOf="@+id/spinner_min"
+                    app:layout_constraintStart_toStartOf="@+id/spinner_min" />
+
+                <Spinner
+                    android:id="@+id/spinner_min"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:entries="@array/spinner_min"
+                    app:layout_constraintBottom_toBottomOf="@+id/spinner_hour"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/spinner_hour"
+                    app:layout_constraintTop_toTopOf="@+id/spinner_hour" />
+
+                <TextView
+                    android:id="@+id/title_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/spent_time"
+                    android:textColor="@color/primary_color_dark"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout >
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_users"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="30dp"
-                android:text="@string/hours"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/edit_date" />
+                android:layout_marginTop="20dp"
+                android:background="@drawable/green_border_background"
+                app:layout_constraintTop_toBottomOf="@id/layout_time" >
 
-            <Spinner
-                android:id="@+id/spinner_hour"
-                android:layout_width="0dp"
+                <TextView
+                    android:id="@+id/contributors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/contributors"
+                    android:textColor="@color/primary_color_dark"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ListView
+                    android:id="@+id/list"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/contributors" />
+
+                <Button
+                    android:id="@+id/add_user_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="52dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@android:color/transparent"
+                    android:drawableStart="@drawable/add"
+                    android:drawablePadding="20dp"
+                    android:text="@string/add_user"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/list" />
+
+            </android.support.constraint.ConstraintLayout >
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/layout_comment"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:entries="@array/spinner_hours"
-                app:layout_constraintEnd_toStartOf="@+id/spinner_min"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/label_hour" />
+                android:layout_marginTop="20dp"
+                android:background="@drawable/green_border_background"
+                app:layout_constraintTop_toBottomOf="@id/layout_users" >
 
-            <TextView
-                android:id="@+id/label_min"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginBottom="8dp"
-                android:text="@string/minutes"
-                app:layout_constraintBottom_toTopOf="@+id/spinner_min"
-                app:layout_constraintStart_toStartOf="@+id/spinner_min" />
+                <TextView
+                    android:id="@+id/label_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/add_comment"
+                    android:textColor="@color/primary_color_dark"
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <Spinner
-                android:id="@+id/spinner_min"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:entries="@array/spinner_min"
-                app:layout_constraintBottom_toBottomOf="@+id/spinner_hour"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/spinner_hour"
-                app:layout_constraintTop_toTopOf="@+id/spinner_hour" />
+                <EditText
+                    android:id="@+id/edit_comment"
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:ems="10"
+                    android:inputType="textMultiLine"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/label_comment" />
 
-
-            <TextView
-                android:id="@+id/contributors"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/contributors"
-                tools:layout_editor_absoluteX="8dp"
-                tools:layout_editor_absoluteY="318dp" />
-
-            <Spinner
-                android:id="@+id/spinner_contributors"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:entries="@array/spinner_users"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/contributors" />
+            </android.support.constraint.ConstraintLayout >
 
             <Button
                 android:id="@+id/btn_previous"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="30dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/button_selector_blue"
                 android:onClick="previousPage"
                 android:paddingStart="20dp"
@@ -151,7 +255,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/btn_next"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editText2" />
+                app:layout_constraintTop_toBottomOf="@+id/layout_comment" />
 
             <Button
                 android:id="@+id/btn_next"
@@ -169,29 +273,6 @@
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/btn_previous"
                 app:layout_constraintTop_toTopOf="@+id/btn_previous" />
-
-            <TextView
-                android:id="@+id/label_comment"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="30dp"
-                android:text="@string/add_comment"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/spinner_contributors" />
-
-            <EditText
-                android:id="@+id/edit_comment"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:ems="10"
-                android:inputType="textMultiLine"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/label_comment" />
 
 
         </android.support.constraint.ConstraintLayout >

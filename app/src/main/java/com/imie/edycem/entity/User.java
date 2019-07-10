@@ -462,4 +462,22 @@ public class User implements Serializable, Parcelable {
     public void setToken(final String value) {
          this.token = value;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", idServer=" + idServer +
+                ", firstname='" + firstname + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
+                ", isEligible=" + isEligible +
+                ", idSmartphone='" + idSmartphone + '\'' +
+                ", dateRgpd=" + dateRgpd +
+                ", token='" + token + '\'' +
+                ", job=" + job +
+                ", userWorkingTimes=" + userWorkingTimes +
+                ", createdProjects=" + createdProjects +
+                '}';
+    }
 }

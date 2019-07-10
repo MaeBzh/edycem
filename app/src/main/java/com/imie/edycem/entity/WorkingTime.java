@@ -293,4 +293,17 @@ public class WorkingTime implements Serializable, Parcelable {
     public void setSpentTime(final int value) {
          this.spentTime = value;
     }
+
+    @Override
+    public String toString() {
+        return "WorkingTime{" +
+                "id=" + id +
+                ", date=" + date +
+                ", spentTime=" + spentTime +
+                ", description='" + description + '\'' +
+                ", user=" + user +
+                ", project=" + project +
+                ", task=" + task +
+                '}';
+    }
 }

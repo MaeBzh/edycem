@@ -76,6 +76,7 @@ public class LoginFragment extends Fragment {
                 user.setEmail(String.valueOf(LoginFragment.this.editEmail.getText()));
                 LoginFragment.this.progressBar.setVisibility(View.VISIBLE);
                 new LoginTask(LoginFragment.this.getContext()).execute(user);
+//                startMainActivity(user);
             }
         });
     }
@@ -238,8 +239,6 @@ public class LoginFragment extends Fragment {
                                         .show();
                                 result.setDateRgpd(DateTime.now());
                                 userProviderUtils.update(result);
-                                new RgdpTask(LoginFragment.this.getContext(), result);
-                                //todo: run on ui thread after post rgpd
                                 LoginFragment.this.startMainActivity(result);
                             }
                         })
@@ -261,31 +260,6 @@ public class LoginFragment extends Fragment {
                 LoginFragment.this.progressBar.setVisibility(View.GONE);
                 LoginFragment.this.editEmail.requestFocus();
             }
-        }
-    }
-
-    private class RgdpTask implements Runnable {
-
-        private Context context;
-        private  User connectedUser;
-
-        RgdpTask(Context context, User connectedUser) {
-            this.context = context;
-            this.connectedUser = connectedUser;
-        }
-
-        @Override
-        public void run() {
-            UserWebServiceClientAdapter userWS = new UserWebServiceClientAdapter(this.context);
-            JSONObject rgdp = new JSONObject();
-            try {
-                rgdp.put("id", this.connectedUser.getIdServer());
-                rgdp.put("date_rgdp", this.connectedUser.getDateRgpd());
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            userWS.updateRgpd(this.connectedUser, rgdp);
         }
     }
 }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -20,11 +21,13 @@ import com.imie.edycem.data.ProjectWebServiceClientAdapter;
 import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.provider.utils.ProjectProviderUtils;
 
 import java.util.ArrayList;
 
-public class ProjectsFragment extends Fragment {
+public class ProjectsFragment extends Fragment implements View.OnClickListener {
 
     private ConstraintLayout hiddenProject;
     private Button addButton;
@@ -35,6 +38,9 @@ public class ProjectsFragment extends Fragment {
     private WorkingTimeActivity activity;
     private WorkingTime workingTime;
     private ArrayList<Project> projectsList = new ArrayList<>();
+    private int[] projectsId;
+    private Button nextButton;
+    private Button previousButton;
     private User connectedUser;
 
     @Override
@@ -46,13 +52,21 @@ public class ProjectsFragment extends Fragment {
     }
 
     public void initComponents(final View view) {
-        this.activity = (WorkingTimeActivity) this.getActivity();
-        this.workingTime = this.activity.getWorkingTime();
-        this.connectedUser = this.activity.getConnectedUser();
+
+        this.nextButton = (Button) view.findViewById(R.id.btn_next);
+        this.nextButton.setOnClickListener(this);
+        this.previousButton = (Button) view.findViewById(R.id.btn_previous);
+        this.previousButton.setOnClickListener(this);
+
+        Intent intent = this.getActivity().getIntent();
+        this.workingTime = intent.getParcelableExtra(WorkingTimeContract.TABLE_NAME);
+        this.connectedUser = intent.getParcelableExtra(UserContract.TABLE_NAME);
 //        this.projectsList = this.activity.getProjects();
+        this.projectsId = intent.getIntArrayExtra("projects_id");
 
         this.projectProviderUtils = new ProjectProviderUtils(this.getContext());
         this.project = new Project();
+
         this.hiddenProject = (ConstraintLayout) view.findViewById(R.id.layout_hidden_projects);
         this.addButton = (Button) view.findViewById(R.id.add_button);
         this.lessButton = (Button) view.findViewById(R.id.less_button);
@@ -68,27 +82,41 @@ public class ProjectsFragment extends Fragment {
             }
         });
 
-        this.addButton.setOnClickListener(new View.OnClickListener() {
+        this.addButton.setOnClickListener(this);
+
+        this.lessButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.add_button:
                 if (hiddenProject.getVisibility() == View.GONE) {
                     hiddenProject.setVisibility(View.VISIBLE);
                     addButton.setVisibility(View.GONE);
                     lessButton.setVisibility(View.VISIBLE);
                 }
-            }
-        });
-
-        this.lessButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                break;
+            case R.id.less_button:
                 if (hiddenProject.getVisibility() == View.VISIBLE) {
                     hiddenProject.setVisibility(View.GONE);
                     addButton.setVisibility(View.VISIBLE);
                     lessButton.setVisibility(View.GONE);
                 }
-            }
-        });
-
+                break;
+            case R.id.btn_next:
+                Intent intent = new Intent(this.getContext(), TaskActivity.class);
+                intent.putExtra(UserContract.TABLE_NAME, (Parcelable) this.connectedUser);
+                intent.putExtra(WorkingTimeContract.TABLE_NAME, (Parcelable) this.workingTime);
+                startActivity(intent);
+                break;
+            case R.id.btn_previous:
+                this.getActivity().onBackPressed();
+        }
     }
 }

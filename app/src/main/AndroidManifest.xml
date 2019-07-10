@@ -29,7 +29,19 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".view.workingtime.UserAndJobActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.workingtime.ProjectsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.workingtime.TaskActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".view.workingtime.WorkingTimeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".view.workingtime.SummaryActivity"
             android:screenOrientation="portrait" />
         <provider
             android:name="com.imie.edycem.provider.EdycemProvider"

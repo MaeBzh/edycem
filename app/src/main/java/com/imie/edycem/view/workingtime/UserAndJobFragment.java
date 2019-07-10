@@ -1,13 +1,16 @@
 package com.imie.edycem.view.workingtime;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -15,20 +18,24 @@ import com.imie.edycem.R;
 import com.imie.edycem.entity.Job;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.provider.utils.JobProviderUtils;
 import com.imie.edycem.provider.utils.UserProviderUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserAndJobFragment extends Fragment {
+public class UserAndJobFragment extends Fragment implements View.OnClickListener {
 
     private UserProviderUtils userProviderUtils;
     private Spinner spinnerName;
     private ArrayList<User> users = new ArrayList<>();
-    private WorkingTimeActivity activity;
     private WorkingTime workingTime;
     private User connectedUser;
+    private Button nextButton;
+    private ArrayList<Integer> projectsId;
+    private UserAndJobActivity activity;
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,9 +46,18 @@ public class UserAndJobFragment extends Fragment {
     }
 
     public void initComponents(View view) {
-        this.activity = (WorkingTimeActivity) this.getActivity();
-        this.workingTime = this.activity.getWorkingTime();
+        this.nextButton = (Button) view.findViewById(R.id.btn_next);
+        this.nextButton.setOnClickListener(this);
+        this.activity = (UserAndJobActivity) this.getActivity();
+        Intent intent = getActivity().getIntent();
+        if (intent != null) {
+            this.workingTime = intent.getParcelableExtra(WorkingTimeContract.TABLE_NAME);
+        } else {
+            this.workingTime = new WorkingTime();
+        }
+        this.workingTime = new WorkingTime();
         this.connectedUser = this.activity.getConnectedUser();
+        this.projectsId = this.activity.getProjects();
 
         this.userProviderUtils = new UserProviderUtils(this.getContext());
         this.spinnerName = (Spinner) view.findViewById(R.id.spinner_name);
@@ -89,7 +105,15 @@ public class UserAndJobFragment extends Fragment {
 
     }
 
-    public interface WorkingTimeListener {
-        void onWorkingTimeUpdating(WorkingTime workingTime);
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btn_next){
+            Intent intent = new Intent(this.getContext(), ProjectsActivity.class);
+            intent.putExtra(UserContract.TABLE_NAME, (Parcelable) this.connectedUser);
+            intent.putExtra(WorkingTimeContract.TABLE_NAME, (Parcelable) this.workingTime);
+            intent.putExtra("projects_id", this.projectsId);
+            startActivity(intent);
+        }
+
     }
 }

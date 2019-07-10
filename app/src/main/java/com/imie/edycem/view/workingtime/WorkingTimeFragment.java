@@ -3,7 +3,9 @@ package com.imie.edycem.view.workingtime;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -24,6 +26,8 @@ import android.widget.TextView;
 import com.imie.edycem.R;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.provider.utils.UserProviderUtils;
 
 import org.joda.time.DateTime;
@@ -33,7 +37,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class WorkingTimeFragment extends Fragment {
+public class WorkingTimeFragment extends Fragment implements View.OnClickListener {
 
     private TextView date;
     private WorkingTimeActivity activity;
@@ -44,6 +48,9 @@ public class WorkingTimeFragment extends Fragment {
     private ListView list;
     private UserProviderUtils userProviderUtils;
     private EditText comment;
+    private Button nextButton;
+    private Button previousButton;
+    private User connectedUser;
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,8 +62,15 @@ public class WorkingTimeFragment extends Fragment {
 
     public void initComponents(View view) {
 
-        this.activity = (WorkingTimeActivity) this.getActivity();
-        this.workingTime = this.activity.getWorkingTime();
+        this.nextButton = (Button) view.findViewById(R.id.btn_next);
+        this.nextButton.setOnClickListener(this);
+
+        this.previousButton = (Button) view.findViewById(R.id.btn_previous);
+        this.previousButton.setOnClickListener(this);
+
+        Intent intent = getActivity().getIntent();
+        this.connectedUser = intent.getParcelableExtra(UserContract.TABLE_NAME);
+        this.workingTime = intent.getParcelableExtra(WorkingTimeContract.TABLE_NAME);
 
         this.date = (TextView) view.findViewById(R.id.edit_date);
         DateTimeFormatter formatter = DateTimeFormat.forPattern(getString(R.string.date_pattern));
@@ -158,6 +172,16 @@ public class WorkingTimeFragment extends Fragment {
             }
         });
     }
+
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btn_next){
+            Intent intent = new Intent(this.getContext(), SummaryActivity.class);
+            intent.putExtra(UserContract.TABLE_NAME, (Parcelable) this.connectedUser);
+            intent.putExtra(WorkingTimeContract.TABLE_NAME, (Parcelable) this.workingTime);
+            startActivity(intent);
+        }
+     }
 
     public class ListAdapter extends ArrayAdapter<String> {
 

@@ -40,6 +40,7 @@ import com.imie.edycem.provider.utils.JobProviderUtils;
 import com.imie.edycem.provider.utils.ProjectProviderUtils;
 import com.imie.edycem.provider.utils.TaskProviderUtils;
 import com.imie.edycem.provider.utils.UserProviderUtils;
+import com.imie.edycem.view.workingtime.UserAndJobActivity;
 import com.imie.edycem.view.workingtime.WorkingTimeActivity;
 
 import org.joda.time.DateTime;
@@ -75,8 +76,8 @@ public class LoginFragment extends Fragment {
                 LoginFragment.this.email = LoginFragment.this.editEmail.getText().toString();
                 user.setEmail(String.valueOf(LoginFragment.this.editEmail.getText()));
                 LoginFragment.this.progressBar.setVisibility(View.VISIBLE);
-                new LoginTask(LoginFragment.this.getContext()).execute(user);
-//                startMainActivity(user);
+//                new LoginTask(LoginFragment.this.getContext()).execute(user);
+                startMainActivity(user);
             }
         });
     }
@@ -85,9 +86,8 @@ public class LoginFragment extends Fragment {
      * Start new main activity with the connected user id's.
      */
     public void startMainActivity(User connectedUser) {
-        Intent intent = new Intent(this.getContext(), WorkingTimeActivity.class);
+        Intent intent = new Intent(this.getContext(), UserAndJobActivity.class);
         intent.putExtra(UserContract.TABLE_NAME, (Parcelable) connectedUser);
-        this.getActivity().finish();
         startActivity(intent);
     }
 

@@ -2,7 +2,6 @@ package com.imie.edycem.view.workingtime;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -12,25 +11,21 @@ import android.widget.ImageView;
 
 import com.imie.edycem.R;
 import com.imie.edycem.entity.User;
+import com.imie.edycem.entity.WorkingTime;
 import com.imie.edycem.provider.contract.UserContract;
 import com.imie.edycem.view.login.LoginActivity;
 
-public class WorkingTimeActivity extends AppCompatActivity {
+public class ProjectsActivity extends AppCompatActivity {
 
-    private ViewPager viewPager;
     private Toolbar toolbar;
     private ImageButton logoutButton;
-    private User connectedUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setContentView(R.layout.activity_working_time);
+        this.setContentView(R.layout.activity_projects);
         this.toolbar = (Toolbar) findViewById(R.id.toolbar);
         this.setSupportActionBar(this.toolbar);
-        Intent intent = getIntent();
-        this.connectedUser = intent.getParcelableExtra(UserContract.TABLE_NAME);
-
     }
 
     @Override
@@ -43,12 +38,12 @@ public class WorkingTimeActivity extends AppCompatActivity {
         this.logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(WorkingTimeActivity.this, LoginActivity.class);
+                Intent intent = new Intent(ProjectsActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
         });
 
-
         return true;
     }
+
 }

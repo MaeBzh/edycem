@@ -2,8 +2,10 @@ package com.imie.edycem.view.workingtime;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +22,8 @@ import com.imie.edycem.data.WorkingTimeWebServiceClientAdapter;
 import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.entity.WorkingTime;
+import com.imie.edycem.provider.contract.UserContract;
+import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.provider.utils.ProjectProviderUtils;
 
 import org.joda.time.DateTime;
@@ -28,7 +32,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SummaryFragment extends Fragment {
+public class SummaryFragment extends Fragment implements View.OnClickListener {
 
     private WorkingTimeActivity activity;
     private WorkingTime workingTime;
@@ -41,6 +45,7 @@ public class SummaryFragment extends Fragment {
     private TextView comment;
     private Button submit;
     private Button edit;
+    private User connectedUser;
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,8 +57,9 @@ public class SummaryFragment extends Fragment {
 
     public void initComponents(final View view) {
 
-        this.activity = (WorkingTimeActivity) this.getActivity();
-        this.workingTime = this.activity.getWorkingTime();
+        Intent intent = getActivity().getIntent();
+        this.workingTime = intent.getParcelableExtra(WorkingTimeContract.TABLE_NAME);
+        this.connectedUser = intent.getParcelableExtra(UserContract.TABLE_NAME);
 
         this.user = (TextView) view.findViewById(R.id.input_user);
         this.user.setText(String.format("%s %s", this.workingTime.getUser().getFirstname(), this.workingTime.getUser().getLastname()));
@@ -63,9 +69,10 @@ public class SummaryFragment extends Fragment {
 
         this.project = (TextView) view.findViewById(R.id.input_project);
 //        this.project.setText(this.workingTime.getProject().getName());
+        this.project.setText("toto");
 
-//        this.task = (TextView) view.findViewById(R.id.input_task);
-//        this.task.setText(this.workingTime.getTask().getName());
+        this.task = (TextView) view.findViewById(R.id.input_task);
+        this.task.setText(this.workingTime.getTask().getName());
 
         this.date = (TextView) view.findViewById(R.id.input_date);
         DateTimeFormatter formatter = DateTimeFormat.forPattern(getString(R.string.date_pattern));
@@ -73,29 +80,28 @@ public class SummaryFragment extends Fragment {
         this.date.setText(dateStr);
 
         this.time = (TextView) view.findViewById(R.id.input_spent_time);
-        this.time.setText(String.format("%s", this.workingTime.getSpentTime()));
-//        time.setText(String.format("%sh %smin", (this.workingTime.getSpentTime() / 60), (this.workingTime.getSpentTime() % 60)));
+        time.setText(String.format("%sh %smin", (this.workingTime.getSpentTime() / 60), (this.workingTime.getSpentTime() % 60)));
 
         this.comment = (TextView) view.findViewById(R.id.input_comment);
         this.comment.setText(this.workingTime.getDescription());
 
         this.submit = (Button) view.findViewById(R.id.btn_submit);
-        this.submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new WorkingTimeTask(SummaryFragment.this.getContext(), SummaryFragment.this.workingTime.getUser(), SummaryFragment.this.workingTime).execute();
-                System.out.println("working time : " + SummaryFragment.this.workingTime.toString());
-            }
-        });
+        this.submit.setOnClickListener(this);
 
         this.edit = (Button) view.findViewById(R.id.btn_edit);
-        this.edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        this.edit.setOnClickListener(this);
 
-            }
-        });
+    }
 
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.btn_submit) {
+            new WorkingTimeTask(SummaryFragment.this.getContext(), SummaryFragment.this.workingTime.getUser(), SummaryFragment.this.workingTime).execute();
+        } else if (view.getId() == R.id.btn_edit) {
+            Intent intent = new Intent(this.getActivity(), UserAndJobActivity.class);
+            intent.putExtra(WorkingTimeContract.TABLE_NAME, (Parcelable) this.workingTime);
+            startActivity(intent);
+        }
     }
 
     /**

@@ -6,7 +6,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 8, 2019
+ * Last update : Jul 11, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -325,10 +325,10 @@ public abstract class UserSQLiteAdapterBase
         final ContentValues values =
                 UserContract.itemToContentValues(item);
         final String whereClause =
-                 UserContract.COL_EMAIL
+                 UserContract.COL_ID
                  + " = ?";
         final String[] whereArgs =
-                new String[] {String.valueOf(item.getEmail()) };
+                new String[] {String.valueOf(item.getId()) };
 
         return this.update(
                 values,

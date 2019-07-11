@@ -98,7 +98,7 @@ public class ProjectWebServiceClientAdapter
         String response = this.invokeRequest(
                 RestClient.Verb.GET,
                 String.format(
-                        "?access_token=%s",
+                        this.getUri() + "?access_token=%s",
                         user.getToken()),
                 null);
 
@@ -115,9 +115,9 @@ public class ProjectWebServiceClientAdapter
         return projects;
     }
 
-    public ArrayList<Integer> getProjectList(User user) {
+    public ArrayList<Project> getProjectList(User user) {
 
-        ArrayList<Integer> projects = new ArrayList<>();
+        ArrayList<Project> projects = new ArrayList<>();
         String response = this.invokeRequest(
                 RestClient.Verb.GET,
                 String.format(
@@ -129,6 +129,7 @@ public class ProjectWebServiceClientAdapter
         if (this.isValidResponse(response) && this.isValidRequest()) {
             try {
                 JSONArray json = new JSONArray(response);
+                projects = extractFromJsonArray(json, projects);
             } catch (JSONException e) {
                 Log.e(TAG, e.getMessage());
                 projects = null;

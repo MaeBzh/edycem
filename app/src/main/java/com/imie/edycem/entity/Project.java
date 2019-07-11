@@ -57,6 +57,8 @@ public class Project implements Serializable, Parcelable {
     private String activityType;
     @Column(type = Column.Type.BOOLEAN)
     private boolean isValidate;
+    @Column(type = Column.Type.STRING, nullable = true)
+    private String tag;
 
     @OneToMany(targetEntity = "WorkingTime", mappedBy = "project")
     private ArrayList<WorkingTime> projectWorkingTimes;
@@ -297,6 +299,12 @@ public class Project implements Serializable, Parcelable {
         } else {
             dest.writeInt(0);
         }
+        if (this.getTag() != null) {
+            dest.writeInt(1);
+            dest.writeString(this.getTag());
+        } else {
+            dest.writeInt(0);
+        }
 
         if (this.getProjectWorkingTimes() != null) {
             dest.writeInt(this.getProjectWorkingTimes().size());
@@ -376,6 +384,10 @@ public class Project implements Serializable, Parcelable {
             this.setActivityType(parc.readString());
         }
         this.setIsValidate(parc.readInt() == 1);
+        int tagBool = parc.readInt();
+        if (tagBool == 1) {
+            this.setTag(parc.readString());
+        }
 
         int nbProjectWorkingTimes = parc.readInt();
         if (nbProjectWorkingTimes > -1) {
@@ -390,6 +402,9 @@ public class Project implements Serializable, Parcelable {
         this.setJob((Job) parc.readParcelable(Job.class.getClassLoader()));
         this.setCreator((User) parc.readParcelable(User.class.getClassLoader()));
     }
+
+
+
 
 
 
@@ -562,5 +577,19 @@ public class Project implements Serializable, Parcelable {
      */
     public void setIdServer(final int value) {
          this.idServer = value;
+    }
+     /**
+     * Get the Tag.
+     * @return the tag
+     */
+    public String getTag() {
+         return this.tag;
+    }
+     /**
+     * Set the Tag.
+     * @param value the tag to set
+     */
+    public void setTag(final String value) {
+         this.tag = value;
     }
 }

@@ -48,18 +48,17 @@ public class TasksFragment extends Fragment implements View.OnClickListener {
         this.nextButton = (Button) view.findViewById(R.id.btn_next);
         this.nextButton.setOnClickListener(this);
         this.previousButton = (Button) view.findViewById(R.id.btn_previous);
-        this.nextButton.setOnClickListener(this);
+        this.previousButton.setOnClickListener(this);
 
         Intent intent = getActivity().getIntent();
         this.workingTime = intent.getParcelableExtra(WorkingTimeContract.TABLE_NAME);
         this.connectedUser = intent.getParcelableExtra(UserContract.TABLE_NAME);
-        this.radioGroup = (RadioGroup) view.findViewById(R.id.radioGroup);
+        this.radioGroup = (RadioGroup) view.findViewById(R.id.task_group);
         this.taskProviderUtils = new TaskProviderUtils(this.getContext());
         this.radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 RadioButton selectedButton = (RadioButton) view.findViewById(i);
-//                selectedButton.setBackground(ContextCompat.getDrawable(TasksFragment.this.getContext(), R.drawable.button_selector_blue));
                 Task selectedTask = taskProviderUtils.queryWithName(selectedButton.getText().toString());
                 TasksFragment.this.workingTime.setTask(selectedTask);
             }

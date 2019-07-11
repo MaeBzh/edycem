@@ -170,34 +170,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ListView
-                    android:id="@+id/list"
-                    android:layout_width="fill_parent"
+                <Spinner
+                    android:id="@+id/spinner_name"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
-                    android:visibility="gone"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/contributors" />
-
-                <Button
-                    android:id="@+id/add_user_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="52dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
-                    android:background="@android:color/transparent"
-                    android:drawableStart="@drawable/add"
-                    android:drawablePadding="20dp"
-                    android:text="@string/add_user"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/list" />
+                    app:layout_constraintTop_toBottomOf="@+id/contributors" />
 
             </android.support.constraint.ConstraintLayout >
 

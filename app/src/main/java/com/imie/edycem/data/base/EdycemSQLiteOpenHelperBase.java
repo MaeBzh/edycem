@@ -6,7 +6,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 5, 2019
+ * Last update : Jul 11, 2019
  *
  */
 package com.imie.edycem.data.base;
@@ -134,6 +134,7 @@ public class EdycemSQLiteOpenHelperBase extends SQLiteOpenHelper {
                 android.util.Log.d(TAG, "Creating schema : Settings");
             }
             db.execSQL(SettingsSQLiteAdapter.getSchema());
+
             db.execSQL("PRAGMA foreign_keys = ON;");
             if (!EdycemSQLiteOpenHelper.isJUnit) {
                 this.loadData(db);

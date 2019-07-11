@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import com.imie.edycem.R;
 import com.imie.edycem.data.ProjectWebServiceClientAdapter;
 import com.imie.edycem.data.UserWebServiceClientAdapter;
+import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.entity.WorkingTime;
 import com.imie.edycem.provider.contract.UserContract;
@@ -22,6 +23,7 @@ import com.imie.edycem.provider.utils.SettingsProviderUtils;
 import com.imie.edycem.provider.utils.UserProviderUtils;
 import com.imie.edycem.view.login.LoginActivity;
 
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,7 +34,7 @@ public class UserAndJobActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private ImageButton logoutButton;
     private User connectedUser;
-    private ArrayList<Integer> projects;
+    private ArrayList<Project> projects;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +44,12 @@ public class UserAndJobActivity extends AppCompatActivity {
         this.setSupportActionBar(this.toolbar);
         Intent intent = getIntent();
         this.connectedUser = intent.getParcelableExtra(UserContract.TABLE_NAME);
-        new DataTask(this, this.connectedUser).execute();
+        if (this.connectedUser.getDateRgpd().getYear() != DateTime.now().getYear()) {
+            new DataTask(this, this.connectedUser).execute();
+        }
     }
 
-    public ArrayList<Integer> getProjects() {
+    public ArrayList<Project> getProjects() {
         return this.projects;
     }
 
@@ -74,7 +78,7 @@ public class UserAndJobActivity extends AppCompatActivity {
     /**
      * Create a thread to use webservices for sending the date of rgpd acceptation.
      */
-    public class DataTask extends AsyncTask<Void, Void, ArrayList<Integer>> {
+    public class DataTask extends AsyncTask<Void, Void, ArrayList<Project>> {
 
         /**
          * Context from the fragment.
@@ -96,7 +100,7 @@ public class UserAndJobActivity extends AppCompatActivity {
 
 
         @Override
-        protected ArrayList<Integer> doInBackground(Void... params) {
+        protected ArrayList<Project> doInBackground(Void... params) {
 //            todo: add date rgpd in SQLite db
             UserWebServiceClientAdapter userWS = new UserWebServiceClientAdapter(this.currentContext);
             JSONObject rgdp = new JSONObject();
@@ -121,13 +125,8 @@ public class UserAndJobActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(ArrayList<Integer> projects) {
+        protected void onPostExecute(ArrayList<Project> projects) {
             UserAndJobActivity.this.projects = projects;
         }
-
     }
-
-
-
-
 }

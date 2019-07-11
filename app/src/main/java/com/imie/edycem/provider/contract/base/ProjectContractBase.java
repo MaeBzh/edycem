@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 8, 2019
+ * Last update : Jul 11, 2019
  *
  */
 package com.imie.edycem.provider.contract.base;
@@ -132,6 +132,13 @@ public abstract class ProjectContractBase {
     public static final String ALIASED_COL_ISVALIDATE =
             ProjectContract.TABLE_NAME + "." + COL_ISVALIDATE;
 
+    /** tag. */
+    public static final String COL_TAG =
+            "tag";
+    /** Alias. */
+    public static final String ALIASED_COL_TAG =
+            ProjectContract.TABLE_NAME + "." + COL_TAG;
+
     /** job_id. */
     public static final String COL_JOB_ID =
             "job_id";
@@ -185,6 +192,8 @@ public abstract class ProjectContractBase {
         
         ProjectContract.COL_ISVALIDATE,
         
+        ProjectContract.COL_TAG,
+        
         ProjectContract.COL_JOB_ID,
         
         ProjectContract.COL_CREATOR_ID
@@ -220,6 +229,8 @@ public abstract class ProjectContractBase {
         ProjectContract.ALIASED_COL_ACTIVITYTYPE,
         
         ProjectContract.ALIASED_COL_ISVALIDATE,
+        
+        ProjectContract.ALIASED_COL_TAG,
         
         
         ProjectContract.ALIASED_COL_JOB_ID,
@@ -311,6 +322,13 @@ public abstract class ProjectContractBase {
 
              result.put(ProjectContract.COL_ISVALIDATE,
                 item.isIsValidate() ? 1 : 0);
+
+             if (item.getTag() != null) {
+                result.put(ProjectContract.COL_TAG,
+                    item.getTag());
+            } else {
+                result.put(ProjectContract.COL_TAG, (String) null);
+            }
 
               if (item.getJob() != null) {
                 result.put(ProjectContract.COL_JOB_ID,
@@ -451,6 +469,13 @@ public abstract class ProjectContractBase {
 
             if (index > -1) {
                 result.setIsValidate(cursor.getInt(index) == 1);
+            }
+            index = cursor.getColumnIndex(ProjectContract.COL_TAG);
+
+            if (index > -1) {
+            if (!cursor.isNull(index)) {
+                    result.setTag(cursor.getString(index));
+            }
             }
             if (result.getJob() == null) {
                 final Job job = new Job();

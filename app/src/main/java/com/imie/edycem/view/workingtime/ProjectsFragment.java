@@ -1,14 +1,11 @@
 package com.imie.edycem.view.workingtime;
 
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +15,13 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.imie.edycem.R;
-import com.imie.edycem.data.ProjectWebServiceClientAdapter;
 import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.entity.WorkingTime;
 import com.imie.edycem.provider.contract.UserContract;
 import com.imie.edycem.provider.contract.WorkingTimeContract;
 import com.imie.edycem.provider.utils.ProjectProviderUtils;
-import com.nostra13.universalimageloader.utils.L;
 
-import java.util.ArrayList;
 
 public class ProjectsFragment extends Fragment implements View.OnClickListener {
 
@@ -37,13 +31,14 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener {
     private RadioGroup radioGroup;
     private ProjectProviderUtils projectProviderUtils;
     private Project project;
-    private WorkingTimeActivity activity;
+    private UserAndJobActivity activity;
     private WorkingTime workingTime;
-    private ArrayList<Project> projectsList = new ArrayList<>();
-    private int[] projectsId;
+    private Object projectsList;
     private Button nextButton;
     private Button previousButton;
     private User connectedUser;
+    private Button mostUsedProject;
+    private Button lastUsedProject;
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -61,10 +56,10 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener {
         this.previousButton.setOnClickListener(this);
 
         Intent intent = this.getActivity().getIntent();
-        this.workingTime = intent.getParcelableExtra(WorkingTimeContract.TABLE_NAME);
-        this.connectedUser = intent.getParcelableExtra(UserContract.TABLE_NAME);
-//        this.projectsList = this.activity.getProjects();
-        this.projectsId = intent.getIntArrayExtra("projects_id");
+        Bundle data = intent.getBundleExtra("data");
+        this.workingTime = data.getParcelable(WorkingTimeContract.TABLE_NAME);
+        this.connectedUser = data.getParcelable(UserContract.TABLE_NAME);
+        this.projectsList = data.getParcelableArrayList("projects");
 
         this.projectProviderUtils = new ProjectProviderUtils(this.getContext());
         this.project = new Project();
@@ -77,7 +72,6 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 RadioButton selectedButton = (RadioButton) view.findViewById(i);
-//                selectedButton.setBackground(ContextCompat.getDrawable(ProjectsFragment.this.getContext(), R.drawable.button_selector_blue));
                 ProjectsFragment.this.project.setName(selectedButton.getText().toString());
 //                Project project = ProjectsFragment.this.projectProviderUtils.query();
                 ProjectsFragment.this.workingTime.setProject(project);

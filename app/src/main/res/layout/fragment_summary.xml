@@ -159,6 +159,16 @@
                 app:layout_constraintTop_toTopOf="@+id/label_date" />
 
             <TextView
+                android:id="@+id/input_contributors"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="text"
+                app:layout_constraintBottom_toBottomOf="@+id/label_contributors"
+                app:layout_constraintStart_toEndOf="@+id/label_contributors"
+                app:layout_constraintTop_toTopOf="@+id/label_contributors" />
+
+            <TextView
                 android:id="@+id/input_comment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -187,17 +197,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/label_time" />
 
-            <ListView
-                android:id="@+id/list"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="8dp"
-                android:text="text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/label_contributors"
-                app:layout_constraintTop_toTopOf="@+id/label_contributors" />
-
             <TextView
                 android:id="@+id/label_contributors"
                 android:layout_width="wrap_content"
@@ -210,18 +209,18 @@
                 app:layout_constraintTop_toBottomOf="@+id/label_comment" />
 
             <Button
-                android:id="@+id/btn_edit"
+                android:id="@+id/btn_previous"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="30dp"
                 android:background="@drawable/button_selector_blue"
-                android:text="@string/btn_edit"
+                android:text="@string/btn_previous"
                 android:textColor="@android:color/white"
                 app:layout_constraintEnd_toStartOf="@+id/btn_submit"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/list" />
+                app:layout_constraintTop_toBottomOf="@+id/input_contributors" />
 
             <Button
                 android:id="@+id/btn_submit"
@@ -236,9 +235,22 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/btn_edit"
-                app:layout_constraintTop_toTopOf="@+id/btn_edit"
+                app:layout_constraintStart_toEndOf="@+id/btn_previous"
+                app:layout_constraintTop_toTopOf="@+id/btn_previous"
                 app:layout_constraintVertical_bias="0.0" />
+
+            <ProgressBar
+                android:id="@+id/progress_bar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/btn_previous" />
 
 
         </android.support.constraint.ConstraintLayout >

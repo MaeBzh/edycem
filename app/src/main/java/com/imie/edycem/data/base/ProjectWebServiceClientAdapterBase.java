@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 8, 2019
+ * Last update : Jul 11, 2019
  *
  */
 
@@ -80,6 +80,8 @@ public abstract class ProjectWebServiceClientAdapterBase
     protected static String JSON_ACTIVITYTYPE = "activityType";
     /** JSON_ISVALIDATE attributes. */
     protected static String JSON_ISVALIDATE = "isValidate";
+    /** JSON_TAG attributes. */
+    protected static String JSON_TAG = "tag";
     /** JSON_PROJECTWORKINGTIMES attributes. */
     protected static String JSON_PROJECTWORKINGTIMES = "projectWorkingTimes";
     /** JSON_JOB attributes. */
@@ -349,11 +351,11 @@ public abstract class ProjectWebServiceClientAdapterBase
         if (result) {
             try {
 
-                if (json.has(ProjectWebServiceClientAdapter.JSON_ID)
-                        && !json.isNull(ProjectWebServiceClientAdapter.JSON_ID)) {
-                    project.setId(
-                            json.getInt(ProjectWebServiceClientAdapter.JSON_ID));
-                }
+//                if (json.has(ProjectWebServiceClientAdapter.JSON_ID)
+//                        && !json.isNull(ProjectWebServiceClientAdapter.JSON_ID)) {
+//                    project.setId(
+//                            json.getInt(ProjectWebServiceClientAdapter.JSON_ID));
+//                }
 
                 if (json.has(ProjectWebServiceClientAdapter.JSON_IDSERVER)
                         && !json.isNull(ProjectWebServiceClientAdapter.JSON_IDSERVER)) {
@@ -447,6 +449,12 @@ public abstract class ProjectWebServiceClientAdapterBase
                         && !json.isNull(ProjectWebServiceClientAdapter.JSON_ISVALIDATE)) {
                     project.setIsValidate(
                             json.getBoolean(ProjectWebServiceClientAdapter.JSON_ISVALIDATE));
+                }
+
+                if (json.has(ProjectWebServiceClientAdapter.JSON_TAG)
+                        && !json.isNull(ProjectWebServiceClientAdapter.JSON_TAG)) {
+                    project.setTag(
+                            json.getString(ProjectWebServiceClientAdapter.JSON_TAG));
                 }
 
                 if (json.has(ProjectWebServiceClientAdapter.JSON_PROJECTWORKINGTIMES)
@@ -556,6 +564,8 @@ public abstract class ProjectWebServiceClientAdapterBase
                     project.getActivityType());
             params.put(ProjectWebServiceClientAdapter.JSON_ISVALIDATE,
                     project.isIsValidate());
+            params.put(ProjectWebServiceClientAdapter.JSON_TAG,
+                    project.getTag());
 
             if (project.getProjectWorkingTimes() != null) {
                 WorkingTimeWebServiceClientAdapter projectWorkingTimesAdapter =
@@ -644,6 +654,8 @@ public abstract class ProjectWebServiceClientAdapterBase
                     values.get(ProjectContract.COL_ACTIVITYTYPE));
             params.put(ProjectWebServiceClientAdapter.JSON_ISVALIDATE,
                     values.get(ProjectContract.COL_ISVALIDATE));
+            params.put(ProjectWebServiceClientAdapter.JSON_TAG,
+                    values.get(ProjectContract.COL_TAG));
             JobWebServiceClientAdapter jobAdapter =
                     new JobWebServiceClientAdapter(this.context);
 

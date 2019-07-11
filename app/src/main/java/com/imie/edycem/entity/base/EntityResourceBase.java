@@ -5,21 +5,20 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 8, 2019
+ * Last update : Jul 11, 2019
  *
  */
 
 package com.imie.edycem.entity.base;
 
-import com.imie.edycem.entity.base.RestResource;
+import com.imie.edycem.entity.base.Resource;
 
-public class EntityResourceBase implements  RestResource {
+public class EntityResourceBase implements Resource {
 
     protected String path;
 
     private int id;
 
-    private String localPath;
 
     @Override
     public int getId() {
@@ -31,15 +30,6 @@ public class EntityResourceBase implements  RestResource {
          this.id = value;
     }
 
-    @Override
-    public String getLocalPath() {
-         return this.localPath;
-    }
-
-    @Override
-    public void setLocalPath(final String value) {
-         this.localPath = value;
-    }
 
     @Override
     public String getPath() {

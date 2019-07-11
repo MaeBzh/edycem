@@ -80,7 +80,6 @@ public class LoginFragment extends Fragment {
                 NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
                 if (activeNetwork != null && activeNetwork.isConnectedOrConnecting()) {
                     new LoginTask(LoginFragment.this.getContext()).execute(user);
-                    startMainActivity(LoginFragment.this.user);
                 } else {
                     LoginFragment.this.user = LoginFragment.this.userProviderUtils.queryWithEmail(user.getEmail());
                     if (LoginFragment.this.user != null) {
@@ -90,6 +89,8 @@ public class LoginFragment extends Fragment {
                         Toast.makeText(getContext(), getString(R.string.authentication_fail), Toast.LENGTH_LONG).show();
                     }
                 }
+
+//                startMainActivity(LoginFragment.this.user);
 
             }
         });
@@ -140,13 +141,15 @@ public class LoginFragment extends Fragment {
             ActivityProviderUtils activityProviderUtils = new ActivityProviderUtils(this.currentContext);
             activities = activityWS.getAllActivities(connectedUser);
 
-            for (Activity activity : activities) {
-                CriteriaExpression criteriaActivity = new CriteriaExpression(CriteriaExpression.GroupType.AND);
-                criteriaActivity.add(ActivityContract.COL_IDSERVER, String.valueOf(activity.getIdServer()));
-                List<Activity> query = activityProviderUtils.query(criteriaActivity);
+            if (activities != null) {
+                for (Activity activity : activities) {
+                    CriteriaExpression criteriaActivity = new CriteriaExpression(CriteriaExpression.GroupType.AND);
+                    criteriaActivity.add(ActivityContract.COL_IDSERVER, String.valueOf(activity.getIdServer()));
+                    List<Activity> query = activityProviderUtils.query(criteriaActivity);
 
-                if (query.isEmpty()) {
-                    activityProviderUtils.insert(activity);
+                    if (query.isEmpty()) {
+                        activityProviderUtils.insert(activity);
+                    }
                 }
             }
 
@@ -154,13 +157,15 @@ public class LoginFragment extends Fragment {
             TaskProviderUtils taskProviderUtils = new TaskProviderUtils(this.currentContext);
             tasks = taskWS.getAllTasks(connectedUser);
 
-            for (Task task : tasks) {
-                CriteriaExpression criteriaTask = new CriteriaExpression(CriteriaExpression.GroupType.AND);
-                criteriaTask.add(TaskContract.COL_IDSERVER, String.valueOf(task.getIdServer()));
-                List<Task> queryTasks = taskProviderUtils.query(criteriaTask);
+            if (tasks != null) {
+                for (Task task : tasks) {
+                    CriteriaExpression criteriaTask = new CriteriaExpression(CriteriaExpression.GroupType.AND);
+                    criteriaTask.add(TaskContract.COL_IDSERVER, String.valueOf(task.getIdServer()));
+                    List<Task> queryTasks = taskProviderUtils.query(criteriaTask);
 
-                if (queryTasks.isEmpty()) {
-                    taskProviderUtils.insert(task);
+                    if (queryTasks.isEmpty()) {
+                        taskProviderUtils.insert(task);
+                    }
                 }
             }
 
@@ -168,26 +173,30 @@ public class LoginFragment extends Fragment {
             JobProviderUtils jobProviderUtils = new JobProviderUtils(this.currentContext);
             jobs = jobWS.getAllJobs(connectedUser);
 
-            for (Job job : jobs) {
-                CriteriaExpression criteriaJob = new CriteriaExpression(CriteriaExpression.GroupType.AND);
-                criteriaJob.add(JobContract.COL_IDSERVER, String.valueOf(job.getIdServer()));
-                List<Job> queryJobs = jobProviderUtils.query(criteriaJob);
+            if (jobs != null) {
+                for (Job job : jobs) {
+                    CriteriaExpression criteriaJob = new CriteriaExpression(CriteriaExpression.GroupType.AND);
+                    criteriaJob.add(JobContract.COL_IDSERVER, String.valueOf(job.getIdServer()));
+                    List<Job> queryJobs = jobProviderUtils.query(criteriaJob);
 
-                if (queryJobs.isEmpty()) {
-                    jobProviderUtils.insert(job);
+                    if (queryJobs.isEmpty()) {
+                        jobProviderUtils.insert(job);
+                    }
                 }
             }
 
             UserWebServiceClientAdapter userWS = new UserWebServiceClientAdapter(this.currentContext);
             users = userWS.getAllUsers(connectedUser);
 
-            for (User user : users) {
-                CriteriaExpression criteriaUser = new CriteriaExpression(CriteriaExpression.GroupType.AND);
-                criteriaUser.add(UserContract.COL_IDSERVER, String.valueOf(user.getIdServer()));
-                List<User> queryUsers = LoginFragment.this.userProviderUtils.query(criteriaUser);
+            if (users != null) {
+                for (User user : users) {
+                    CriteriaExpression criteriaUser = new CriteriaExpression(CriteriaExpression.GroupType.AND);
+                    criteriaUser.add(UserContract.COL_IDSERVER, String.valueOf(user.getIdServer()));
+                    List<User> queryUsers = LoginFragment.this.userProviderUtils.query(criteriaUser);
 
-                if (queryUsers.isEmpty()) {
-                    LoginFragment.this.userProviderUtils.insert(user);
+                    if (queryUsers.isEmpty()) {
+                        LoginFragment.this.userProviderUtils.insert(user);
+                    }
                 }
             }
 
@@ -195,13 +204,15 @@ public class LoginFragment extends Fragment {
             ProjectProviderUtils projectProviderUtils = new ProjectProviderUtils(this.currentContext);
             projects = projectWS.getAllProjects(connectedUser);
 
-            for (Project project : projects) {
-                CriteriaExpression criteriaProject = new CriteriaExpression(CriteriaExpression.GroupType.AND);
-                criteriaProject.add(ProjectContract.COL_IDSERVER, String.valueOf(project.getIdServer()));
-                List<Project> queryProjects = projectProviderUtils.query(criteriaProject);
+            if (projects != null) {
+                for (Project project : projects) {
+                    CriteriaExpression criteriaProject = new CriteriaExpression(CriteriaExpression.GroupType.AND);
+                    criteriaProject.add(ProjectContract.COL_IDSERVER, String.valueOf(project.getIdServer()));
+                    List<Project> queryProjects = projectProviderUtils.query(criteriaProject);
 
-                if (queryProjects.isEmpty()) {
-                    projectProviderUtils.insert(project);
+                    if (queryProjects.isEmpty()) {
+                        projectProviderUtils.insert(project);
+                    }
                 }
             }
         }
@@ -264,9 +275,10 @@ public class LoginFragment extends Fragment {
                                 }
                             })
                             .show();
+                } else {
+                    LoginFragment.this.startMainActivity(result);
                 }
             } else {
-
                 Toast.makeText(LoginFragment.this.getContext(),
                         LoginFragment.this.getContext().getString(R.string.authentication_fail),
                         Toast.LENGTH_SHORT)

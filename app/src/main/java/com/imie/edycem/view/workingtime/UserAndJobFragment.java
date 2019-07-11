@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.imie.edycem.R;
 import com.imie.edycem.entity.Job;
+import com.imie.edycem.entity.Project;
 import com.imie.edycem.entity.User;
 import com.imie.edycem.entity.WorkingTime;
 import com.imie.edycem.provider.contract.UserContract;
@@ -35,7 +36,7 @@ public class UserAndJobFragment extends Fragment implements View.OnClickListener
     private WorkingTime workingTime;
     private User connectedUser;
     private Button nextButton;
-    private ArrayList<Integer> projectsId;
+    private ArrayList<Project> projects;
     private UserAndJobActivity activity;
 
     @Override
@@ -57,12 +58,11 @@ public class UserAndJobFragment extends Fragment implements View.OnClickListener
             this.workingTime = new WorkingTime();
         }
         this.workingTime = new WorkingTime();
-        this.connectedUser = this.activity.getConnectedUser();
-        this.projectsId = this.activity.getProjects();
+
+
 
         this.userProviderUtils = new UserProviderUtils(this.getContext());
         this.spinnerName = (Spinner) view.findViewById(R.id.spinner_name);
-
         this.users.addAll(userProviderUtils.queryAll());
 
         List<String> spinnerNameArray = new ArrayList<String>();
@@ -122,10 +122,14 @@ public class UserAndJobFragment extends Fragment implements View.OnClickListener
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.btn_next){
+            this.projects = this.activity.getProjects();
+            this.connectedUser = this.activity.getConnectedUser();
             Intent intent = new Intent(this.getContext(), ProjectsActivity.class);
-            intent.putExtra(UserContract.TABLE_NAME, (Parcelable) this.connectedUser);
-            intent.putExtra(WorkingTimeContract.TABLE_NAME, (Parcelable) this.workingTime);
-            intent.putExtra("projects_id", this.projectsId);
+            Bundle data = new Bundle();
+            data.putParcelable(UserContract.TABLE_NAME, this.connectedUser);
+            data.putParcelable(WorkingTimeContract.TABLE_NAME, this.workingTime);
+            data.putParcelableArrayList("projects", this.projects);
+            intent.putExtra("data", data);
             startActivity(intent);
         }
 

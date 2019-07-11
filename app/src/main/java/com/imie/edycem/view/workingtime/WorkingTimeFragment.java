@@ -37,6 +37,7 @@ import org.joda.time.format.DateTimeFormatter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 public class WorkingTimeFragment extends Fragment implements View.OnClickListener {
@@ -46,13 +47,14 @@ public class WorkingTimeFragment extends Fragment implements View.OnClickListene
     private WorkingTime workingTime;
     private Spinner hours;
     private Spinner minutes;
-    private Button addUser;
-    private ListView list;
+    private Spinner spinnerName;
     private UserProviderUtils userProviderUtils;
+    private ArrayList<User> users = new ArrayList<>();
     private EditText comment;
     private Button nextButton;
     private Button previousButton;
     private User connectedUser;
+    private User contributor;
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -133,27 +135,34 @@ public class WorkingTimeFragment extends Fragment implements View.OnClickListene
             }
         });
 
-        this.addUser = (Button) view.findViewById(R.id.add_user_button);
-        this.list = (ListView) view.findViewById(R.id.list);
-        this.addUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (WorkingTimeFragment.this.list.getVisibility() == View.GONE) {
-                    WorkingTimeFragment.this.list.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+        this.spinnerName = (Spinner) view.findViewById(R.id.spinner_name);
 
         this.userProviderUtils = new UserProviderUtils(this.getContext());
-        ArrayList<User> users = userProviderUtils.queryAll();
-        ArrayList<String> usernames = new ArrayList<>();
+        this.users.addAll(this.userProviderUtils.queryAll());
+
+        List<String> spinnerNameArray = new ArrayList<String>();
         for (User user : users) {
-            usernames.add(String.format("%s %s", user.getFirstname(), user.getLastname()));
+            spinnerNameArray.add(String.format("%s %s", user.getFirstname(), user.getLastname()));
         }
+        ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(
+                this.getContext(), android.R.layout.simple_spinner_item, spinnerNameArray);
 
-        WorkingTimeFragment.ListAdapter arrayAdapter = new WorkingTimeFragment.ListAdapter(this.getContext(), usernames);
-        this.list.setAdapter(arrayAdapter);
+        nameAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        this.spinnerName.setAdapter(nameAdapter);
+        this.spinnerName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String userStr = (String) spinnerName.getSelectedItem();
+                String[] splitStr = userStr.split(" ");
+                String firstname = splitStr[0];
+                String lastname = splitStr[1];
+                WorkingTimeFragment.this.contributor = WorkingTimeFragment.this.userProviderUtils.queryWithName(firstname, lastname);
+            }
 
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
 //       todo : get the date from text view
         this.workingTime.setDate(DateTime.now());
@@ -182,6 +191,7 @@ public class WorkingTimeFragment extends Fragment implements View.OnClickListene
         if (view.getId() == R.id.btn_next){
             Intent intent = new Intent(this.getContext(), SummaryActivity.class);
             intent.putExtra(UserContract.TABLE_NAME, (Parcelable) this.connectedUser);
+            intent.putExtra("contributor", (Parcelable) this.contributor);
             intent.putExtra(WorkingTimeContract.TABLE_NAME, (Parcelable) this.workingTime);
             startActivity(intent);
         }

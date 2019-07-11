@@ -5,7 +5,7 @@
  * Description : 
  * Author(s)   : Harmony
  * Licence     : 
- * Last update : Jul 5, 2019
+ * Last update : Jul 11, 2019
  *
  */
 package com.imie.edycem.test.utils.base;
@@ -55,6 +55,7 @@ public abstract class ProjectUtilsBase {
         project.setDocuments("documents_"+TestUtils.generateRandomString(10));
         project.setActivityType("activityType_"+TestUtils.generateRandomString(10));
         project.setIsValidate(TestUtils.generateRandomBool());
+        project.setTag("tag_"+TestUtils.generateRandomString(10));
         ArrayList<WorkingTime> projectWorkingTimess =
             new ArrayList<WorkingTime>();
         projectWorkingTimess.addAll(WorkingTimeDataLoader.getInstance(ctx).getMap().values());
@@ -105,6 +106,7 @@ public abstract class ProjectUtilsBase {
             Assert.assertEquals(project1.getDocuments(), project2.getDocuments());
             Assert.assertEquals(project1.getActivityType(), project2.getActivityType());
             Assert.assertEquals(project1.isIsValidate(), project2.isIsValidate());
+            Assert.assertEquals(project1.getTag(), project2.getTag());
             if (project1.getProjectWorkingTimes() != null
                     && project2.getProjectWorkingTimes() != null) {
                 Assert.assertEquals(project1.getProjectWorkingTimes().size(),

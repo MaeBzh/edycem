@@ -194,6 +194,8 @@ public class WorkingTimeFragment extends Fragment implements View.OnClickListene
             intent.putExtra("contributor", (Parcelable) this.contributor);
             intent.putExtra(WorkingTimeContract.TABLE_NAME, (Parcelable) this.workingTime);
             startActivity(intent);
+        } else if (view.getId() == R.id.btn_previous) {
+            this.getActivity().onBackPressed();
         }
      }
 

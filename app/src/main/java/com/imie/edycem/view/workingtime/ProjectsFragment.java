@@ -39,6 +39,11 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener {
     private User connectedUser;
     private Button mostUsedProject;
     private Button lastUsedProject;
+    private RadioButton hidden1;
+    private RadioButton hidden2;
+    private RadioButton hidden3;
+    private RadioButton hidden4;
+    private RadioButton hidden5;
 
     @Override
     public final View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,7 +69,12 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener {
         this.projectProviderUtils = new ProjectProviderUtils(this.getContext());
         this.project = new Project();
 
-        this.hiddenProject = (ConstraintLayout) view.findViewById(R.id.layout_hidden_projects);
+        this.hidden1 = (RadioButton) view.findViewById(R.id.btn_project_hidden_1);
+        this.hidden2 = (RadioButton) view.findViewById(R.id.btn_project_hidden_2);
+        this.hidden3 = (RadioButton) view.findViewById(R.id.btn_project_hidden_3);
+        this.hidden4 = (RadioButton) view.findViewById(R.id.btn_project_hidden_4);
+        this.hidden5 = (RadioButton) view.findViewById(R.id.btn_project_hidden_5);
+
         this.addButton = (Button) view.findViewById(R.id.add_button);
         this.lessButton = (Button) view.findViewById(R.id.less_button);
         this.radioGroup = (RadioGroup) view.findViewById(R.id.radio_group_project);
@@ -87,15 +97,23 @@ public class ProjectsFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.add_button:
-                if (hiddenProject.getVisibility() == View.GONE) {
-                    hiddenProject.setVisibility(View.VISIBLE);
+                if (hidden1.getVisibility() == View.GONE) {
+                    hidden1.setVisibility(View.VISIBLE);
+                    hidden2.setVisibility(View.VISIBLE);
+                    hidden3.setVisibility(View.VISIBLE);
+                    hidden4.setVisibility(View.VISIBLE);
+                    hidden5.setVisibility(View.VISIBLE);
                     addButton.setVisibility(View.GONE);
                     lessButton.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.less_button:
-                if (hiddenProject.getVisibility() == View.VISIBLE) {
-                    hiddenProject.setVisibility(View.GONE);
+                if (hidden1.getVisibility() == View.VISIBLE) {
+                    hidden1.setVisibility(View.GONE);
+                    hidden2.setVisibility(View.GONE);
+                    hidden3.setVisibility(View.GONE);
+                    hidden4.setVisibility(View.GONE);
+                    hidden5.setVisibility(View.GONE);
                     addButton.setVisibility(View.VISIBLE);
                     lessButton.setVisibility(View.GONE);
                 }

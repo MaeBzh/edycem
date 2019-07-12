@@ -123,7 +123,7 @@
                     android:background="@drawable/button_selector_green"
                     android:button="@null"
                     android:padding="10dp"
-                    android:text="@string/project_name"
+                    android:text="Project 1"
                     android:textColor="@android:color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -139,7 +139,7 @@
                     android:background="@drawable/button_selector_green"
                     android:button="@null"
                     android:padding="10dp"
-                    android:text="@string/project_name"
+                    android:text="Projet 5"
                     android:textColor="@android:color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -155,20 +155,15 @@
                     android:background="@drawable/button_selector_green"
                     android:button="@null"
                     android:padding="10dp"
-                    android:text="@string/project_name"
+                    android:text="Projet 9"
                     android:textColor="@android:color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/btn_lost_used2" />
 
-                <android.support.constraint.ConstraintLayout
-                    android:id="@+id/layout_hidden_projects"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone" >
 
                     <RadioButton
-                        android:id="@+id/btn_project6"
+                        android:id="@+id/btn_project_hidden_1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -177,7 +172,8 @@
                         android:background="@drawable/button_selector_green"
                         android:button="@null"
                         android:padding="10dp"
-                        android:text="@string/project_name"
+                        android:text="Projet 3"
+                        android:visibility="gone"
                         android:textColor="@android:color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -186,7 +182,7 @@
 
 
                     <RadioButton
-                        android:id="@+id/btn_project7"
+                        android:id="@+id/btn_project_hidden_2"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -195,14 +191,14 @@
                         android:background="@drawable/button_selector_green"
                         android:button="@null"
                         android:padding="10dp"
-                        android:text="@string/project_name"
+                        android:text="Projet 11"
                         android:textColor="@android:color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btn_project6" />
+                        app:layout_constraintTop_toBottomOf="@+id/btn_project_hidden_1" />
 
                     <RadioButton
-                        android:id="@+id/btn_project8"
+                        android:id="@+id/btn_project_hidden_3"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -211,14 +207,15 @@
                         android:background="@drawable/button_selector_green"
                         android:button="@null"
                         android:padding="10dp"
-                        android:text="@string/project_name"
+                        android:text="projet 4"
+                        android:visibility="gone"
                         android:textColor="@android:color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btn_project7" />
+                        app:layout_constraintTop_toBottomOf="@+id/btn_project_hidden_2" />
 
                     <RadioButton
-                        android:id="@+id/btn_project9"
+                        android:id="@+id/btn_project_hidden_4"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -227,14 +224,15 @@
                         android:background="@drawable/button_selector_green"
                         android:button="@null"
                         android:padding="10dp"
-                        android:text="@string/project_name"
+                        android:text="projet 2"
+                        android:visibility="gone"
                         android:textColor="@android:color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btn_project8" />
+                        app:layout_constraintTop_toBottomOf="@+id/btn_project_hidden_3" />
 
                     <RadioButton
-                        android:id="@+id/btn_project10"
+                        android:id="@+id/btn_project_hidden_5"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
@@ -243,13 +241,12 @@
                         android:background="@drawable/button_selector_green"
                         android:button="@null"
                         android:padding="10dp"
-                        android:text="@string/project_name"
+                        android:text="Projet 7"
+                        android:visibility="gone"
                         android:textColor="@android:color/white"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/btn_project9" />
-
-                </android.support.constraint.ConstraintLayout >
+                        app:layout_constraintTop_toBottomOf="@+id/btn_project_hidden_4" />
 
             </RadioGroup >
 

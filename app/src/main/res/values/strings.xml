@@ -102,7 +102,7 @@
     <string name="settings_idserver_label">IdServer</string>
     <string name="settings_rgpd_invalid_field_error">Field Rgpd is invalid.</string>
     <string name="settings_rgpd_label">Rgpd</string>
-    <string name="specifications">Définition du Cahier des Charges</string>
+    <string name="specifications">Definition du Cahier des Charges</string>
     <string name="spent_time">Temps passé</string>
     <string-array name="spinner_hours">
         <item>1</item>
